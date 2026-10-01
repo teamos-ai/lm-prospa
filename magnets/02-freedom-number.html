@@ -3,10 +3,10 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Your Financial Freedom Number — Prospa Financial</title>
+    <title>Your Freedom Score — Prospa Financial</title>
     <meta
       name="description"
-      content="An illustrative calculator that frames the capital required for work to become optional, and the gap between that figure and your current trajectory."
+      content="A four-step calculator that turns your numbers into a Freedom Score: the capital your lifestyle calls for, what your trajectory produces, the age you actually reach it, and what it would take to reach it sooner."
     />
     <link rel="icon" type="image/svg+xml" href="../assets/favicon.svg" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -17,216 +17,267 @@
     />
     <link rel="stylesheet" href="../assets/prospa.css" />
     <style>
-      .calc {
+      /* ---- Walk-through ---- */
+      .step {
+        display: none;
+        animation: rise var(--dur-reveal) var(--ease) both;
+      }
+      .step.on {
+        display: block;
+      }
+      @keyframes rise {
+        from {
+          opacity: 0;
+          transform: translateY(10px);
+        }
+        to {
+          opacity: 1;
+          transform: none;
+        }
+      }
+
+      .ask {
+        font-size: 27px;
+        letter-spacing: -0.025em;
+        margin-bottom: 12px;
+      }
+      .ask-why {
+        color: var(--gray);
+        font-size: 16px;
+        max-width: 58ch;
+        margin-bottom: 34px;
+      }
+
+      .dial-field + .dial-field {
+        margin-top: 34px;
+      }
+      .dial-field label {
+        display: block;
+        font-size: 13.5px;
+        font-weight: 600;
+        color: var(--ink-2);
+        margin-bottom: 4px;
+      }
+      .dial-read {
+        font-family: 'JetBrains Mono', monospace;
+        font-size: 36px;
+        font-weight: 500;
+        letter-spacing: -0.035em;
+        color: var(--teal);
+        line-height: 1.1;
+        font-variant-numeric: tabular-nums;
+      }
+      .dial-hint {
+        display: block;
+        font-size: 12.5px;
+        color: var(--gray);
+        margin-top: 8px;
+      }
+      .dial-field input[type='range'] {
+        margin-top: 14px;
+      }
+
+      .live {
+        background: var(--bg1);
+        border-radius: var(--r-md);
+        padding: 18px 22px;
+        font-size: 14.5px;
+        color: var(--slate);
+        margin-top: 32px;
+      }
+      .live b {
+        color: var(--green-600);
+        font-family: 'JetBrains Mono', monospace;
+        font-weight: 500;
+      }
+
+      .nav-row {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 16px;
+        padding-top: 32px;
+        margin-top: 36px;
+        border-top: 1px solid var(--line);
+      }
+
+      /* ---- Result ---- */
+      .result-hero {
+        background: radial-gradient(120% 150% at 85% 0%, #1a7079 0%, var(--teal) 45%, var(--teal-900) 100%);
+        border-radius: var(--r-xl);
+        padding: 44px 48px;
+        color: #fff;
         display: grid;
-        grid-template-columns: 320px 1fr;
-        gap: 40px;
-        align-items: start;
+        grid-template-columns: 280px 1fr;
+        gap: 44px;
+        align-items: center;
       }
-      .inputs {
+      .result-hero .band-k {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        font-size: 11px;
+        font-weight: 600;
+        letter-spacing: 0.16em;
+        text-transform: uppercase;
+        color: #a8e88f;
+        margin-bottom: 14px;
+      }
+      .result-hero .band-k::before {
+        content: '';
+        width: 22px;
+        height: 2px;
+        background: var(--green);
+        border-radius: 2px;
+      }
+      .result-hero h2 {
+        color: #fff;
+        font-size: 32px;
+        letter-spacing: -0.025em;
+        margin-bottom: 14px;
+      }
+      .result-hero p {
+        color: #cfe0e2;
+        font-size: 16px;
+        max-width: 50ch;
+      }
+
+      .headline-pair {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 18px;
+      }
+      .headline {
+        border-radius: var(--r-xl);
+        padding: 34px 36px;
+      }
+      .headline-age {
+        background: var(--ember-soft);
+      }
+      .headline-need {
         background: var(--bg2);
+      }
+      .headline .k {
+        display: block;
+        font-size: 11px;
+        font-weight: 600;
+        letter-spacing: 0.14em;
+        text-transform: uppercase;
+        color: var(--gray);
+        margin-bottom: 12px;
+      }
+      .headline .v {
+        font-family: 'JetBrains Mono', monospace;
+        font-size: 46px;
+        font-weight: 500;
+        letter-spacing: -0.04em;
+        line-height: 1;
+        font-variant-numeric: tabular-nums;
+      }
+      .headline-age .v {
+        color: var(--ember-strong);
+      }
+      .headline-need .v {
+        color: var(--teal);
+      }
+      .headline p {
+        font-size: 14px;
+        color: var(--slate);
+        margin-top: 16px;
+        max-width: 42ch;
+      }
+
+      /* ---- Adjust tray ---- */
+      .tray {
+        background: var(--bg2);
+        border: 1px solid var(--line);
         border-radius: var(--r-lg);
-        padding: 30px;
-        position: sticky;
-        top: 24px;
+        padding: 26px 28px;
       }
-      .inputs .field + .field {
-        margin-top: 22px;
+      .tray-grid {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 22px;
       }
-      .inputs label {
+      .tray-grid label {
         display: flex;
         justify-content: space-between;
         align-items: baseline;
         gap: 10px;
+        font-size: 12.5px;
+        font-weight: 600;
+        color: var(--ink-2);
       }
-      .inputs label .v {
+      .tray-grid label .v {
         font-family: 'JetBrains Mono', monospace;
-        font-size: 14px;
+        font-size: 13px;
         color: var(--teal);
         font-weight: 500;
         font-variant-numeric: tabular-nums;
       }
 
-      .headline {
-        background: var(--teal);
-        border-radius: var(--r-xl);
-        padding: 40px 44px;
-        color: #fff;
-        margin-bottom: 22px;
-      }
-      .headline .k {
-        font-size: 11.5px;
-        font-weight: 600;
-        letter-spacing: 0.14em;
-        text-transform: uppercase;
-        color: #9fd8c4;
-        display: block;
-        margin-bottom: 10px;
-      }
-      .headline .big {
-        font-family: 'JetBrains Mono', monospace;
-        font-size: 50px;
-        font-weight: 500;
-        letter-spacing: -0.04em;
-        line-height: 1;
-        color: #fff;
-        font-variant-numeric: tabular-nums;
-      }
-      .headline p {
-        color: #cfe0e2;
-        font-size: 14.5px;
-        margin-top: 16px;
-        max-width: 52ch;
-      }
-
-      .gap-card {
-        border-radius: var(--r-lg);
-        padding: 28px 30px;
-      }
-      .gap-short {
-        background: var(--ember-soft);
-      }
-      .gap-ahead {
-        background: var(--bg1);
-      }
-      .gap-card .k {
-        font-size: 11.5px;
-        font-weight: 600;
-        letter-spacing: 0.14em;
-        text-transform: uppercase;
-        color: var(--gray);
-        display: block;
-        margin-bottom: 8px;
-      }
-      .gap-card .big {
-        font-family: 'JetBrains Mono', monospace;
-        font-size: 34px;
-        font-weight: 500;
-        letter-spacing: -0.03em;
-        font-variant-numeric: tabular-nums;
-      }
-      .gap-short .big {
-        color: var(--ember-strong);
-      }
-      .gap-ahead .big {
-        color: var(--green-600);
-      }
-
-      .track {
-        height: 10px;
-        border-radius: 5px;
-        background: var(--line);
-        overflow: hidden;
-        margin: 14px 0 10px;
-      }
-      .track i {
-        display: block;
-        height: 100%;
-        border-radius: 5px;
-        background: var(--green);
-        transform-origin: left center;
-        transition: transform var(--dur-reveal) var(--ease);
-      }
-
-      .chart {
-        width: 100%;
-        height: auto;
-        display: block;
-      }
-      .chart-legend {
-        display: flex;
-        gap: 22px;
-        flex-wrap: wrap;
-        font-size: 12.5px;
-        color: var(--gray);
-        margin-top: 14px;
-      }
-      .chart-legend span {
-        display: inline-flex;
-        align-items: center;
-        gap: 8px;
-      }
-      .chart-legend i {
-        width: 16px;
-        height: 3px;
-        border-radius: 2px;
-        flex: none;
-      }
-
-      .lever {
-        display: grid;
-        grid-template-columns: 1fr auto;
-        gap: 12px 18px;
-        align-items: center;
-        padding: 16px 0;
-        border-bottom: 1px solid var(--line-2);
-      }
-      .lever:last-child {
-        border-bottom: none;
-      }
-      .lever b {
-        font-size: 15px;
-        color: var(--ink);
-        font-weight: 600;
-      }
-      .lever span {
-        display: block;
-        font-size: 13px;
-        color: var(--gray);
-        margin-top: 2px;
-      }
-      .lever .d {
-        font-family: 'JetBrains Mono', monospace;
-        font-size: 16px;
-        color: var(--green-600);
-        font-weight: 500;
-        white-space: nowrap;
-        font-variant-numeric: tabular-nums;
-      }
-
-      @media (max-width: 900px) {
-        .calc {
+      @media (max-width: 860px) {
+        .result-hero {
           grid-template-columns: 1fr;
           gap: 28px;
+          padding: 32px 26px;
+          text-align: center;
+          justify-items: center;
         }
-        .inputs {
-          position: static;
+        .result-hero h2 {
+          font-size: 25px;
+        }
+        .headline-pair {
+          grid-template-columns: 1fr;
+        }
+        .tray-grid {
+          grid-template-columns: repeat(2, 1fr);
+        }
+        .dial-read {
+          font-size: 29px;
+        }
+        .ask {
+          font-size: 22px;
         }
       }
-      @media (max-width: 720px) {
-        .headline {
-          padding: 30px 26px;
-        }
-        .headline .big {
-          font-size: 36px;
+      @media (max-width: 560px) {
+        .tray-grid {
+          grid-template-columns: 1fr;
         }
       }
+
       @media print {
-        .calc {
-          grid-template-columns: 260px 1fr;
-          gap: 24px;
+        .step {
+          display: none !important;
         }
-        .inputs {
-          position: static;
-          background: #fff;
-          border: 1px solid var(--line);
-          padding: 16pt;
+        .step.on {
+          display: block !important;
+        }
+        .result-hero {
+          background: var(--bg2);
+          color: var(--ink);
+        }
+        .result-hero h2 {
+          color: var(--ink);
+        }
+        .result-hero p {
+          color: var(--gray);
+        }
+        .result-hero .band-k {
+          color: var(--teal);
+        }
+        .on-dark .w-gauge-n {
+          color: var(--ink);
+        }
+        .on-dark .w-gauge-u,
+        .on-dark .w-gauge-cap {
+          color: var(--gray);
         }
         input[type='range'] {
           display: none;
         }
-        .headline {
-          background: var(--bg2);
-          color: var(--ink);
-        }
-        .headline .k {
-          color: var(--gray);
-        }
-        .headline .big {
-          color: var(--teal);
-        }
-        .headline p {
-          color: var(--gray);
+        .tray {
+          background: #fff;
         }
       }
     </style>
@@ -237,366 +288,727 @@
     <article class="sheet sheet-wide">
       <div data-sheet-masthead></div>
 
-      <div class="pad">
-        <div class="eyebrow">Session tool 02 · Calculator</div>
-        <h1 class="doc-title">Your Financial <em>Freedom Number</em></h1>
-        <p class="lede">
-          What would it take for work to become optional? This frames the size of the goal —
-          the capital your chosen lifestyle would call for, what your current trajectory produces,
-          and the distance between the two. Illustrative only.
-        </p>
+      <!-- ============ INTRO ============ -->
+      <section class="step on" id="step-intro">
+        <div class="pad">
+          <div class="eyebrow">Session tool 02 · Guided calculator</div>
+          <h1 class="doc-title">Your <em>Freedom Score</em></h1>
+          <p class="lede">
+            Four questions, about two minutes. At the end you get a score out of 100, the capital
+            your chosen lifestyle actually calls for, and
+            <strong>the age your current trajectory reaches it</strong> — which, for most people, is
+            not the age they had in mind.
+          </p>
 
-        <hr class="rule" />
-
-        <div class="calc">
-          <!-- ---------- Inputs ---------- -->
-          <form class="inputs no-print" id="inputs" autocomplete="off">
-            <div class="sub-h" style="margin-bottom: 20px">Your assumptions</div>
-
-            <div class="field">
-              <label for="i-age">Current age <span class="v" id="v-age">40</span></label>
-              <input type="range" id="i-age" min="25" max="70" step="1" value="40" />
+          <div class="grid g3" style="margin: 38px 0 32px">
+            <div class="card card-tint">
+              <div class="stat"><span class="k">You answer</span><span class="figure fig-lg">4 things</span></div>
+              <p class="small muted" style="margin-top: 10px">
+                Your age, the age you want work to be optional, the lifestyle you want it to fund,
+                and what you invest each year.
+              </p>
             </div>
-
-            <div class="field">
-              <label for="i-target">Work becomes optional at <span class="v" id="v-target">55</span></label>
-              <input type="range" id="i-target" min="40" max="75" step="1" value="55" />
+            <div class="card card-tint">
+              <div class="stat"><span class="k">You get</span><span class="figure fig-lg">/100</span></div>
+              <p class="small muted" style="margin-top: 10px">
+                A Freedom Score, your capital target, your projection, the gap, and your freedom age.
+              </p>
             </div>
-
-            <div class="field">
-              <label for="i-lifestyle">
-                Desired annual lifestyle <span class="v" id="v-lifestyle">$120,000</span>
-              </label>
-              <input type="range" id="i-lifestyle" min="40000" max="400000" step="5000" value="120000" />
-              <span class="hint">In today's dollars, before tax considerations.</span>
-            </div>
-
-            <div class="field">
-              <label for="i-current">
-                Accessible investments today <span class="v" id="v-current">$300,000</span>
-              </label>
-              <input type="range" id="i-current" min="0" max="3000000" step="25000" value="300000" />
-              <span class="hint">Outside super. Excludes the family home.</span>
-            </div>
-
-            <div class="field">
-              <label for="i-annual">Invested each year <span class="v" id="v-annual">$30,000</span></label>
-              <input type="range" id="i-annual" min="0" max="250000" step="2500" value="30000" />
-            </div>
-
-            <div class="field">
-              <label for="i-return">Assumed annual return <span class="v" id="v-return">6.0%</span></label>
-              <input type="range" id="i-return" min="0" max="12" step="0.25" value="6" />
-            </div>
-
-            <div class="field">
-              <label for="i-infl">Assumed inflation <span class="v" id="v-infl">2.5%</span></label>
-              <input type="range" id="i-infl" min="0" max="6" step="0.25" value="2.5" />
-            </div>
-
-            <div class="field">
-              <label for="i-draw">Illustrative withdrawal rate <span class="v" id="v-draw">4.0%</span></label>
-              <input type="range" id="i-draw" min="2" max="8" step="0.25" value="4" />
-              <span class="hint">A planning assumption, not a safe or guaranteed rate.</span>
-            </div>
-
-            <button type="button" class="btn btn-outline btn-sm" style="margin-top: 24px" data-reset>
-              Reset to defaults
-            </button>
-          </form>
-
-          <!-- ---------- Outputs ---------- -->
-          <div>
-            <div class="headline">
-              <span class="k">Illustrative capital target</span>
-              <span class="big" id="o-target">—</span>
-              <p id="o-target-note"></p>
-            </div>
-
-            <div class="grid g2" style="margin-bottom: 22px">
-              <div class="card card-tint">
-                <span class="k" style="font-size: 11.5px; font-weight: 600; letter-spacing: 0.14em; text-transform: uppercase; color: var(--gray)">
-                  Projected at target age
-                </span>
-                <div class="figure fig-lg" id="o-projected" style="margin-top: 8px">—</div>
-                <p class="small muted" style="margin-top: 8px" id="o-projected-note"></p>
-              </div>
-              <div class="gap-card gap-short" id="o-gap-card">
-                <span class="k" id="o-gap-label">Illustrative shortfall</span>
-                <div class="big" id="o-gap">—</div>
-                <p class="small muted" style="margin-top: 8px" id="o-gap-note"></p>
-              </div>
-            </div>
-
-            <div class="card" style="margin-bottom: 22px">
-              <div class="between" style="margin-bottom: 4px">
-                <b style="color: var(--ink)">Progress toward the target</b>
-                <span class="figure fig-md" id="o-pct">—</span>
-              </div>
-              <div class="track"><i id="o-track" style="transform: scaleX(0)"></i></div>
-              <p class="small muted" id="o-pct-note"></p>
-            </div>
-
-            <div class="card">
-              <div class="sub-h">Accessible capital, year by year</div>
-              <svg class="chart" id="chart" viewBox="0 0 640 240" role="img" aria-labelledby="chart-title">
-                <title id="chart-title">Projected accessible capital against the illustrative capital target</title>
-              </svg>
-              <div class="chart-legend">
-                <span><i style="background: var(--teal)"></i>Projected accessible capital</span>
-                <span><i style="background: var(--ember)"></i>Illustrative capital target</span>
-              </div>
+            <div class="card card-tint">
+              <div class="stat"><span class="k">Stays</span><span class="figure fig-lg">Private</span></div>
+              <p class="small muted" style="margin-top: 10px">
+                Calculated in your browser. Nothing is sent anywhere, by us or to us.
+              </p>
             </div>
           </div>
-        </div>
 
-        <hr class="rule" />
+          <div class="card" style="margin-bottom: 30px">
+            <h3 class="step-h">The one idea behind it</h3>
+            <p class="small muted" style="margin-top: 10px">
+              A portfolio supports a lifestyle, not a lump sum. Decide the annual income you want,
+              divide by the rate you would draw it at, and you have a capital target. Everything
+              else on the result page is the distance between that target and where you are headed.
+            </p>
+          </div>
 
-        <div class="sec-head">
-          <h2>What moves this number most</h2>
-          <p>
-            Each row changes one assumption and holds the rest. It is the fastest way to see which
-            lever is actually yours to pull.
-          </p>
-        </div>
-        <div id="levers"></div>
-
-        <hr class="rule" />
-
-        <div class="card card-green">
-          <h3 class="step-h">The question behind the number</h3>
-          <p class="muted" style="margin-top: 10px; font-size: 16px">
-            If your target age is earlier than the age you can access super, the issue is not only
-            <em>how much wealth do I need</em>. It is also <strong>where that wealth needs to sit,
-            and when it has to be reachable</strong>. A large balance behind a preservation date
-            does not fund the years before it.
-          </p>
-          <a class="btn btn-teal btn-sm no-print" style="margin-top: 20px" href="03-gap-years.html">
-            Map those years
-            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+          <button class="btn btn-primary" data-go="0">
+            Start — four questions
+            <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor"
                  stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
               <path d="M5 12h14M12 5l7 7-7 7" />
             </svg>
-          </a>
+          </button>
         </div>
+      </section>
 
-        <div class="disclaimer" style="margin-top: 32px">
-          <b>Important limitations.</b> This is a simplified educational illustration, not a
-          retirement forecast. It ignores tax, fees, investment volatility, the order in which
-          returns arrive, changes in spending, superannuation, the age pension, other assets and
-          many further factors. The withdrawal rate is a planning assumption, not a recommendation
-          or a guarantee, and returns are not guaranteed. Moneysmart's retirement guidance notes
-          that what you need varies with the lifestyle you want, and that planning should consider
-          when super can be accessed and how any income gap is funded —
-          <a href="https://moneysmart.gov.au/plan-for-your-retirement" target="_blank"
-             rel="noopener noreferrer" style="color: var(--teal); font-weight: 600">moneysmart.gov.au</a>.
-        </div>
+      <!-- ============ STEP 1 ============ -->
+      <section class="step" id="step-0">
+        <div class="pad">
+          <ol class="w-stepper no-print" id="stepper-0" style="margin-bottom: 38px"></ol>
+          <div class="eyebrow">Step 1 of 4 · Where you are</div>
+          <h2 class="ask">How old are you, and what have you built outside super?</h2>
+          <p class="ask-why">
+            Only capital you could actually reach before preservation age counts here. Leave out the
+            family home unless you genuinely intend to sell it, and leave out superannuation — it has
+            its own section later.
+          </p>
 
-        <div class="row no-print" style="margin-top: 26px">
-          <button class="btn btn-outline btn-sm" data-print>Print or save as PDF</button>
+          <div class="dial-field">
+            <label for="i-age">Your age today</label>
+            <span class="dial-read" id="v-age">40</span>
+            <input type="range" id="i-age" min="25" max="70" step="1" value="40" />
+          </div>
+
+          <div class="dial-field">
+            <label for="i-current">Accessible investments you hold today</label>
+            <span class="dial-read" id="v-current">$300,000</span>
+            <span class="dial-hint">Shares, ETFs, managed funds, cash beyond your reserve, investment property equity you would release.</span>
+            <input type="range" id="i-current" min="0" max="3000000" step="25000" value="300000" />
+          </div>
+
+          <div class="live" id="live-0"></div>
+
+          <div class="nav-row">
+            <button class="btn btn-ghost btn-sm" data-go="-1">Back</button>
+            <button class="btn btn-primary" data-go="1">
+              Next
+              <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                   stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <path d="M5 12h14M12 5l7 7-7 7" />
+              </svg>
+            </button>
+          </div>
         </div>
-      </div>
+      </section>
+
+      <!-- ============ STEP 2 ============ -->
+      <section class="step" id="step-1">
+        <div class="pad">
+          <ol class="w-stepper no-print" id="stepper-1" style="margin-bottom: 38px"></ol>
+          <div class="eyebrow">Step 2 of 4 · What you want</div>
+          <h2 class="ask">When should work become optional, and on what income?</h2>
+          <p class="ask-why">
+            In today's dollars — the calculator handles inflation. Think about what the year costs,
+            not what you earn: holidays, the car, the house, the things you would keep doing.
+          </p>
+
+          <div class="dial-field">
+            <label for="i-target">Age work becomes optional</label>
+            <span class="dial-read" id="v-target">55</span>
+            <input type="range" id="i-target" min="40" max="75" step="1" value="55" />
+          </div>
+
+          <div class="dial-field">
+            <label for="i-lifestyle">Annual lifestyle you want it to fund</label>
+            <span class="dial-read" id="v-lifestyle">$120,000</span>
+            <span class="dial-hint">In today's dollars, before tax considerations.</span>
+            <input type="range" id="i-lifestyle" min="40000" max="400000" step="5000" value="120000" />
+          </div>
+
+          <div class="live" id="live-1"></div>
+
+          <div class="nav-row">
+            <button class="btn btn-ghost btn-sm" data-go="0">Back</button>
+            <button class="btn btn-primary" data-go="2">
+              Next
+              <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                   stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <path d="M5 12h14M12 5l7 7-7 7" />
+              </svg>
+            </button>
+          </div>
+        </div>
+      </section>
+
+      <!-- ============ STEP 3 ============ -->
+      <section class="step" id="step-2">
+        <div class="pad">
+          <ol class="w-stepper no-print" id="stepper-2" style="margin-bottom: 38px"></ol>
+          <div class="eyebrow">Step 3 of 4 · What you are doing about it</div>
+          <h2 class="ask">How much are you directing into those investments each year?</h2>
+          <p class="ask-why">
+            Outside super again — the amount that actually leaves your account and goes into
+            accessible capital. If you are not sure, use what went in last year rather than what you
+            intended to.
+          </p>
+
+          <div class="dial-field">
+            <label for="i-annual">Invested each year, outside super</label>
+            <span class="dial-read" id="v-annual">$30,000</span>
+            <input type="range" id="i-annual" min="0" max="250000" step="2500" value="30000" />
+          </div>
+
+          <div class="live" id="live-2"></div>
+
+          <div class="nav-row">
+            <button class="btn btn-ghost btn-sm" data-go="1">Back</button>
+            <button class="btn btn-primary" data-go="3">
+              Next
+              <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                   stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <path d="M5 12h14M12 5l7 7-7 7" />
+              </svg>
+            </button>
+          </div>
+        </div>
+      </section>
+
+      <!-- ============ STEP 4 ============ -->
+      <section class="step" id="step-3">
+        <div class="pad">
+          <ol class="w-stepper no-print" id="stepper-3" style="margin-bottom: 38px"></ol>
+          <div class="eyebrow">Step 4 of 4 · The assumptions</div>
+          <h2 class="ask">Three assumptions, and they are only assumptions</h2>
+          <p class="ask-why">
+            The defaults are conventional planning figures, not forecasts and not advice. Move them
+            and watch the result move — seeing how much the answer depends on these is half the point
+            of the exercise.
+          </p>
+
+          <div class="dial-field">
+            <label for="i-return">Assumed annual investment return</label>
+            <span class="dial-read" id="v-return">6.0%</span>
+            <span class="dial-hint">Illustrative. Returns are not guaranteed and real portfolios do not deliver the same number every year.</span>
+            <input type="range" id="i-return" min="0" max="12" step="0.25" value="6" />
+          </div>
+
+          <div class="dial-field">
+            <label for="i-infl">Assumed inflation</label>
+            <span class="dial-read" id="v-infl">2.5%</span>
+            <span class="dial-hint">Used to convert today's lifestyle figure into dollars at your target age.</span>
+            <input type="range" id="i-infl" min="0" max="6" step="0.25" value="2.5" />
+          </div>
+
+          <div class="dial-field">
+            <label for="i-draw">Illustrative withdrawal rate</label>
+            <span class="dial-read" id="v-draw">4.0%</span>
+            <span class="dial-hint">A planning assumption, not a safe or guaranteed rate. It is what converts an income into a capital target.</span>
+            <input type="range" id="i-draw" min="2" max="8" step="0.25" value="4" />
+          </div>
+
+          <div class="live" id="live-3"></div>
+
+          <div class="nav-row">
+            <button class="btn btn-ghost btn-sm" data-go="2">Back</button>
+            <button class="btn btn-primary" data-go="4">
+              See my Freedom Score
+              <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                   stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <path d="M5 12h14M12 5l7 7-7 7" />
+              </svg>
+            </button>
+          </div>
+        </div>
+      </section>
+
+      <!-- ============ RESULT ============ -->
+      <section class="step" id="step-4">
+        <div class="pad">
+          <div class="eyebrow">Your result</div>
+
+          <div class="result-hero">
+            <div class="on-dark" id="gauge"></div>
+            <div>
+              <span class="band-k" id="band-k"></span>
+              <h2 id="band-name"></h2>
+              <p id="band-copy"></p>
+            </div>
+          </div>
+
+          <div class="sub-h" style="margin-top: 40px">The four numbers behind it</div>
+          <div id="metrics"></div>
+
+          <hr class="rule" />
+
+          <div class="sec-head">
+            <h2>The two numbers nobody calculates</h2>
+            <p>
+              Both fall straight out of the figures you just entered, and both are usually the first
+              time someone has seen them.
+            </p>
+          </div>
+
+          <div class="headline-pair">
+            <div class="headline headline-age">
+              <span class="k">Your freedom age, on this trajectory</span>
+              <span class="v" id="o-freedom-age">—</span>
+              <p id="o-freedom-note"></p>
+            </div>
+            <div class="headline headline-need">
+              <span class="k">To reach it at your chosen age</span>
+              <span class="v" id="o-required">—</span>
+              <p id="o-required-note"></p>
+            </div>
+          </div>
+
+          <hr class="rule" />
+
+          <div class="sec-head">
+            <h2>Your capital, year by year</h2>
+            <p>The line is your trajectory. The dashed line is the target it has to meet.</p>
+          </div>
+          <div class="card">
+            <div id="chart"></div>
+          </div>
+
+          <div class="grid g2" style="margin-top: 20px">
+            <div class="card">
+              <div id="goal"></div>
+            </div>
+            <div class="card">
+              <div class="sub-h" style="margin-bottom: 18px">Where that capital comes from</div>
+              <div id="split"></div>
+            </div>
+          </div>
+
+          <hr class="rule" />
+
+          <div class="sec-head">
+            <h2>What moves the number most</h2>
+            <p>
+              Each row changes one assumption and holds the rest. The bars are scaled against each
+              other, so the longest bar is the lever with the most in it.
+            </p>
+          </div>
+          <div id="levers"></div>
+
+          <div class="card card-green" id="access" style="margin-top: 26px" hidden></div>
+
+          <hr class="rule" />
+
+          <!-- Adjust in place -->
+          <div class="sec-head">
+            <h2>Change anything</h2>
+            <p>Every number above updates as you move these. This is the part worth playing with.</p>
+          </div>
+          <div class="tray no-print">
+            <div class="tray-grid">
+              <div class="field">
+                <label for="t-age">Age <span class="v" id="tv-age">40</span></label>
+                <input type="range" id="t-age" min="25" max="70" step="1" value="40" />
+              </div>
+              <div class="field">
+                <label for="t-target">Work optional at <span class="v" id="tv-target">55</span></label>
+                <input type="range" id="t-target" min="40" max="75" step="1" value="55" />
+              </div>
+              <div class="field">
+                <label for="t-lifestyle">Lifestyle <span class="v" id="tv-lifestyle">$120,000</span></label>
+                <input type="range" id="t-lifestyle" min="40000" max="400000" step="5000" value="120000" />
+              </div>
+              <div class="field">
+                <label for="t-current">Accessible today <span class="v" id="tv-current">$300,000</span></label>
+                <input type="range" id="t-current" min="0" max="3000000" step="25000" value="300000" />
+              </div>
+              <div class="field">
+                <label for="t-annual">Invested a year <span class="v" id="tv-annual">$30,000</span></label>
+                <input type="range" id="t-annual" min="0" max="250000" step="2500" value="30000" />
+              </div>
+              <div class="field">
+                <label for="t-return">Return <span class="v" id="tv-return">6.0%</span></label>
+                <input type="range" id="t-return" min="0" max="12" step="0.25" value="6" />
+              </div>
+              <div class="field">
+                <label for="t-infl">Inflation <span class="v" id="tv-infl">2.5%</span></label>
+                <input type="range" id="t-infl" min="0" max="6" step="0.25" value="2.5" />
+              </div>
+              <div class="field">
+                <label for="t-draw">Withdrawal rate <span class="v" id="tv-draw">4.0%</span></label>
+                <input type="range" id="t-draw" min="2" max="8" step="0.25" value="4" />
+              </div>
+            </div>
+            <div class="row" style="margin-top: 24px">
+              <button class="btn btn-outline btn-sm" data-reset>Reset to the defaults</button>
+              <button class="btn btn-ghost btn-sm" data-go="0">Walk through it again</button>
+            </div>
+          </div>
+
+          <div class="cta-panel card card-tint" style="margin-top: 32px; background: var(--teal); color: #fff; border-radius: var(--r-xl); padding: 40px 44px">
+            <h3 style="color: #fff; font-size: 24px; letter-spacing: -0.02em; margin-bottom: 12px">
+              Take these four numbers to a conversation
+            </h3>
+            <p style="color: #cfe0e2; font-size: 15.5px; max-width: 56ch; margin-bottom: 24px" id="cta-line"></p>
+            <div class="row no-print">
+              <a class="btn btn-primary" href="https://www.prospafinancial.com.au" target="_blank" rel="noopener noreferrer">
+                Book a complimentary consultation
+              </a>
+              <button class="btn btn-ghost" style="color: #fff" data-print>Print or save as PDF</button>
+            </div>
+          </div>
+
+          <div class="row no-print" style="margin-top: 26px">
+            <a class="btn btn-ghost btn-sm" href="03-gap-years.html">
+              Next: map the years super cannot fund
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                   stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <path d="M5 12h14M12 5l7 7-7 7" />
+              </svg>
+            </a>
+          </div>
+
+          <div class="disclaimer" style="margin-top: 32px">
+            <b>Important limitations.</b> A simplified educational illustration, not a retirement
+            forecast and not personal advice. It ignores tax, fees, investment volatility, the order
+            in which returns arrive, changes in spending, superannuation, the age pension, other
+            assets and much else. The withdrawal rate is a planning assumption, not a recommendation
+            or a guarantee, and returns are not guaranteed — a real portfolio does not deliver the
+            same number every year, and the sequence matters as much as the average. Your freedom age
+            and the required annual figure are arithmetic on the assumptions you chose, so they move
+            when those assumptions move. Moneysmart's retirement guidance notes that what you need
+            varies with the lifestyle you want, and that planning should consider when super can be
+            accessed and how any income gap is funded —
+            <a href="https://moneysmart.gov.au/plan-for-your-retirement" target="_blank"
+               rel="noopener noreferrer" style="color: var(--teal); font-weight: 600">moneysmart.gov.au</a>.
+          </div>
+        </div>
+      </section>
 
       <div data-sheet-foot></div>
     </article>
 
     <script type="module">
       import { mountSheet, wirePrint, money, store } from '../assets/sheet.js'
+      import {
+        scoreGauge,
+        metricStrip,
+        breakdownBar,
+        goalProgress,
+        progressRows,
+        projection,
+        stepper,
+        moneyShort,
+        TONE,
+      } from '../assets/widgets.js'
 
-      mountSheet({ no: '02', kind: 'Calculator', wide: true })
+      mountSheet({ no: '02', kind: 'Guided calculator', wide: true })
       wirePrint()
 
-      const DEFAULTS = {
-        age: 40,
-        target: 55,
-        lifestyle: 120000,
-        current: 300000,
-        annual: 30000,
-        return: 6,
-        infl: 2.5,
-        draw: 4,
-      }
-      const saved = store('freedom-number')
+      /* ==========================================================
+         THE MODEL — identical to the supplied Prospa workbook.
+
+           years      = max(target − age, 0)
+           futureNeed = lifestyle × (1 + inflation)^years
+           capital    = futureNeed ÷ withdrawalRate
+           projected  = current × (1+r)^years
+                        + annual × (((1+r)^years − 1) ÷ r)
+                        (annual × years when r = 0)
+           gap        = projected − capital
+           progress   = projected ÷ capital
+
+         Everything below is derived from those same primitives.
+         ========================================================== */
+
+      const DEFAULTS = { age: 40, target: 55, lifestyle: 120000, current: 300000, annual: 30000, return: 6, infl: 2.5, draw: 4 }
+      const KEYS = Object.keys(DEFAULTS)
+      const saved = store('freedom-score')
       const el = (id) => document.getElementById(id)
-      const ids = Object.keys(DEFAULTS)
+      const state = { ...DEFAULTS }
 
-      function read() {
-        const v = {}
-        ids.forEach((k) => (v[k] = Number(el('i-' + k).value)))
-        return v
-      }
-
-      /* ---------- The model (identical to the supplied workbook) ----------
-         years      = max(target − age, 0)
-         futureNeed = lifestyle × (1 + inflation)^years
-         capital    = futureNeed ÷ withdrawalRate
-         projected  = current × (1+r)^years + annual × (((1+r)^years − 1) ÷ r)
-                      (with the annuity term falling back to annual × years when r = 0)
-      */
       function model(v) {
         const years = Math.max(v.target - v.age, 0)
         const r = v.return / 100
         const i = v.infl / 100
         const w = v.draw / 100
+
         const futureNeed = v.lifestyle * Math.pow(1 + i, years)
         const capital = w > 0 ? futureNeed / w : 0
         const grow = (n) =>
           v.current * Math.pow(1 + r, n) + (r === 0 ? v.annual * n : (v.annual * (Math.pow(1 + r, n) - 1)) / r)
         const projected = grow(years)
-        return { years, futureNeed, capital, projected, gap: projected - capital, grow, r, i, w }
-      }
+        const gap = projected - capital
+        const progress = capital > 0 ? projected / capital : 0
 
-      function sync() {
-        const v = read()
-        // Keep the target age at or beyond the current age.
-        if (v.target < v.age) {
-          el('i-target').value = v.age
-          v.target = v.age
+        // The Freedom Score is the workbook's own "progress toward capital target", capped at 100.
+        const score = Math.max(0, Math.min(100, Math.round(progress * 100)))
+
+        // Funding split — the three parts sum exactly to `projected`.
+        const contributions = v.annual * years
+        const growth = projected - v.current - contributions
+
+        // What it would take to land exactly on target at the chosen age.
+        let required = null
+        if (years > 0) {
+          required =
+            r === 0
+              ? (capital - v.current) / years
+              : ((capital - v.current * Math.pow(1 + r, years)) * r) / (Math.pow(1 + r, years) - 1)
+          required = Math.max(0, required)
         }
 
-        el('v-age').textContent = v.age
-        el('v-target').textContent = v.target
-        el('v-lifestyle').textContent = money(v.lifestyle)
-        el('v-current').textContent = money(v.current)
-        el('v-annual').textContent = money(v.annual)
-        el('v-return').textContent = v.return.toFixed(1) + '%'
-        el('v-infl').textContent = v.infl.toFixed(1) + '%'
-        el('v-draw').textContent = v.draw.toFixed(1) + '%'
+        // Freedom age — the first age at which the trajectory meets the target that then applies.
+        // The target itself keeps inflating, so both sides move.
+        let freedomAge = null
+        let freedomIn = null
+        for (let n = 0; n <= 95 - v.age; n++) {
+          if (w > 0 && grow(n) >= (v.lifestyle * Math.pow(1 + i, n)) / w) {
+            freedomAge = v.age + n
+            freedomIn = n
+            break
+          }
+        }
 
-        const m = model(v)
+        return { years, r, i, w, futureNeed, capital, grow, projected, gap, progress, score, contributions, growth, required, freedomAge, freedomIn }
+      }
 
-        el('o-target').textContent = money(m.capital)
-        el('o-target-note').textContent =
-          m.years === 0
-            ? `To support ${money(v.lifestyle)} a year from today at a ${v.draw.toFixed(1)}% withdrawal rate.`
-            : `To support ${money(m.futureNeed)} a year at age ${v.target} — your ${money(
-                v.lifestyle
-              )} lifestyle after ${m.years} ${m.years === 1 ? 'year' : 'years'} of ${v.infl.toFixed(
-                1
-              )}% inflation — drawn at ${v.draw.toFixed(1)}% a year.`
+      const BANDS = [
+        { max: 24, name: 'Early in the build', copy: 'Most of the distance is still ahead, which at this stage is normal rather than alarming. The useful questions are about the rate you are building at and the age you are building toward — both are still fully in play.' },
+        { max: 49, name: 'Underway', copy: 'The trajectory is real and compounding is doing some of the work. What decides the outcome from here is whether the annual amount rises with your income, or stays where it was set years ago.' },
+        { max: 74, name: 'Within reach', copy: 'On these assumptions you arrive at a substantial share of the target. The remaining gap is usually closable by one of three levers — the date, the amount, or the lifestyle figure — rather than by all three.' },
+        { max: 99, name: 'Nearly there', copy: 'You are close enough that the conversation changes. It stops being about accumulating and starts being about structure, tax on the way out, and the order in which you draw.' },
+        { max: 100, name: 'Funded, on these assumptions', copy: 'The trajectory meets the target at the age you chose. That makes the assumptions the thing worth testing: what the plan does in a poor decade, and what happens if the lifestyle figure turns out to be higher than you think.' },
+      ]
 
-        el('o-projected').textContent = money(m.projected)
-        el('o-projected-note').textContent =
-          m.years === 0
-            ? 'Your accessible investments as they stand today.'
-            : `${money(v.current)} today plus ${money(v.annual)} a year, compounding at ${v.return.toFixed(1)}%.`
+      /* ===================== WALK-THROUGH ====================== */
+
+      const STEPS = ['Where you are', 'What you want', 'What you invest', 'The assumptions']
+      STEPS.forEach((_, i) => stepper(el('stepper-' + i), STEPS, i))
+
+      const sections = () => Array.from(document.querySelectorAll('.step'))
+      function show(n) {
+        const id = n === -1 ? 'step-intro' : 'step-' + n
+        sections().forEach((s) => s.classList.toggle('on', s.id === id))
+        if (n === 4) render()
+        window.scrollTo({ top: 0, behavior: 'smooth' })
+      }
+
+      document.addEventListener('click', (e) => {
+        const go = e.target.closest('[data-go]')
+        if (go) return show(Number(go.dataset.go))
+        if (e.target.closest('[data-reset]')) {
+          Object.assign(state, DEFAULTS)
+          syncInputs()
+          render()
+        }
+      })
+
+      /* Inputs exist twice: once in the walk-through, once in the result tray.
+         Both write to the same state, and both read back from it. */
+      const pairs = KEYS.map((k) => ({ k, step: el('i-' + k), tray: el('t-' + k) }))
+
+      const fmt = {
+        age: (v) => String(v),
+        target: (v) => String(v),
+        lifestyle: money,
+        current: money,
+        annual: money,
+        return: (v) => v.toFixed(1) + '%',
+        infl: (v) => v.toFixed(1) + '%',
+        draw: (v) => v.toFixed(1) + '%',
+      }
+
+      function syncInputs() {
+        pairs.forEach(({ k, step, tray }) => {
+          if (step) step.value = state[k]
+          if (tray) tray.value = state[k]
+          const a = el('v-' + k)
+          const b = el('tv-' + k)
+          const text = fmt[k](state[k])
+          if (a) a.textContent = text
+          if (b) b.textContent = text
+        })
+      }
+
+      pairs.forEach(({ k, step, tray }) => {
+        const onInput = (e) => {
+          state[k] = Number(e.target.value)
+          // The target age cannot sit before today.
+          if (k === 'target' && state.target < state.age) state.target = state.age
+          if (k === 'age' && state.target < state.age) state.target = state.age
+          syncInputs()
+          saved.write(state)
+          live()
+          if (el('step-4').classList.contains('on')) render()
+        }
+        step?.addEventListener('input', onInput)
+        tray?.addEventListener('input', onInput)
+      })
+
+      /* Live previews under each step, so no step is blind data entry. */
+      function live() {
+        const m = model(state)
+        const l0 = el('live-0')
+        if (l0)
+          l0.innerHTML =
+            state.current === 0
+              ? `Starting from nothing is a perfectly normal place to start — it just makes the annual amount in step three carry all the weight.`
+              : `Left alone and growing at ${state.return.toFixed(1)}%, <b>${money(state.current)}</b> on its own becomes <b>${money(
+                  state.current * Math.pow(1 + m.r, Math.max(state.target - state.age, 0))
+                )}</b> by age ${state.target}. That is before you add a dollar.`
+
+        const l1 = el('live-1')
+        if (l1)
+          l1.innerHTML =
+            m.years === 0
+              ? `You have set the age to today, so the calculator is asking what it would take to stop now.`
+              : `<b>${money(state.lifestyle)}</b> a year in today's money is <b>${money(
+                  m.futureNeed
+                )}</b> a year by the time you are ${state.target}. At a ${state.draw.toFixed(
+                  1
+                )}% withdrawal rate, supporting that calls for <b>${money(m.capital)}</b> of capital.`
+
+        const l2 = el('live-2')
+        if (l2)
+          l2.innerHTML = `Over ${m.years} ${m.years === 1 ? 'year' : 'years'} you would contribute <b>${money(
+            m.contributions
+          )}</b> of your own money. Growth adds a further <b>${money(
+            Math.max(0, m.growth)
+          )}</b> on these assumptions — which is the part that does the heavy lifting, and the part you do not control.`
+
+        const l3 = el('live-3')
+        if (l3)
+          l3.innerHTML = `Together these three put your target at <b>${money(
+            m.capital
+          )}</b> and your projection at <b>${money(m.projected)}</b>. Drop the return by one point and the projection becomes <b>${money(
+            model({ ...state, return: Math.max(0, state.return - 1) }).projected
+          )}</b> — the same plan, one assumption apart.`
+      }
+
+      /* ======================= RESULT ========================== */
+
+      function render() {
+        const m = model(state)
+        const band = BANDS.find((b) => m.score <= b.max) || BANDS[0]
+
+        scoreGauge(el('gauge'), {
+          value: m.score,
+          max: 100,
+          unit: 'Freedom Score',
+          caption: `${moneyShort(m.projected)} projected against a ${moneyShort(m.capital)} target`,
+        })
+        el('band-k').textContent = `Score ${m.score} of 100`
+        el('band-name').textContent = band.name
+        el('band-copy').textContent = band.copy
 
         const short = m.gap < 0
-        const card = el('o-gap-card')
-        card.className = 'gap-card ' + (short ? 'gap-short' : 'gap-ahead')
-        el('o-gap-label').textContent = short ? 'Illustrative shortfall' : 'Illustrative surplus'
-        el('o-gap').textContent = money(Math.abs(m.gap))
-        el('o-gap-note').textContent = short
-          ? 'The distance between the trajectory and the target, on these assumptions.'
-          : 'This trajectory exceeds the illustrative target on these assumptions.'
+        metricStrip(el('metrics'), [
+          { label: 'Capital target', value: money(m.capital), tone: 'key', note: `To draw ${money(m.futureNeed)} a year at ${state.draw.toFixed(1)}%` },
+          { label: 'On this trajectory', value: money(m.projected), note: `By age ${state.target}, ${m.years} ${m.years === 1 ? 'year' : 'years'} away` },
+          { label: short ? 'Shortfall' : 'Surplus', value: money(Math.abs(m.gap)), tone: short ? 'warn' : 'good', note: short ? 'The distance still to cover' : 'Ahead of the target on these assumptions' },
+          { label: 'Years to your target age', value: String(m.years), note: m.years === 0 ? 'You have set the age to today' : 'Every one of them compounds' },
+        ])
 
-        const pct = m.capital > 0 ? m.projected / m.capital : 0
-        el('o-pct').textContent = (pct * 100).toFixed(0) + '%'
-        el('o-track').style.transform = `scaleX(${Math.min(pct, 1).toFixed(3)})`
-        el('o-pct-note').textContent =
-          pct >= 1
-            ? 'On these assumptions the trajectory reaches the target by your chosen age.'
-            : `On these assumptions the trajectory reaches ${(pct * 100).toFixed(
-                0
-              )}% of the target by age ${v.target}.`
+        // --- Freedom age ---
+        const fa = el('o-freedom-age')
+        const fn = el('o-freedom-note')
+        if (m.freedomAge === null) {
+          fa.textContent = 'Beyond 95'
+          fn.textContent =
+            state.draw === 0
+              ? 'A withdrawal rate of zero gives no capital target to meet.'
+              : 'On these assumptions the trajectory never catches the target, because the target inflates at least as fast as the capital grows. That is a signal about the assumptions, not a verdict on you — try moving the annual amount or the lifestyle figure.'
+        } else if (m.freedomAge <= state.target) {
+          fa.textContent = String(m.freedomAge)
+          fn.textContent = `You reach your number at ${m.freedomAge}, which is ${
+            state.target - m.freedomAge === 0 ? 'exactly your chosen age' : `${state.target - m.freedomAge} ${state.target - m.freedomAge === 1 ? 'year' : 'years'} before your chosen age of ${state.target}`
+          }. The question becomes what you do with the difference.`
+        } else {
+          const late = m.freedomAge - state.target
+          fa.textContent = String(m.freedomAge)
+          fn.textContent = `You chose ${state.target}. On this trajectory the money arrives at ${m.freedomAge} — ${late} ${late === 1 ? 'year' : 'years'} later. This is the single number most people have never calculated, and it is usually the one that starts the conversation.`
+        }
 
-        drawChart(v, m)
-        drawLevers(v, m)
-        saved.write(v)
-      }
+        // --- Required annual ---
+        const rq = el('o-required')
+        const rn = el('o-required-note')
+        if (m.required === null) {
+          rq.textContent = '—'
+          rn.textContent = 'Your target age is today, so there are no years left to contribute over.'
+        } else if (m.required <= state.annual) {
+          rq.textContent = money(m.required)
+          rn.textContent = `You are already directing ${money(state.annual)} a year, which is ${money(
+            state.annual - m.required
+          )} more than the target needs on these assumptions.`
+        } else {
+          rq.textContent = money(m.required)
+          rn.textContent = `Against the ${money(state.annual)} you invest now — a difference of ${money(
+            m.required - state.annual
+          )} a year. If that figure is out of reach, it is telling you the date or the lifestyle number has to move instead.`
+        }
 
-      /* ---------- Chart ---------- */
-      function drawChart(v, m) {
-        const svg = el('chart')
-        const W = 640
-        const H = 240
-        const pad = { t: 16, r: 14, b: 26, l: 14 }
+        // --- Projection chart ---
         const horizon = Math.max(m.years, 1)
-        const pts = []
-        for (let n = 0; n <= horizon; n++) pts.push({ n, y: m.grow(n) })
+        const series = []
+        for (let n = 0; n <= horizon; n++) series.push(m.grow(n))
+        projection(el('chart'), {
+          series,
+          target: m.capital,
+          xFrom: state.age,
+          xTo: state.target,
+          targetLabel: 'Target',
+          meetsAt: m.freedomIn !== null && m.freedomIn <= horizon ? m.freedomIn : null,
+        })
 
-        const yMax = Math.max(m.capital, ...pts.map((p) => p.y)) * 1.08 || 1
-        const x = (n) => pad.l + (n / horizon) * (W - pad.l - pad.r)
-        const y = (val) => H - pad.b - (val / yMax) * (H - pad.t - pad.b)
+        // --- Goal + funding split ---
+        goalProgress(el('goal'), {
+          label: 'Progress toward the target',
+          current: m.projected,
+          target: m.capital,
+          onTrack: m.gap >= 0,
+          fmt: moneyShort,
+        })
 
-        const line = pts.map((p, idx) => `${idx ? 'L' : 'M'}${x(p.n).toFixed(1)},${y(p.y).toFixed(1)}`).join(' ')
-        const area = `${line} L${x(horizon).toFixed(1)},${(H - pad.b).toFixed(1)} L${x(0).toFixed(1)},${(
-          H - pad.b
-        ).toFixed(1)} Z`
+        breakdownBar(el('split'), [
+          { label: 'What you hold today', value: state.current, color: TONE.tealDeep, display: money(state.current) },
+          { label: 'What you will contribute', value: m.contributions, color: TONE.teal, display: money(m.contributions) },
+          { label: 'What growth adds', value: Math.max(0, m.growth), color: TONE.green, display: money(Math.max(0, m.growth)) },
+        ])
 
-        svg.innerHTML = `
-          <title id="chart-title">Projected accessible capital against the illustrative capital target</title>
-          <defs>
-            <linearGradient id="fill" x1="0" y1="0" x2="0" y2="1">
-              <stop offset="0%" stop-color="#135f69" stop-opacity="0.16" />
-              <stop offset="100%" stop-color="#135f69" stop-opacity="0.01" />
-            </linearGradient>
-          </defs>
-          <line x1="${pad.l}" y1="${H - pad.b}" x2="${W - pad.r}" y2="${H - pad.b}"
-                stroke="#e6ecec" stroke-width="1" />
-          <line x1="${pad.l}" y1="${y(m.capital).toFixed(1)}" x2="${W - pad.r}" y2="${y(m.capital).toFixed(1)}"
-                stroke="#c65a1e" stroke-width="1.6" stroke-dasharray="5 5" />
-          <path d="${area}" fill="url(#fill)" />
-          <path d="${line}" fill="none" stroke="#135f69" stroke-width="2.4"
-                stroke-linecap="round" stroke-linejoin="round" />
-          <circle cx="${x(horizon).toFixed(1)}" cy="${y(m.grow(horizon)).toFixed(1)}" r="5"
-                  fill="#fff" stroke="#135f69" stroke-width="2.6" />
-          <text x="${pad.l}" y="${H - 8}" font-family="JetBrains Mono, monospace" font-size="10"
-                fill="#616773">Age ${v.age}</text>
-          <text x="${W - pad.r}" y="${H - 8}" text-anchor="end" font-family="JetBrains Mono, monospace"
-                font-size="10" fill="#616773">Age ${v.target}</text>
-          <text x="${W - pad.r}" y="${Math.max(y(m.capital) - 8, 12).toFixed(1)}" text-anchor="end"
-                font-family="JetBrains Mono, monospace" font-size="10" fill="#a8481a">Target ${money(
-                  m.capital
-                )}</text>`
-      }
-
-      /* ---------- Sensitivity ---------- */
-      function drawLevers(v, m) {
+        // --- Levers ---
         const base = m.gap
         const rows = [
-          {
-            b: 'Work one more year',
-            s: `Target age ${v.target + 1} instead of ${v.target}`,
-            v: { ...v, target: v.target + 1 },
-          },
-          {
-            b: 'Invest $10,000 more each year',
-            s: `${money(v.annual + 10000)} a year instead of ${money(v.annual)}`,
-            v: { ...v, annual: v.annual + 10000 },
-          },
-          {
-            b: 'Trim the lifestyle target by $10,000',
-            s: `${money(v.lifestyle - 10000)} a year instead of ${money(v.lifestyle)}`,
-            v: { ...v, lifestyle: Math.max(v.lifestyle - 10000, 0) },
-          },
-          {
-            b: 'Earn one percentage point more',
-            s: `${(v.return + 1).toFixed(1)}% instead of ${v.return.toFixed(1)}% — not a lever you control`,
-            v: { ...v, return: v.return + 1 },
-          },
-        ]
-        el('levers').innerHTML = rows
-          .map((r) => {
-            const d = model(r.v).gap - base
-            return `
-              <div class="lever">
-                <div><b>${r.b}</b><span>${r.s}</span></div>
-                <div class="d">${d >= 0 ? '+' : '−'}${money(Math.abs(d))}</div>
-              </div>`
-          })
-          .join('')
+          { label: 'Work one more year', v: { ...state, target: state.target + 1 }, note: `Target age ${state.target + 1} instead of ${state.target}` },
+          { label: 'Invest $10,000 more each year', v: { ...state, annual: state.annual + 10000 }, note: `${money(state.annual + 10000)} a year instead of ${money(state.annual)}` },
+          { label: 'Trim the lifestyle target by $10,000', v: { ...state, lifestyle: Math.max(0, state.lifestyle - 10000) }, note: `${money(Math.max(0, state.lifestyle - 10000))} a year instead of ${money(state.lifestyle)}` },
+          { label: 'Earn one percentage point more', v: { ...state, return: state.return + 1 }, note: 'Not a lever you control — shown for scale' },
+        ].map((row) => {
+          const d = model(row.v).gap - base
+          return {
+            label: row.label,
+            value: d,
+            display: `${d >= 0 ? '+' : '−'}${money(Math.abs(d))}`,
+            color: d >= 0 ? TONE.green : TONE.ember,
+            note: row.note,
+          }
+        })
+        progressRows(el('levers'), rows)
+
+        // --- Access check, when the target sits before preservation age ---
+        const access = el('access')
+        const gapYears = Math.max(60 - state.target, 0)
+        if (gapYears > 0 && m.years > 0) {
+          const bridge = gapYears * state.lifestyle
+          access.hidden = false
+          access.innerHTML = `
+            <h3 class="step-h">One thing this calculator does not know</h3>
+            <p class="muted" style="margin-top: 10px">
+              You have chosen to stop at ${state.target}. Preservation age is 60 for everyone reaching
+              it from 1 July 2024, so ${gapYears} ${gapYears === 1 ? 'year' : 'years'} of that period
+              cannot be funded by superannuation at all — roughly ${money(bridge)} in today's dollars,
+              before any other income. The figures above assume the capital is there and reachable;
+              whether it is reachable is a separate question.
+            </p>
+            <a class="btn btn-teal btn-sm no-print" style="margin-top: 20px" href="03-gap-years.html">
+              Map those years
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                   stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <path d="M5 12h14M12 5l7 7-7 7" />
+              </svg>
+            </a>`
+        } else {
+          access.hidden = true
+        }
+
+        el('cta-line').textContent =
+          m.freedomAge !== null && m.freedomAge > state.target
+            ? `A target of ${money(m.capital)}, a trajectory reaching ${money(m.projected)}, a freedom age of ${m.freedomAge} against the ${state.target} you wanted, and a required ${money(m.required)} a year. Those four numbers are a far better starting point than "I'd like to retire early".`
+            : `A target of ${money(m.capital)}, a trajectory reaching ${money(m.projected)}, and a freedom age of ${m.freedomAge ?? '—'}. The useful conversation now is about structure, access and tax — not about accumulating more.`
       }
 
-      /* ---------- Wiring ---------- */
+      /* ======================= BOOT ============================ */
+
       const prev = saved.read()
-      if (prev) ids.forEach((k) => prev[k] !== undefined && (el('i-' + k).value = prev[k]))
-      ids.forEach((k) => el('i-' + k).addEventListener('input', sync))
-      document.querySelector('[data-reset]').addEventListener('click', () => {
-        ids.forEach((k) => (el('i-' + k).value = DEFAULTS[k]))
-        sync()
-      })
-      sync()
+      if (prev) KEYS.forEach((k) => typeof prev[k] === 'number' && (state[k] = prev[k]))
+      syncInputs()
+      live()
     </script>
   </body>
 </html>

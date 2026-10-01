@@ -96,32 +96,6 @@
         color: var(--ember-strong);
       }
 
-      .net-head {
-        background: var(--teal);
-        border-radius: var(--r-xl);
-        padding: 34px 40px;
-        color: #fff;
-        display: grid;
-        grid-template-columns: repeat(3, 1fr);
-        gap: 26px;
-      }
-      .net-head .k {
-        font-size: 11px;
-        font-weight: 600;
-        letter-spacing: 0.14em;
-        text-transform: uppercase;
-        color: #9fd8c4;
-        display: block;
-        margin-bottom: 7px;
-      }
-      .net-head .v {
-        font-family: 'JetBrains Mono', monospace;
-        font-size: 28px;
-        font-weight: 500;
-        letter-spacing: -0.03em;
-        font-variant-numeric: tabular-nums;
-      }
-
       .trap {
         display: grid;
         grid-template-columns: 34px 1fr;
@@ -159,23 +133,6 @@
         .split-total {
           grid-template-columns: 1fr 70px 110px;
           gap: 10px 12px;
-        }
-        .net-head {
-          grid-template-columns: 1fr;
-          padding: 26px 24px;
-          gap: 18px;
-        }
-      }
-      @media print {
-        .net-head {
-          background: var(--bg2);
-          color: var(--ink);
-        }
-        .net-head .k {
-          color: var(--gray);
-        }
-        .net-head .v {
-          color: var(--teal);
         }
       }
     </style>
@@ -234,20 +191,7 @@
           </div>
         </div>
 
-        <div class="net-head">
-          <div>
-            <span class="k">Gross</span>
-            <span class="v" id="o-gross">—</span>
-          </div>
-          <div>
-            <span class="k">Approximate tax</span>
-            <span class="v" id="o-tax">—</span>
-          </div>
-          <div>
-            <span class="k">Net — what you allocate</span>
-            <span class="v" id="o-net" style="color: #a8e88f">—</span>
-          </div>
-        </div>
+        <div id="metrics"></div>
         <p class="small muted" style="margin-top: 14px">
           A simplification: it applies one marginal rate to the whole amount and ignores any
           pre-tax arrangement, offsets, HELP repayments or the possibility that the bonus pushes you
@@ -336,6 +280,11 @@
         </div>
 
         <p class="small" id="split-note" style="margin-top: 14px"></p>
+
+        <div class="card" style="margin-top: 24px">
+          <div class="sub-h" style="margin-bottom: 20px">Your rule, as a picture</div>
+          <div id="split-donut"></div>
+        </div>
 
         <hr class="rule" />
 
@@ -462,6 +411,7 @@
 
     <script type="module">
       import { mountSheet, wirePrint, money, persistFields } from '../assets/sheet.js'
+      import { metricStrip, donut, TONE } from '../assets/widgets.js'
 
       mountSheet({ no: '06', kind: 'Planner' })
       wirePrint()
@@ -474,16 +424,41 @@
         const tax = gross * rate
         const net = gross - tax
 
-        el('o-gross').textContent = money(gross)
-        el('o-tax').textContent = money(tax)
-        el('o-net').textContent = money(net)
+        metricStrip(el('metrics'), [
+          { label: 'Gross', value: money(gross), note: 'The number that gets announced' },
+          { label: 'Approximate tax', value: money(tax), tone: 'warn', note: `At ${(rate * 100).toFixed(0)}% including the Medicare levy` },
+          { label: 'Net', value: money(net), tone: 'key', note: 'The only figure you can actually allocate' },
+          { label: 'Share that survives', value: gross > 0 ? Math.round((net / gross) * 100) + '%' : '—', note: 'Of the headline number' },
+        ])
 
         let pct = 0
+        const slices = []
+        const COLOURS = {
+          enjoy: TONE.ember,
+          reserve: TONE.tealSoft,
+          debt: TONE.tealDeep,
+          invest: TONE.green,
+          super: TONE.teal,
+        }
+        const LABELS = {
+          enjoy: 'Enjoy it',
+          reserve: 'Top up the reserve',
+          debt: 'Non-deductible debt',
+          invest: 'Accessible investments',
+          super: 'Superannuation',
+        }
         document.querySelectorAll('[data-split]').forEach((i) => {
           const k = i.dataset.split
           const p = Number(i.value) || 0
           pct += p
-          document.querySelector(`[data-amt="${k}"]`).textContent = money((net * p) / 100)
+          const amt = (net * p) / 100
+          document.querySelector(`[data-amt="${k}"]`).textContent = money(amt)
+          if (p > 0) slices.push({ label: LABELS[k], value: amt, color: COLOURS[k], display: money(amt) })
+        })
+
+        donut(el('split-donut'), slices.length ? slices : [{ label: 'Unallocated', value: 1, color: TONE.track, display: money(0) }], {
+          label: 'Net',
+          value: money(net),
         })
 
         el('o-pct').textContent = pct.toFixed(0) + '%'

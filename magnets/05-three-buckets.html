@@ -90,55 +90,6 @@
         font-variant-numeric: tabular-nums;
       }
 
-      /* Allocation bar */
-      .alloc {
-        display: flex;
-        height: 48px;
-        border-radius: var(--r-sm);
-        overflow: hidden;
-        background: var(--line);
-      }
-      .alloc div {
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        color: #fff;
-        font-family: 'JetBrains Mono', monospace;
-        font-size: 12.5px;
-        font-weight: 500;
-        transition: flex-grow var(--dur-reveal) var(--ease);
-        overflow: hidden;
-        white-space: nowrap;
-      }
-      .a-today {
-        background: var(--teal);
-      }
-      .a-freedom {
-        background: var(--green-600);
-      }
-      .a-retire {
-        background: var(--teal-900);
-      }
-      .alloc-key {
-        display: flex;
-        gap: 22px;
-        flex-wrap: wrap;
-        margin-top: 14px;
-        font-size: 13px;
-        color: var(--gray);
-      }
-      .alloc-key span {
-        display: inline-flex;
-        align-items: center;
-        gap: 8px;
-      }
-      .alloc-key i {
-        width: 11px;
-        height: 11px;
-        border-radius: 3px;
-        flex: none;
-      }
-
       .read {
         border-radius: var(--r-lg);
         padding: 26px 30px;
@@ -314,17 +265,8 @@
           </p>
         </div>
 
-        <div class="alloc" id="alloc">
-          <div class="a-today" id="a-today" style="flex-grow: 1"></div>
-          <div class="a-freedom" id="a-freedom" style="flex-grow: 1"></div>
-          <div class="a-retire" id="a-retire" style="flex-grow: 1"></div>
-        </div>
-        <div class="alloc-key">
-          <span><i style="background: var(--teal)"></i>Today</span>
-          <span><i style="background: var(--green-600)"></i>Freedom</span>
-          <span><i style="background: var(--teal-900)"></i>Retirement</span>
-          <span style="margin-left: auto" class="figure" id="a-total"></span>
-        </div>
+        <div id="metrics" style="margin-bottom: 26px"></div>
+        <div id="alloc"></div>
 
         <div class="read" id="read"></div>
 
@@ -369,6 +311,7 @@
 
     <script type="module">
       import { mountSheet, wirePrint, money, persistFields } from '../assets/sheet.js'
+      import { metricStrip, breakdownBar, TONE } from '../assets/widgets.js'
 
       mountSheet({ no: '05', kind: 'Worksheet' })
       wirePrint()
@@ -383,17 +326,20 @@
         const total = t + f + r
 
         const pct = (n) => (total > 0 ? n / total : 0)
-        ;[
-          ['a-today', t],
-          ['a-freedom', f],
-          ['a-retire', r],
-        ].forEach(([id, n]) => {
-          const node = el(id)
-          node.style.flexGrow = String(total > 0 ? Math.max(n, 0.0001) : 1)
-          node.textContent = total > 0 && pct(n) > 0.07 ? (pct(n) * 100).toFixed(0) + '%' : ''
-        })
 
-        el('a-total').textContent = total > 0 ? 'Total mapped · ' + money(total) : ''
+        metricStrip(el('metrics'), [
+          { label: 'Today · 0–3 years', value: money(t), note: 'Liquidity and lifestyle' },
+          { label: 'Freedom · before 60', value: money(f), tone: total > 0 && pct(f) < 0.2 ? 'warn' : undefined,
+            note: 'The only bucket that funds an earlier exit' },
+          { label: 'Retirement · 60+', value: money(r), note: 'Super and long-term capital' },
+          { label: 'Total mapped', value: money(total), tone: 'key', note: total > 0 ? 'Across all three timeframes' : 'Add your figures above' },
+        ])
+
+        breakdownBar(el('alloc'), [
+          { label: 'Today — liquidity and lifestyle', value: t, color: TONE.teal, display: money(t) },
+          { label: 'Freedom — reachable before 60', value: f, color: TONE.green, display: money(f) },
+          { label: 'Retirement — after 60', value: r, color: TONE.tealDeep, display: money(r) },
+        ])
 
         const read = el('read')
         if (total === 0) {

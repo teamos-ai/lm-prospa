@@ -2101,3 +2101,589 @@ input[type='range']::-moz-range-thumb {
     padding-inline: 10pt;
   }
 }
+
+/* ============================================================
+   NUMBER & INDICATOR WIDGETS
+   Behaviour in assets/widgets.js. Ported from the Prospa
+   calculator bento and the Health OS widget library.
+   ============================================================ */
+
+/* ---------- Score gauge ---------- */
+.w-gaugebox {
+  width: 100%;
+  max-width: 280px;
+  margin: 0 auto;
+}
+.w-gauge {
+  position: relative;
+  width: 100%;
+}
+.w-gauge svg {
+  display: block;
+  width: 100%;
+  overflow: visible;
+}
+.w-gauge-face {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 14px;
+  text-align: center;
+}
+.w-gauge-n {
+  display: block;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 48px;
+  font-weight: 500;
+  letter-spacing: -0.04em;
+  line-height: 1;
+  color: var(--ink);
+  font-variant-numeric: tabular-nums;
+}
+.w-gauge-u {
+  display: block;
+  font-size: 10.5px;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--gray);
+  margin-top: 6px;
+}
+.w-gauge-cap {
+  text-align: center;
+  font-size: 12.5px;
+  line-height: 1.5;
+  color: var(--gray);
+  margin-top: 14px;
+}
+.w-gauge-ticked .w-gauge-n {
+  font-size: 38px;
+}
+
+/* On a dark panel */
+.on-dark .w-gauge-n {
+  color: #fff;
+}
+.on-dark .w-gauge-u,
+.on-dark .w-gauge-cap {
+  color: #9fbdc0;
+}
+
+/* ---------- Metric strip ---------- */
+.w-metrics {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 12px;
+}
+.w-metric {
+  background: #fff;
+  border: 1px solid var(--line);
+  border-radius: var(--r-md);
+  padding: 18px 20px;
+  min-width: 0;
+}
+.w-metric-k {
+  display: block;
+  font-size: 10.5px;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--gray);
+}
+.w-metric-v {
+  display: block;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 23px;
+  font-weight: 500;
+  letter-spacing: -0.03em;
+  color: var(--ink);
+  margin-top: 9px;
+  font-variant-numeric: tabular-nums;
+  line-height: 1.1;
+}
+.w-metric-n {
+  display: block;
+  font-size: 12px;
+  color: var(--gray);
+  margin-top: 7px;
+  line-height: 1.4;
+}
+.w-metric-good {
+  background: var(--bg1);
+  border-color: transparent;
+}
+.w-metric-good .w-metric-v {
+  color: var(--green-600);
+}
+.w-metric-warn {
+  background: var(--ember-soft);
+  border-color: transparent;
+}
+.w-metric-warn .w-metric-v {
+  color: var(--ember-strong);
+}
+.w-metric-key {
+  background: var(--teal);
+  border-color: transparent;
+}
+.w-metric-key .w-metric-k {
+  color: #9fd8c4;
+}
+.w-metric-key .w-metric-v {
+  color: #fff;
+}
+.w-metric-key .w-metric-n {
+  color: #cfe0e2;
+}
+
+/* ---------- Breakdown bar ---------- */
+.w-breakdown-bar {
+  display: flex;
+  height: 20px;
+  border-radius: var(--r-sm);
+  overflow: hidden;
+  background: var(--line);
+}
+.w-breakdown-bar span {
+  display: block;
+  height: 100%;
+  transform: scaleX(0);
+  transform-origin: left center;
+}
+.w-breakdown-key {
+  list-style: none;
+  margin: 16px 0 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+}
+.w-breakdown-key li {
+  display: flex;
+  align-items: center;
+  gap: 11px;
+  padding: 9px 0;
+  border-bottom: 1px solid var(--line-2);
+  font-size: 14.5px;
+  color: var(--slate);
+}
+.w-breakdown-key li:last-child {
+  border-bottom: none;
+}
+.w-breakdown-key i {
+  width: 9px;
+  height: 9px;
+  border-radius: 3px;
+  flex: none;
+}
+.w-breakdown-key span {
+  flex: 1;
+  min-width: 0;
+}
+.w-breakdown-key em {
+  font-style: normal;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 13.5px;
+  color: var(--ink);
+  font-variant-numeric: tabular-nums;
+}
+.w-breakdown-key b {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 13px;
+  color: var(--gray);
+  min-width: 42px;
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+
+/* ---------- Goal progress ---------- */
+.w-goal-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+}
+.w-goal-k {
+  font-size: 10.5px;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--gray);
+}
+.w-goal-flag {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: var(--bg1);
+  color: var(--green-600);
+  font-size: 10.5px;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  padding: 5px 11px;
+  border-radius: var(--r-pill);
+}
+.w-goal-flag svg {
+  width: 12px;
+  height: 12px;
+}
+.w-goal-v {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 22px;
+  letter-spacing: -0.03em;
+  margin: 14px 0;
+  font-variant-numeric: tabular-nums;
+}
+.w-goal-v b {
+  font-weight: 500;
+  color: var(--ink);
+}
+.w-goal-v span {
+  color: var(--gray);
+  font-size: 17px;
+}
+.w-goal-track {
+  height: 12px;
+  border-radius: 6px;
+  background: var(--line);
+  overflow: hidden;
+}
+.w-goal-track i {
+  display: block;
+  height: 100%;
+  border-radius: 6px;
+  background: linear-gradient(90deg, var(--teal), var(--green));
+  transform: scaleX(0);
+  transform-origin: left center;
+}
+.w-goal-axis {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 9px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10.5px;
+  color: var(--gray);
+}
+
+/* ---------- Progress rows ---------- */
+.w-row {
+  padding: 13px 0;
+  border-bottom: 1px solid var(--line-2);
+}
+.w-row:last-child {
+  border-bottom: none;
+}
+.w-row-top {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 14px;
+  margin-bottom: 9px;
+}
+.w-row-top span {
+  font-size: 14.5px;
+  color: var(--ink);
+  font-weight: 600;
+}
+.w-row-top b {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--teal);
+  white-space: nowrap;
+  font-variant-numeric: tabular-nums;
+}
+.w-row-track {
+  height: 7px;
+  border-radius: 4px;
+  background: var(--line);
+  overflow: hidden;
+}
+.w-row-track i {
+  display: block;
+  height: 100%;
+  border-radius: 4px;
+  transform: scaleX(0);
+  transform-origin: left center;
+}
+.w-row-note {
+  display: block;
+  font-size: 12.5px;
+  color: var(--gray);
+  margin-top: 8px;
+}
+
+/* ---------- Comparison ---------- */
+.w-compare-row {
+  display: flex;
+  align-items: stretch;
+}
+.w-compare-side {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+  min-width: 0;
+}
+.w-compare-right {
+  align-items: flex-end;
+  text-align: right;
+}
+.w-compare-k {
+  font-size: 10.5px;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--gray);
+}
+.w-compare-v {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 26px;
+  font-weight: 500;
+  letter-spacing: -0.03em;
+  color: var(--ink);
+  font-variant-numeric: tabular-nums;
+}
+.w-compare-muted {
+  color: var(--gray);
+}
+.w-compare-rule {
+  position: relative;
+  width: 1px;
+  background: var(--line);
+  margin: 0 24px;
+  flex: none;
+}
+.w-compare-rule span {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  background: #fff;
+  padding: 5px 2px;
+  font-size: 11px;
+  color: var(--gray);
+}
+.w-compare-note {
+  margin-top: 16px;
+  font-size: 13.5px;
+  color: var(--slate);
+  text-align: center;
+}
+
+/* ---------- Donut ---------- */
+.w-donut-wrap {
+  display: flex;
+  align-items: center;
+  gap: 24px;
+  flex-wrap: wrap;
+}
+.w-donut {
+  position: relative;
+  flex: none;
+}
+.w-donut-face {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 3px;
+}
+.w-donut-face span {
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--gray);
+}
+.w-donut-face b {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 19px;
+  font-weight: 500;
+  color: var(--ink);
+  letter-spacing: -0.02em;
+}
+.w-donut-key {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  flex: 1;
+  min-width: 170px;
+}
+.w-donut-key li {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 9px 0;
+  border-bottom: 1px solid var(--line-2);
+  font-size: 14px;
+  color: var(--slate);
+}
+.w-donut-key li:last-child {
+  border-bottom: none;
+}
+.w-donut-key i {
+  width: 9px;
+  height: 9px;
+  border-radius: 3px;
+  flex: none;
+}
+.w-donut-key span {
+  flex: 1;
+}
+.w-donut-key b {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 13.5px;
+  color: var(--ink);
+  font-weight: 500;
+  font-variant-numeric: tabular-nums;
+}
+
+/* ---------- Stepper ---------- */
+.w-stepper {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+.w-step {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex: 1;
+  min-width: 140px;
+  padding: 12px 16px;
+  border-radius: var(--r-sm);
+  background: var(--bg2);
+  transition: background var(--dur-base) var(--ease);
+}
+.w-step-mark {
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex: none;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 12px;
+  background: #fff;
+  border: 1.5px solid var(--line);
+  color: var(--gray);
+  transition: background var(--dur-base) var(--ease), color var(--dur-base) var(--ease),
+    border-color var(--dur-base) var(--ease);
+}
+.w-step-mark svg {
+  width: 13px;
+  height: 13px;
+}
+.w-step-label {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--gray);
+  line-height: 1.3;
+}
+.w-step-done .w-step-mark {
+  background: var(--green);
+  border-color: var(--green);
+  color: #fff;
+}
+.w-step-done .w-step-label {
+  color: var(--slate);
+}
+.w-step-now {
+  background: var(--teal);
+}
+.w-step-now .w-step-mark {
+  background: #fff;
+  border-color: #fff;
+  color: var(--teal);
+}
+.w-step-now .w-step-label {
+  color: #fff;
+}
+
+/* ---------- Projection chart ---------- */
+.w-chart svg {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+.w-chart-ax {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px;
+  fill: #616773;
+}
+.w-chart-target {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10.5px;
+  fill: #a8481a;
+}
+.w-chart-end {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 12px;
+  fill: #135f69;
+  font-weight: 500;
+}
+
+@media (max-width: 900px) {
+  .w-metrics {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+@media (max-width: 560px) {
+  .w-metrics {
+    grid-template-columns: 1fr;
+  }
+  .w-compare-rule {
+    margin: 0 14px;
+  }
+  .w-compare-v {
+    font-size: 21px;
+  }
+  .w-gauge-n {
+    font-size: 40px;
+  }
+  .w-step {
+    min-width: 0;
+  }
+  .w-step-label {
+    font-size: 12px;
+  }
+}
+
+@media print {
+  .w-gauge-arc,
+  .w-breakdown-bar span,
+  .w-goal-track i,
+  .w-row-track i,
+  .w-chart-line {
+    transition: none !important;
+  }
+  .w-breakdown-bar span,
+  .w-goal-track i,
+  .w-row-track i {
+    transform: scaleX(1) !important;
+  }
+  .w-metric,
+  .w-donut-wrap,
+  .w-breakdown,
+  .w-goal,
+  .w-chart {
+    break-inside: avoid;
+  }
+  .w-metric-key {
+    background: var(--bg2);
+  }
+  .w-metric-key .w-metric-k,
+  .w-metric-key .w-metric-n {
+    color: var(--gray);
+  }
+  .w-metric-key .w-metric-v {
+    color: var(--teal);
+  }
+}

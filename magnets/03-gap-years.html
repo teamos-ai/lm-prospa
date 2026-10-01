@@ -313,17 +313,7 @@
           <p id="bs-p"></p>
         </div>
 
-        <div class="grid g3" style="margin-top: 22px">
-          <div class="card card-tint">
-            <div class="stat"><span class="k">Gap years</span><span class="figure fig-lg" id="o-years">—</span></div>
-          </div>
-          <div class="card card-tint">
-            <div class="stat"><span class="k">Net annual need</span><span class="figure fig-lg" id="o-need">—</span></div>
-          </div>
-          <div class="card card-tint">
-            <div class="stat"><span class="k">Per year, after other income</span><span class="figure fig-lg" id="o-rate">—</span></div>
-          </div>
-        </div>
+        <div id="metrics" style="margin-top: 22px"></div>
 
         <p class="small muted" style="margin-top: 16px">
           The bridge figure above is the simple sum of the net annual need across the gap years, in
@@ -382,6 +372,14 @@
             <b>Available to bridge the gap</b>
             <div class="t" id="o-avail">$0</div>
           </div>
+        </div>
+
+        <div class="card" id="cover-card" style="margin-top: 24px" hidden>
+          <div id="cover"></div>
+        </div>
+        <div class="card" id="mix-card" style="margin-top: 18px" hidden>
+          <div class="sub-h" style="margin-bottom: 18px">Where that capital would come from</div>
+          <div id="mix"></div>
         </div>
 
         <div class="verdict short" id="verdict"></div>
@@ -447,6 +445,7 @@
 
     <script type="module">
       import { mountSheet, wirePrint, money, persistFields } from '../assets/sheet.js'
+      import { metricStrip, goalProgress, breakdownBar, moneyShort, TONE } from '../assets/widgets.js'
 
       mountSheet({ no: '03', kind: 'Calculator' })
       wirePrint()
@@ -483,9 +482,13 @@
         el('seg-gap').style.display = years > 0 ? 'flex' : 'none'
         el('ax-gap').style.display = years > 0 ? 'block' : 'none'
 
-        el('o-years').textContent = years
-        el('o-need').textContent = money(spend)
-        el('o-rate').textContent = money(net)
+        metricStrip(el('metrics'), [
+          { label: 'Gap years', value: String(years), tone: years > 0 ? 'warn' : 'good',
+            note: years > 0 ? `Between ${target} and preservation age 60` : 'Your target is at or after preservation age' },
+          { label: 'Annual lifestyle', value: money(spend), note: 'What the year has to cost' },
+          { label: 'Other income in those years', value: money(other), note: other > 0 ? 'Part-time work, rent, a business interest' : 'Nothing assumed' },
+          { label: 'Net annual need', value: money(net), tone: 'key', note: 'What capital outside super has to provide' },
+        ])
 
         if (years === 0) {
           el('bs-k').textContent = 'No bridge required'
@@ -510,6 +513,42 @@
           0
         )
         el('o-avail').textContent = money(avail)
+
+        // Widgets: how much of the bridge is covered, and what would cover it.
+        const coverCard = el('cover-card')
+        const mixCard = el('mix-card')
+        if (years > 0 && avail > 0) {
+          coverCard.hidden = false
+          goalProgress(el('cover'), {
+            label: 'Capital available against the bridge',
+            current: avail,
+            target: bridge,
+            onTrack: avail >= bridge,
+            fmt: moneyShort,
+          })
+          const srcs = [
+            ['src-cash', 'Cash and term deposits', TONE.tealDeep],
+            ['src-inv', 'Investments outside super', TONE.teal],
+            ['src-prop', 'Property equity released', TONE.tealSoft],
+            ['src-struct', 'Bonds, company or trust', TONE.green],
+            ['src-biz', 'Business or equity event', TONE.greenDeep],
+          ]
+            .map(([k, label, color]) => ({
+              label,
+              value: Number(document.querySelector(`[data-persist="${k}"]`)?.value) || 0,
+              color,
+            }))
+            .filter((x) => x.value > 0)
+          if (srcs.length > 1) {
+            mixCard.hidden = false
+            breakdownBar(el('mix'), srcs)
+          } else {
+            mixCard.hidden = true
+          }
+        } else {
+          coverCard.hidden = true
+          mixCard.hidden = true
+        }
 
         const v = el('verdict')
         if (years === 0) {

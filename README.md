@@ -19,7 +19,7 @@ used rather than filed and forgotten.
 | # | Tool | Type | Agenda item |
 |---|---|---|---|
 | 01 | **The Executive Wealth Score** | Scored assessment | 8 · Your Executive Financial Health Check |
-| 02 | Your Financial Freedom Number | Calculator | 5 · Making Work Optional |
+| 02 | **Your Freedom Score** | Guided calculator | 5 · Making Work Optional |
 | 03 | The Gap Years Map | Calculator | 5 · Making Work Optional |
 | 04 | The Next Dollar Decision Map | Decision guide | 3 · Building Wealth Outside Super |
 | 05 | The Three Wealth Buckets | Worksheet | 3 · Building Wealth Outside Super |
@@ -38,7 +38,7 @@ Four pieces of attendee collateral were supplied. All four survive, substantiall
 | Supplied | Became | What changed |
 |---|---|---|
 | Executive Financial Health Check (PDF) | **01 Wealth Score** | The same six sections and the same Red/Amber/Green key, now weighted, scored out of 100, with a pattern engine reading the relationships between areas. A static tick-box became a diagnostic. |
-| Financial Freedom Number Calculator (XLSX) | **02 Freedom Number** | Every formula ported exactly — the default scenario reproduces the workbook's $4,344,894 target and $1,417,247 projection to the dollar. Added live sliders, a projection chart against the target, and a sensitivity table showing which lever actually closes the gap. |
+| Financial Freedom Number Calculator (XLSX) | **02 Freedom Score** | Every formula ported exactly — the default scenario still reproduces the workbook's $4,344,894 target and $1,417,247 projection to the dollar. Rebuilt as a four-step walk-through ending in a score out of 100, with a gauge, a metric strip, a funding breakdown, a projection chart and two figures the spreadsheet never surfaced: the freedom age and the required annual contribution. |
 | Three Wealth Buckets Worksheet (PDF) | **05 Three Buckets** | Same three buckets, same prompts. Added live allocation visual and a read of the shape, which is where the insight was always hiding. |
 | 2-Minute Financial Freedom Check-In (PDF) | *informs 01 and the webinar* | Kept as the pre-session instrument it was designed to be. Its proposed "Wealth Score" follow-up is what 01 now implements — properly specified. See `SCORING.md`. |
 
@@ -48,6 +48,38 @@ actually ask; the bonus playbook (06) addresses lumpy executive income; the chea
 structures comparison (08) and estate checklist (10) are the reference documents this audience
 keeps and shares; the swipe file (11) is what finally makes the rest happen, because almost nothing
 moves until a conversation does; and the guide (12) is the session itself, as something to read.
+
+---
+
+## The Freedom Score — what the spreadsheet became
+
+The supplied workbook produced six figures in a grid. Nobody looks at a grid and feels anything.
+Magnet 02 now walks a reader through four questions and ends on a dashboard, and **every original
+formula is untouched**:
+
+```
+years      = max(target − age, 0)
+futureNeed = lifestyle × (1 + inflation)^years
+capital    = futureNeed ÷ withdrawalRate
+projected  = current × (1+r)^years + annual × (((1+r)^years − 1) ÷ r)      [annual × years when r = 0]
+gap        = projected − capital
+progress   = projected ÷ capital
+```
+
+**The Freedom Score is the workbook's own "progress toward capital target"**, capped at 100 — so
+the headline number is not a new invention, it is the sheet's last row given a face.
+
+Three figures are derived from those same primitives and are the reason the tool lands:
+
+| Figure | How it is derived | Why it matters |
+|---|---|---|
+| **Funding split** | `current` + `annual × years` + `projected − current − (annual × years)` | The three parts sum exactly to the projection, including when the return is zero. It shows how much of the outcome is growth rather than contribution — which is the part nobody controls. |
+| **Required annual** | `(capital − current × (1+r)^years) × r ÷ ((1+r)^years − 1)` | What you would have to invest each year to land exactly on target at the age you chose. Fed back into the model it produces a score of exactly 100, which is how it was verified. |
+| **Freedom age** | the first age at which `grow(n) ≥ lifestyle × (1+i)^n ÷ w` | The age the trajectory actually meets the target — remembering the target keeps inflating too. On the workbook's own defaults this is **82**, against a chosen age of 55. It is the number that starts the conversation. |
+
+Edge cases are handled rather than hidden: a zero return gives a funding split with no growth
+component, a target age equal to today reports that there are no years left to contribute over, and
+a trajectory that never catches an inflating target says "beyond 95" and explains why.
 
 ---
 
@@ -79,6 +111,31 @@ second page. Used on **12**.
 > Both effects are behavioural ports of the Health OS design system's `SwipeFiles.tsx` and
 > `Ebook.tsx`, rebuilt without React, framer-motion or react-pageflip so that nothing here needs a
 > build step.
+
+---
+
+## One widget vocabulary for every number
+
+[`assets/widgets.js`](assets/widgets.js) is a plain-JavaScript port of the number and indicator
+widgets from both design systems — the Prospa calculator bento (donut, bars, sparkline, hero tile)
+and the Health OS widget library (ScoreGauge, TickedGauge, MetricStrip, BreakdownBar, GoalProgress,
+ProgressRows, Comparison, Stepper).
+
+| Widget | What it is for | Used on |
+|---|---|---|
+| `scoreGauge` | The headline score, as a 180° arc | 02 |
+| `metricStrip` | Four headline figures in one row, with tone for good / warn / key | 02, 03, 05, 06 |
+| `breakdownBar` | One stacked bar plus a legend carrying each share | 02, 03, 05 |
+| `goalProgress` | Current against target, with an axis | 02, 03 |
+| `progressRows` | Several measures on one scale — the sensitivity levers | 02 |
+| `donut` | A ring with a centre label and legend | 06 |
+| `projection` | A line against a target, with the shortfall shaded | 02 |
+| `stepper` | The walk-through's spine | 02 |
+| `tickedGauge`, `comparison` | Secondary indicators, available to any sheet | — |
+
+Every widget takes real data, animates its measurement in once via a single shared
+`IntersectionObserver`, and settles straight to its final state under reduced motion. Each one also
+has a print rule, so a sheet exports with its bars and arcs at full value rather than mid-animation.
 
 ---
 

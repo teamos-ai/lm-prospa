@@ -149,6 +149,26 @@ Used on: **every sheet**, from one source in `assets/sheet.js`
 | Website | prospafinancial.com.au | Same |
 | Positioning / tagline | People. Advice. Progress. / Plan. Grow. Prosper. | Same |
 
+## 8a. The Freedom Score (sheet 02)
+
+No new external facts. The score and every figure around it are arithmetic on the user's own
+entries, using the formulas from the Prospa workbook supplied by Audrey Li on 2026-09-29 — which the
+default scenario still reproduces to the dollar ($4,344,894 capital target, $1,417,246.55
+projection).
+
+| Derived figure | Basis | Status |
+|---|---|---|
+| Freedom Score | The workbook's own `progress = projected ÷ capital`, capped at 100 | Restatement of a supplied formula |
+| Funding split | `current`, `annual × years`, and the remainder as growth | Arithmetic identity — the three sum to `projected` |
+| Required annual | Solving the workbook's future-value formula for the contribution | Arithmetic; verified by feeding it back for a score of exactly 100 |
+| Freedom age | First `n` where `grow(n) ≥ lifestyle × (1+i)^n ÷ w` | Arithmetic on the same primitives |
+| Band names | Prospa Financial's educational framing of score ranges | Editorial, not a standard — stated as such |
+
+The sheet repeats one registered fact: preservation age 60 from 1 July 2024 (§2), shown when the
+chosen age falls before 60. The limitations block states plainly that the freedom age and required
+annual move with the assumptions, that the withdrawal rate is a planning assumption rather than a
+recommendation, and that a real portfolio does not deliver the same return every year.
+
 ## 8b. The two newest sheets
 
 **11 Conversation Swipe File** asserts no figures at all. Every one of its seven templates is a
