@@ -3,10 +3,10 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>The Estate &amp; Beneficiary Checklist — Prospa Financial</title>
+    <title>The Estate Checklist — Prospa Financial</title>
     <meta
       name="description"
-      content="Your will does not control your super, and may not control your property. A checklist of what actually decides where your assets land."
+      content="Four documents decide where your money goes, and your will is only one of them. A checklist of what controls each asset, and what to confirm is still current."
     />
     <link rel="icon" type="image/svg+xml" href="../assets/favicon.svg" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -17,163 +17,538 @@
     />
     <link rel="stylesheet" href="../assets/prospa.css" />
     <style>
-      .myth {
+      /* ==========================================================
+         SHEET 10 — THE ESTATE CHECKLIST
+         Bespoke to this sheet only. Three local patterns:
+
+           .route  the asset → governing document map
+           .nom    the four super nominations, as cards not a table
+           .stage  a checklist group with its own completion
+
+         Everything else is prospa.css. No raw brand colour below —
+         only tokens — and the warm accent (--ember) is used once,
+         on the one thing here that expires without telling you.
+         ========================================================== */
+
+      /* ---------- What decides where each thing goes ---------- */
+
+      .routes {
+        list-style: none;
+        margin: 0;
+        padding: 0;
         display: grid;
-        grid-template-columns: 1fr 1fr;
-        gap: 0;
-        border-radius: var(--r-lg);
-        overflow: hidden;
+        gap: 14px;
+      }
+
+      .route {
+        background: var(--white);
         border: 1px solid var(--line);
-        margin-bottom: 16px;
+        border-radius: var(--r-lg);
+        padding: 22px 26px 20px;
+        display: grid;
+        grid-template-columns: minmax(0, 1fr) 30px minmax(0, 1.2fr);
+        column-gap: 16px;
+        align-items: center;
       }
-      .myth > div {
-        padding: 24px 26px;
-      }
-      .myth .assume {
-        background: var(--bg2);
-      }
-      .myth .actual {
-        background: #fff;
-        border-left: 1px solid var(--line);
-      }
-      .myth .tag {
-        font-family: 'JetBrains Mono', monospace;
-        font-size: 10.5px;
-        letter-spacing: 0.13em;
-        text-transform: uppercase;
+
+      .route-k {
         display: block;
-        margin-bottom: 10px;
-      }
-      .myth .assume .tag {
+        font-family: 'JetBrains Mono', monospace;
+        font-size: 9.5px;
+        letter-spacing: 0.15em;
+        text-transform: uppercase;
         color: var(--gray);
+        margin-bottom: 7px;
       }
-      .myth .actual .tag {
-        color: var(--ember-strong);
+
+      .route-from b {
+        display: block;
+        font-size: 16.5px;
+        font-weight: 600;
+        line-height: 1.3;
+        color: var(--ink);
       }
-      .myth p {
-        font-size: 15px;
-        color: var(--slate);
-        line-height: 1.55;
+
+      .route-arrow {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: var(--teal);
       }
-      .myth .assume p {
+
+      .route-arrow svg {
+        display: block;
+        width: 21px;
+        height: 21px;
+      }
+
+      .route-to {
+        background: var(--bg1);
+        border-radius: var(--r-md);
+        padding: 14px 18px;
+      }
+
+      .route-to .route-k {
+        color: var(--teal);
+      }
+
+      .route-to b {
+        display: block;
+        font-size: 15.5px;
+        font-weight: 600;
+        line-height: 1.3;
+        color: var(--ink);
+      }
+
+      .route-note {
+        grid-column: 1 / -1;
+        margin-top: 18px;
+        padding-top: 15px;
+        border-top: 1px solid var(--line);
+      }
+
+      .route-note p {
+        font-size: 14px;
+        line-height: 1.6;
         color: var(--gray);
       }
 
-      .block {
+      .route-assume {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: baseline;
+        gap: 10px;
+        margin-top: 11px;
+      }
+
+      .route-assume span {
+        flex: none;
+        font-family: 'JetBrains Mono', monospace;
+        font-size: 9.5px;
+        letter-spacing: 0.14em;
+        text-transform: uppercase;
+        color: var(--teal);
+        background: var(--bg2);
+        border-radius: var(--r-pill);
+        padding: 4px 10px;
+      }
+
+      .route-assume em {
+        font-style: normal;
+        font-size: 13.5px;
+        color: var(--slate);
+      }
+
+      /* ---------- The four kinds of nomination ---------- */
+
+      .noms {
+        list-style: none;
+        margin: 0;
+        padding: 0;
+        display: grid;
+        gap: 14px;
+      }
+
+      .nom {
+        background: var(--white);
+        border: 1px solid var(--line);
+        border-radius: var(--r-lg);
+        padding: 22px 26px;
+      }
+
+      .nom-head {
+        display: flex;
+        align-items: center;
+        flex-wrap: wrap;
+        gap: 12px;
+        margin-bottom: 10px;
+      }
+
+      .nom-head h3 {
+        font-size: 17px;
+      }
+
+      .nom p {
+        font-size: 14.5px;
+        line-height: 1.6;
+        color: var(--gray);
+      }
+
+      .badge-quiet {
+        background: var(--bg2);
+        color: var(--gray);
+      }
+
+      /* The one warm accent on this sheet. A lapsing nomination is the
+         only item here that stops working on its own, in silence. */
+      .watch {
+        margin-top: 15px;
+        padding: 13px 17px;
+        border-left: 3px solid var(--ember);
+        border-radius: 0 var(--r-sm) var(--r-sm) 0;
+        background: var(--ember-soft);
+        font-size: 14px;
+        line-height: 1.6;
+        color: var(--slate);
+      }
+
+      .watch b {
+        color: var(--ink);
+      }
+
+      /* ---------- Who receives it ---------- */
+
+      .recip h3 {
+        font-size: 19px;
+        margin: 9px 0 7px;
+      }
+
+      .recip-def {
+        font-size: 13.5px;
+        line-height: 1.5;
+        color: var(--gray);
+      }
+
+      .recip-rows {
+        margin: 20px 0 0;
+      }
+
+      .recip-rows > div {
+        padding: 15px 0;
+        border-top: 1px solid var(--line);
+      }
+
+      .recip-rows > div:last-child {
+        padding-bottom: 0;
+      }
+
+      .recip-rows dt {
+        font-size: 11.5px;
+        font-weight: 600;
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+        color: var(--gray);
+      }
+
+      .recip-rows dd {
+        margin: 7px 0 0;
+      }
+
+      .recip-rows dd b {
+        display: block;
+        font-family: 'JetBrains Mono', monospace;
+        font-size: 21px;
+        font-weight: 500;
+        letter-spacing: -0.03em;
+        color: var(--ink);
+        font-variant-numeric: tabular-nums;
+      }
+
+      .recip-rows dd small {
+        display: block;
+        margin-top: 6px;
+        font-size: 12.5px;
+        line-height: 1.5;
+        color: var(--gray);
+      }
+
+      /* ---------- Progress ---------- */
+
+      .prog {
+        display: grid;
+        grid-template-columns: 216px minmax(0, 1fr);
+        gap: 34px;
+        align-items: center;
+        background: var(--bg2);
+        border-radius: var(--r-xl);
+        padding: 32px 38px;
+        margin-bottom: 24px;
+        transition: background var(--dur-reveal) var(--ease);
+      }
+
+      .prog.is-done {
+        background: var(--bg1);
+      }
+
+      .prog-top {
+        display: flex;
+        align-items: center;
+        flex-wrap: wrap;
+        gap: 12px;
+      }
+
+      .prog-k {
+        font-size: 11.5px;
+        font-weight: 600;
+        letter-spacing: 0.14em;
+        text-transform: uppercase;
+        color: var(--gray);
+      }
+
+      .prog-flag {
+        display: none;
+        align-items: center;
+        gap: 7px;
+        background: var(--white);
+        color: var(--green-600);
+        font-size: 10.5px;
+        font-weight: 600;
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+        padding: 5px 12px;
+        border-radius: var(--r-pill);
+      }
+
+      .prog.is-done .prog-flag {
+        display: inline-flex;
+      }
+
+      .prog-flag svg {
+        width: 12px;
+        height: 12px;
+      }
+
+      .prog-note {
+        margin-top: 11px;
+        font-size: 14.5px;
+        line-height: 1.6;
+        color: var(--gray);
+        max-width: 50ch;
+      }
+
+      .prog-pips {
+        list-style: none;
+        margin: 18px 0 0;
+        padding: 0;
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+      }
+
+      .prog-pip {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        background: var(--white);
+        border: 1px solid var(--line);
+        border-radius: var(--r-pill);
+        padding: 5px 13px 5px 9px;
+        font-family: 'JetBrains Mono', monospace;
+        font-size: 10.5px;
+        letter-spacing: 0.07em;
+        text-transform: uppercase;
+        color: var(--gray);
+        transition: color var(--dur-base) var(--ease);
+      }
+
+      .prog-pip i {
+        flex: none;
+        width: 7px;
+        height: 7px;
+        border-radius: 50%;
+        background: var(--line);
+        transition: background var(--dur-base) var(--ease);
+      }
+
+      .prog-pip.on {
+        color: var(--green-600);
+      }
+
+      .prog-pip.on i {
+        background: var(--green);
+      }
+
+      /* ---------- Checklist stages ---------- */
+
+      .stage {
+        background: var(--white);
         border: 1px solid var(--line);
         border-radius: var(--r-lg);
         overflow: hidden;
-        margin-bottom: 20px;
+        margin-bottom: 18px;
       }
-      .block-head {
+
+      .stage-head {
+        display: grid;
+        grid-template-columns: auto minmax(0, 1fr) auto;
+        gap: 16px;
+        align-items: center;
         padding: 20px 26px;
         background: var(--bg2);
+        border-bottom: 1px solid var(--line);
+        transition: background var(--dur-reveal) var(--ease);
+      }
+
+      .stage.is-done .stage-head {
+        background: var(--bg1);
+      }
+
+      .stage-id h3 {
+        font-size: 17.5px;
+      }
+
+      .stage-id p {
+        margin-top: 4px;
+        font-size: 13px;
+        line-height: 1.5;
+        color: var(--gray);
+      }
+
+      .stage-prog {
         display: flex;
         align-items: center;
-        gap: 14px;
-        border-bottom: 1px solid var(--line);
+        gap: 12px;
       }
-      .block-head h3 {
-        font-size: 18px;
+
+      .stage-track {
+        flex: none;
+        width: 82px;
+        height: 6px;
+        border-radius: 3px;
+        background: var(--line);
+        overflow: hidden;
       }
-      .block-head .cnt {
-        margin-left: auto;
+
+      .stage-track i {
+        display: block;
+        height: 100%;
+        border-radius: 3px;
+        background: var(--teal);
+        transform: scaleX(0);
+        transform-origin: left center;
+        transition: transform var(--dur-reveal) var(--ease), background var(--dur-base) var(--ease);
+      }
+
+      .stage.is-done .stage-track i {
+        background: var(--green);
+      }
+
+      .stage-cnt {
         font-family: 'JetBrains Mono', monospace;
         font-size: 12px;
         color: var(--teal);
+        font-variant-numeric: tabular-nums;
         white-space: nowrap;
       }
-      .block-body {
-        padding: 10px 26px 20px;
+
+      .stage.is-done .stage-cnt {
+        color: var(--green-600);
       }
+
+      .stage-body {
+        padding: 8px 26px 18px;
+      }
+
       .check .sub {
-        display: block;
         font-size: 13px;
         color: var(--gray);
         margin-top: 4px;
       }
 
-      .nom-tbl td b {
-        color: var(--ink);
+      /* ---------- Responsive ---------- */
+
+      @media (max-width: 680px) {
+        .route {
+          grid-template-columns: minmax(0, 1fr);
+          row-gap: 12px;
+          padding: 20px 20px 18px;
+        }
+        .route-arrow {
+          justify-content: flex-start;
+        }
+        .route-arrow svg {
+          transform: rotate(90deg);
+        }
+        .nom {
+          padding: 20px 20px;
+        }
+        .prog {
+          grid-template-columns: minmax(0, 1fr);
+          gap: 22px;
+          padding: 26px 22px;
+        }
+        /* Stacked, the gauge at its full width dominates the panel. */
+        .prog .w-gaugebox {
+          max-width: 206px;
+        }
       }
 
-      .progress-wrap {
-        background: var(--teal);
-        border-radius: var(--r-xl);
-        padding: 34px 40px;
-        color: #fff;
-      }
-      .progress-wrap .k {
-        font-size: 11.5px;
-        font-weight: 600;
-        letter-spacing: 0.14em;
-        text-transform: uppercase;
-        color: #9fd8c4;
-        display: block;
-        margin-bottom: 10px;
-      }
-      .progress-wrap .big {
-        font-family: 'JetBrains Mono', monospace;
-        font-size: 40px;
-        font-weight: 500;
-        letter-spacing: -0.04em;
-        line-height: 1;
-        font-variant-numeric: tabular-nums;
-      }
-      .progress-wrap .track {
-        height: 8px;
-        border-radius: 4px;
-        background: rgba(255, 255, 255, 0.18);
-        overflow: hidden;
-        margin: 20px 0 14px;
-      }
-      .progress-wrap .track i {
-        display: block;
-        height: 100%;
-        border-radius: 4px;
-        background: var(--green);
-        transform-origin: left center;
-        transform: scaleX(0);
-        transition: transform var(--dur-reveal) var(--ease);
-      }
-      .progress-wrap p {
-        color: #cfe0e2;
-        font-size: 14.5px;
-        max-width: 56ch;
+      @media (max-width: 580px) {
+        .stage-head {
+          grid-template-columns: auto minmax(0, 1fr);
+          padding: 18px 20px;
+        }
+        .stage-prog {
+          grid-column: 1 / -1;
+        }
+        .stage-track {
+          flex: 1 1 auto;
+          width: auto;
+        }
+        .stage-body {
+          padding: 6px 20px 14px;
+        }
       }
 
-      @media (max-width: 760px) {
-        .myth {
-          grid-template-columns: 1fr;
-        }
-        .myth .actual {
-          border-left: none;
-          border-top: 1px solid var(--line);
-        }
-        .block-head,
-        .block-body {
-          padding-left: 20px;
-          padding-right: 20px;
-        }
-        .progress-wrap {
-          padding: 26px 24px;
-        }
-      }
+      /* ---------- Print: keep the information, drop the chrome ---------- */
+
       @media print {
-        .myth,
-        .block {
+        .route,
+        .nom,
+        .recip,
+        .stage,
+        .prog,
+        .watch {
           break-inside: avoid;
         }
-        .progress-wrap {
-          background: var(--bg2);
-          color: var(--ink);
+        .prog {
+          background: var(--white);
+          border-radius: 0;
+          border-bottom: 1pt solid var(--line);
+          padding: 0 0 10pt;
+          gap: 20pt;
+          margin-bottom: 12pt;
         }
-        .progress-wrap .k,
-        .progress-wrap p {
-          color: var(--gray);
+        .prog-pips,
+        .stage-track {
+          display: none;
         }
-        .progress-wrap .big {
+        /* The arc is drawn with a gradient on screen; on paper one flat
+           teal line reproduces reliably and costs almost no ink. */
+        #prog-gauge .w-gauge-arc {
+          stroke: var(--teal) !important;
+        }
+        .stage {
+          margin-bottom: 10pt;
+        }
+        .stage-head,
+        .stage.is-done .stage-head {
+          background: var(--white);
+        }
+        /* Backgrounds are off by default on paper, so the filled marker would
+           print as white on white. Outline it instead. */
+        .stage-head .num {
+          background: transparent;
           color: var(--teal);
+          border: 1pt solid var(--teal);
+        }
+        /* A ticked box is the whole point of a printed checklist, so this one
+           small mark is allowed to carry its colour onto the page. */
+        .check input[type='checkbox'] {
+          border-color: var(--gray);
+        }
+        .check input[type='checkbox']:checked {
+          background: var(--green);
+          border-color: var(--green);
+          -webkit-print-color-adjust: exact;
+          print-color-adjust: exact;
+        }
+        .route-to,
+        .watch {
+          background: transparent;
+        }
+        .route-to {
+          border: 1px solid var(--line);
         }
       }
     </style>
@@ -183,113 +558,203 @@
 
     <article class="sheet">
       <div data-sheet-masthead></div>
+      <div data-sheet-hero></div>
 
       <div class="pad">
         <div class="eyebrow">Session tool 10 · Checklist</div>
-        <h1 class="doc-title">The Estate &amp; <em>Beneficiary</em> Checklist</h1>
+        <h1 class="doc-title">The <em>Estate</em> Checklist</h1>
         <p class="lede">
-          This is the one area where the cost of leaving it is paid entirely by other people — and
-          where the documents most often contradict each other without anyone noticing.
-          <strong>Your will does not control everything you own.</strong>
+          The one job where the cost of skipping it is paid entirely by other people.
         </p>
 
-        <hr class="rule" />
+        <div class="lm-photoband">
+          <img
+            src="../assets/img/photo/timber-fence-forest-golden-light.webp"
+            alt=""
+            loading="lazy"
+            decoding="async"
+          />
+          <p>Four documents decide where your money goes. Your will is <em>only one of them</em>.</p>
+          <span class="lm-band-k">Why this sheet exists</span>
+        </div>
 
-        <!-- ---------- Myths ---------- -->
+        <!-- ---------- 1 · What decides what ---------- -->
         <div class="sec-head">
-          <h2>Three things people reasonably assume</h2>
-          <p>And what is generally the case instead.</p>
+          <h2>What decides where each thing goes</h2>
+          <p>
+            A different document governs each kind of asset. Three of them sit outside your will
+            entirely, and they do not have to agree with it.
+          </p>
         </div>
 
-        <div class="myth">
-          <div class="assume">
-            <span class="tag">The assumption</span>
-            <p>"My will covers my superannuation."</p>
-          </div>
-          <div class="actual">
-            <span class="tag">Generally</span>
-            <p>
-              Superannuation is held in trust and is not automatically an estate asset. Where it
-              goes is usually decided by your beneficiary nomination, or by the trustee if there is
-              no valid one — not by your will.
-            </p>
-          </div>
-        </div>
+        <ul class="routes">
+          <li class="route">
+            <div class="route-from">
+              <span class="route-k">The asset</span>
+              <b>Your superannuation</b>
+            </div>
+            <div class="route-arrow">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                   stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <path d="M5 12h14M13 6l6 6-6 6" />
+              </svg>
+            </div>
+            <div class="route-to">
+              <span class="route-k">Decided by</span>
+              <b>Your beneficiary nomination</b>
+            </div>
+            <div class="route-note">
+              <p>
+                Superannuation is held in trust and is not automatically an estate asset. Where it
+                goes is usually decided by your beneficiary nomination, or by the trustee if there is
+                no valid one.
+              </p>
+              <p class="route-assume">
+                <span>Commonly assumed</span>
+                <em>“My will covers my superannuation.”</em>
+              </p>
+            </div>
+          </li>
 
-        <div class="myth">
-          <div class="assume">
-            <span class="tag">The assumption</span>
-            <p>"My will covers the house."</p>
-          </div>
-          <div class="actual">
-            <span class="tag">Generally</span>
-            <p>
-              Property held as joint tenants typically passes directly to the surviving joint owner
-              by survivorship, outside the will. Property held as tenants in common does pass
-              through the estate. The difference is on the title.
-            </p>
-          </div>
-        </div>
+          <li class="route">
+            <div class="route-from">
+              <span class="route-k">The asset</span>
+              <b>A home held jointly</b>
+            </div>
+            <div class="route-arrow">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                   stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <path d="M5 12h14M13 6l6 6-6 6" />
+              </svg>
+            </div>
+            <div class="route-to">
+              <span class="route-k">Decided by</span>
+              <b>The title</b>
+            </div>
+            <div class="route-note">
+              <p>
+                Property held as joint tenants typically passes directly to the surviving joint owner
+                by survivorship, outside the will. Property held as tenants in common does pass
+                through the estate. The difference is on the title.
+              </p>
+              <p class="route-assume">
+                <span>Commonly assumed</span>
+                <em>“My will covers the house.”</em>
+              </p>
+            </div>
+          </li>
 
-        <div class="myth">
-          <div class="assume">
-            <span class="tag">The assumption</span>
-            <p>"My children will receive my super tax-free."</p>
-          </div>
-          <div class="actual">
-            <span class="tag">Generally</span>
-            <p>
-              Only if they are tax dependants. Financially independent adult children usually are
-              not, and tax can apply to the taxable component of a lump sum death benefit paid to
-              them.
-            </p>
-          </div>
-        </div>
+          <li class="route">
+            <div class="route-from">
+              <span class="route-k">The asset</span>
+              <b>Anything inside a trust or company</b>
+            </div>
+            <div class="route-arrow">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                   stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <path d="M5 12h14M13 6l6 6-6 6" />
+              </svg>
+            </div>
+            <div class="route-to">
+              <span class="route-k">Decided by</span>
+              <b>The deed</b>
+            </div>
+            <div class="route-note">
+              <p>
+                A trust does not die with you. Control passes under the deed, not under the will — so
+                the question to ask is who the deed hands control to next.
+              </p>
+              <p class="route-assume">
+                <span>Commonly assumed</span>
+                <em>“It forms part of my estate.”</em>
+              </p>
+            </div>
+          </li>
+
+          <li class="route">
+            <div class="route-from">
+              <span class="route-k">The asset</span>
+              <b>What is left in your own name</b>
+            </div>
+            <div class="route-arrow">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                   stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <path d="M5 12h14M13 6l6 6-6 6" />
+              </svg>
+            </div>
+            <div class="route-to">
+              <span class="route-k">Decided by</span>
+              <b>Your will</b>
+            </div>
+            <div class="route-note">
+              <p>
+                This is the part your will actually governs — and, of the four, the only part it
+                governs at all. Everything above is decided somewhere else.
+              </p>
+            </div>
+          </li>
+        </ul>
 
         <hr class="rule" />
 
-        <!-- ---------- Nominations ---------- -->
+        <!-- ---------- 2 · Nominations ---------- -->
         <div class="sec-head">
           <h2>The four kinds of super nomination</h2>
           <p>
-            Not all of them bind the trustee, and not all funds offer all of them. Check which one
+            Not all of them bind the trustee, and not all funds offer all of them. Find out which one
             you actually have.
           </p>
         </div>
 
-        <table class="tbl nom-tbl">
-          <thead>
-            <tr>
-              <th>Type</th>
-              <th>Binds the trustee?</th>
-              <th>What to watch</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td><b>Non-binding</b></td>
-              <td>No — a preference only</td>
-              <td>The trustee considers your wishes but decides. The most common nomination, and the least certain.</td>
-            </tr>
-            <tr>
-              <td><b>Binding lapsing</b></td>
-              <td>Yes, while valid</td>
-              <td>Typically expires after three years. An expired nomination reverts to trustee discretion, and expiry is silent.</td>
-            </tr>
-            <tr>
-              <td><b>Binding non-lapsing</b></td>
-              <td>Yes, while valid</td>
-              <td>Does not expire by time, but must still be valid and is only offered by some funds. Review it after any life change.</td>
-            </tr>
-            <tr>
-              <td><b>Reversionary pension</b></td>
-              <td>Yes — the income stream continues</td>
-              <td>An existing pension continues to a nominated person rather than paying a lump sum. Interacts with their transfer balance cap.</td>
-            </tr>
-          </tbody>
-        </table>
+        <ul class="noms">
+          <li class="nom">
+            <div class="nom-head">
+              <h3>Non-binding</h3>
+              <span class="badge badge-quiet"><i class="d"></i>A preference only</span>
+            </div>
+            <p>
+              The trustee considers your wishes but decides. The most common nomination, and the least
+              certain.
+            </p>
+          </li>
 
-        <div class="card card-tint" style="margin-top: 22px">
+          <li class="nom">
+            <div class="nom-head">
+              <h3>Binding lapsing</h3>
+              <span class="badge badge-green"><i class="d"></i>Binds, while valid</span>
+            </div>
+            <p>The trustee must follow it — for as long as it remains in force.</p>
+            <p class="watch">
+              <b>This is the one that expires.</b> A lapsing nomination typically expires after three
+              years, and expiry is silent: nothing announces it, and the decision reverts to trustee
+              discretion.
+            </p>
+          </li>
+
+          <li class="nom">
+            <div class="nom-head">
+              <h3>Binding non-lapsing</h3>
+              <span class="badge badge-green"><i class="d"></i>Binds, while valid</span>
+            </div>
+            <p>
+              Does not expire by time, but must still be valid, and is only offered by some funds.
+              Review it after any life change.
+            </p>
+          </li>
+
+          <li class="nom">
+            <div class="nom-head">
+              <h3>Reversionary pension</h3>
+              <span class="badge badge-teal"><i class="d"></i>Binds — the income stream continues</span>
+            </div>
+            <p>
+              An existing pension continues to a nominated person rather than paying a lump sum. It
+              interacts with that person's transfer balance cap.
+            </p>
+          </li>
+        </ul>
+
+        <div class="card card-tint" style="margin-top: 20px">
           <p class="small">
             <b style="color: var(--ink)">Who can be nominated.</b> Generally a spouse, a child, a
             financial dependant, someone in an interdependency relationship, or your legal personal
@@ -300,71 +765,158 @@
 
         <hr class="rule" />
 
-        <!-- ---------- Death benefit tax ---------- -->
+        <!-- ---------- 3 · Death benefit tax ---------- -->
         <div class="sec-head">
           <h2>Who receives it changes what is paid</h2>
-          <p>Broadly, for a lump sum death benefit from a taxed source.</p>
+          <p>
+            Broadly, for a lump sum death benefit from a taxed source. Super is often assumed to reach
+            adult children tax-free; that holds only where they are tax dependants, and financially
+            independent adult children usually are not.
+          </p>
         </div>
 
-        <table class="tbl">
-          <thead>
-            <tr>
-              <th>Recipient</th>
-              <th>Tax-free component</th>
-              <th>Taxable component (taxed element)</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td><b>Tax dependant</b><span class="muted" style="display:block;font-size:13px;margin-top:3px">Spouse, child under 18, financial dependant, interdependency</span></td>
-              <td class="n">Nil</td>
-              <td class="n">Nil</td>
-            </tr>
-            <tr>
-              <td><b>Non-tax dependant</b><span class="muted" style="display:block;font-size:13px;margin-top:3px">Most commonly a financially independent adult child</span></td>
-              <td class="n">Nil</td>
-              <td class="n">Up to 15%<span class="muted" style="display:block;font-size:12.5px">plus Medicare levy where paid directly to an individual</span></td>
-            </tr>
-          </tbody>
-        </table>
+        <div class="grid g2">
+          <div class="card card-tint recip">
+            <span class="route-k">Recipient</span>
+            <h3>Tax dependant</h3>
+            <p class="recip-def">
+              Spouse, child under 18, financial dependant, interdependency
+            </p>
+            <dl class="recip-rows">
+              <div>
+                <dt>Tax-free component</dt>
+                <dd><b>Nil</b></dd>
+              </div>
+              <div>
+                <dt>Taxable component (taxed element)</dt>
+                <dd><b>Nil</b></dd>
+              </div>
+            </dl>
+          </div>
 
-        <p class="small muted" style="margin-top: 16px">
+          <div class="card recip">
+            <span class="route-k">Recipient</span>
+            <h3>Non-tax dependant</h3>
+            <p class="recip-def">
+              Most commonly a financially independent adult child
+            </p>
+            <dl class="recip-rows">
+              <div>
+                <dt>Tax-free component</dt>
+                <dd><b>Nil</b></dd>
+              </div>
+              <div>
+                <dt>Taxable component (taxed element)</dt>
+                <dd>
+                  <b>Up to 15%</b>
+                  <small>plus Medicare levy where paid directly to an individual</small>
+                </dd>
+              </div>
+            </dl>
+          </div>
+        </div>
+
+        <p class="small muted" style="margin-top: 18px">
           An untaxed element — which can arise in some schemes and where life cover forms part of the
-          benefit — is taxed at a higher rate again. Where a benefit is paid through the estate
-          rather than directly, the Medicare levy generally does not apply, though the underlying tax
+          benefit — is taxed at a higher rate again. Where a benefit is paid through the estate rather
+          than directly, the Medicare levy generally does not apply, though the underlying tax
           treatment still follows who ultimately benefits. This is a simplified summary of a genuinely
           technical area.
         </p>
 
         <hr class="rule" />
 
-        <!-- ---------- Checklist ---------- -->
-        <div class="sec-head">
+        <!-- ---------- 4 · The checklist ---------- -->
+        <div class="lm-aside lm-aside--flip" style="--lm-aside-pos: 50% 30%">
+          <div class="lm-aside-img">
+            <img
+              src="../assets/img/photo/senior-couple-embrace-outdoors-happy.webp"
+              alt=""
+              loading="lazy"
+              decoding="async"
+            />
+          </div>
+          <div>
+            <h2 class="step-h" style="font-size: 23px">Before you start</h2>
+            <p class="muted" style="margin-top: 12px">
+              You will never see the benefit of this work. The people who will are the ones who have
+              to find the documents, ring the fund and make decisions in a week they did not choose.
+            </p>
+            <p class="muted" style="margin-top: 12px">
+              So treat it as four short sittings rather than one long one, and tick only what is
+              genuinely current. An unticked box is not a failure — it is the agenda for one
+              conversation.
+            </p>
+          </div>
+        </div>
+
+        <div class="sec-head" style="margin-top: 36px">
           <h2>The checklist</h2>
           <p>
-            Tick what is genuinely current — not what exists somewhere. A document that has not been
-            looked at since a marriage, a birth, a separation or a business sale is not current.
+            Tick what is genuinely current, not what exists somewhere. A document nobody has looked at
+            since a marriage, a birth, a separation or a business sale is not current.
           </p>
         </div>
 
-        <div class="block">
-          <div class="block-head">
-            <span class="num">1</span>
-            <h3>The documents</h3>
-            <span class="cnt" data-count="docs"></span>
+        <div class="prog" id="prog">
+          <div class="prog-gauge" id="prog-gauge"></div>
+          <div>
+            <div class="prog-top">
+              <span class="prog-k">Your progress</span>
+              <span class="prog-flag">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6"
+                     stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                  <path d="M20 6 9 17l-5-5" />
+                </svg>
+                Complete
+              </span>
+            </div>
+            <p class="prog-note" id="prog-note" aria-live="polite"></p>
+            <ul class="prog-pips">
+              <li class="prog-pip" data-pip="docs"><i aria-hidden="true"></i>1 · Documents</li>
+              <li class="prog-pip" data-pip="super"><i aria-hidden="true"></i>2 · Super</li>
+              <li class="prog-pip" data-pip="outside"><i aria-hidden="true"></i>3 · Outside the will</li>
+              <li class="prog-pip" data-pip="intent"><i aria-hidden="true"></i>4 · Intent</li>
+            </ul>
           </div>
-          <div class="block-body" data-block="docs">
+        </div>
+
+        <div class="stage" data-stage="docs">
+          <div class="stage-head">
+            <span class="num">1</span>
+            <div class="stage-id">
+              <h3>The documents</h3>
+              <p>The things that have to exist on paper.</p>
+            </div>
+            <div class="stage-prog">
+              <div class="stage-track" aria-hidden="true"><i></i></div>
+              <span class="stage-cnt"></span>
+            </div>
+          </div>
+          <div class="stage-body">
             <div class="check">
               <input type="checkbox" id="d1" data-est data-strike="d1" />
-              <label for="d1">I have a current will<span class="sub">Reviewed since my most recent major life or financial change</span></label>
+              <label for="d1"
+                >I have a current will<span class="sub"
+                  >Reviewed since my most recent major life or financial change</span
+                ></label
+              >
             </div>
             <div class="check">
               <input type="checkbox" id="d2" data-est data-strike="d2" />
-              <label for="d2">I have an enduring power of attorney for financial matters<span class="sub">It operates while I am alive but unable to act — a will does nothing here</span></label>
+              <label for="d2"
+                >I have an enduring power of attorney for financial matters<span class="sub"
+                  >It works while I am alive but unable to act — a will does nothing here</span
+                ></label
+              >
             </div>
             <div class="check">
               <input type="checkbox" id="d3" data-est data-strike="d3" />
-              <label for="d3">I have an appointment for medical or personal decisions<span class="sub">Naming and form varies by state or territory</span></label>
+              <label for="d3"
+                >I have an appointment for medical or personal decisions<span class="sub"
+                  >The name and the form vary by state or territory</span
+                ></label
+              >
             </div>
             <div class="check">
               <input type="checkbox" id="d4" data-est data-strike="d4" />
@@ -373,93 +925,153 @@
           </div>
         </div>
 
-        <div class="block">
-          <div class="block-head">
+        <div class="stage" data-stage="super">
+          <div class="stage-head">
             <span class="num">2</span>
-            <h3>Superannuation and insurance</h3>
-            <span class="cnt" data-count="super"></span>
+            <div class="stage-id">
+              <h3>Superannuation and insurance</h3>
+              <p>Which nomination you have, and whether it still works.</p>
+            </div>
+            <div class="stage-prog">
+              <div class="stage-track" aria-hidden="true"><i></i></div>
+              <span class="stage-cnt"></span>
+            </div>
           </div>
-          <div class="block-body" data-block="super">
+          <div class="stage-body">
             <div class="check">
               <input type="checkbox" id="s1" data-est data-strike="s1" />
-              <label for="s1">I know which type of nomination is on each super account<span class="sub">Including any older or inactive accounts</span></label>
+              <label for="s1"
+                >I know which type of nomination is on each super account<span class="sub"
+                  >Including older or inactive accounts</span
+                ></label
+              >
             </div>
             <div class="check">
               <input type="checkbox" id="s2" data-est data-strike="s2" />
-              <label for="s2">Every binding nomination is current and has not lapsed<span class="sub">Lapsing nominations typically expire after three years, silently</span></label>
+              <label for="s2"
+                >Every binding nomination is current and has not lapsed<span class="sub"
+                  >Lapsing nominations typically expire after three years, silently</span
+                ></label
+              >
             </div>
             <div class="check">
               <input type="checkbox" id="s3" data-est data-strike="s3" />
-              <label for="s3">My nominations agree with my will<span class="sub">Rather than quietly contradicting it</span></label>
+              <label for="s3"
+                >My nominations agree with my will<span class="sub"
+                  >Rather than quietly contradicting it</span
+                ></label
+              >
             </div>
             <div class="check">
               <input type="checkbox" id="s4" data-est data-strike="s4" />
-              <label for="s4">I know whether my intended beneficiaries are tax dependants<span class="sub">It changes what they receive after tax</span></label>
+              <label for="s4"
+                >I know whether my intended beneficiaries are tax dependants<span class="sub"
+                  >It changes what they receive after tax</span
+                ></label
+              >
             </div>
             <div class="check">
               <input type="checkbox" id="s5" data-est data-strike="s5" />
-              <label for="s5">I know who owns each life insurance policy and who it pays<span class="sub">Inside super, outside super, or through a company or trust</span></label>
+              <label for="s5"
+                >I know who owns each life insurance policy and who it pays<span class="sub"
+                  >Inside super, outside super, or through a company or trust</span
+                ></label
+              >
             </div>
           </div>
         </div>
 
-        <div class="block">
-          <div class="block-head">
+        <div class="stage" data-stage="outside">
+          <div class="stage-head">
             <span class="num">3</span>
-            <h3>Assets that pass outside the will</h3>
-            <span class="cnt" data-count="outside"></span>
+            <div class="stage-id">
+              <h3>What passes outside the will</h3>
+              <p>Settled by a title or a deed, not by your will.</p>
+            </div>
+            <div class="stage-prog">
+              <div class="stage-track" aria-hidden="true"><i></i></div>
+              <span class="stage-cnt"></span>
+            </div>
           </div>
-          <div class="block-body" data-block="outside">
+          <div class="stage-body">
             <div class="check">
               <input type="checkbox" id="o1" data-est data-strike="o1" />
-              <label for="o1">I know how each property is held<span class="sub">Joint tenants or tenants in common — it is on the title, and it decides whether the will applies</span></label>
+              <label for="o1"
+                >I know how each property is held<span class="sub"
+                  >Joint tenants or tenants in common — it is on the title, and it decides whether the
+                  will applies</span
+                ></label
+              >
             </div>
             <div class="check">
               <input type="checkbox" id="o2" data-est data-strike="o2" />
-              <label for="o2">I know what happens to assets held in a trust or company<span class="sub">A trust does not die with you. Control passes under the deed, not the will</span></label>
+              <label for="o2"
+                >I know what happens to assets held in a trust or company<span class="sub"
+                  >A trust does not die with you. Control passes under the deed, not the will</span
+                ></label
+              >
             </div>
             <div class="check">
               <input type="checkbox" id="o3" data-est data-strike="o3" />
-              <label for="o3">I know who would control any family trust, and how that is decided<span class="sub">Succession of the appointor role is the question most deeds answer badly</span></label>
+              <label for="o3"
+                >I know who would control any family trust, and how that is decided<span class="sub"
+                  >Succession of the appointor role is the question most deeds answer badly</span
+                ></label
+              >
             </div>
             <div class="check">
               <input type="checkbox" id="o4" data-est data-strike="o4" />
-              <label for="o4">Any investment bond or similar product has a current nominated beneficiary</label>
+              <label for="o4"
+                >Any investment bond or similar product has a current nominated beneficiary</label
+              >
             </div>
           </div>
         </div>
 
-        <div class="block">
-          <div class="block-head">
+        <div class="stage" data-stage="intent">
+          <div class="stage-head">
             <span class="num">4</span>
-            <h3>Intent and practicalities</h3>
-            <span class="cnt" data-count="intent"></span>
+            <div class="stage-id">
+              <h3>Intent and practicalities</h3>
+              <p>What the people involved will actually have to deal with.</p>
+            </div>
+            <div class="stage-prog">
+              <div class="stage-track" aria-hidden="true"><i></i></div>
+              <span class="stage-cnt"></span>
+            </div>
           </div>
-          <div class="block-body" data-block="intent">
+          <div class="stage-body">
             <div class="check">
               <input type="checkbox" id="i1" data-est data-strike="i1" />
-              <label for="i1">I have considered whether beneficiaries should receive capital directly or through a structure<span class="sub">Timing and structure change what an inheritance does</span></label>
+              <label for="i1"
+                >I have considered whether beneficiaries should receive capital directly or through a
+                structure<span class="sub">Timing and structure change what an inheritance does</span></label
+              >
             </div>
             <div class="check">
               <input type="checkbox" id="i2" data-est data-strike="i2" />
-              <label for="i2">There is enough liquidity for the estate to meet costs and tax without forcing a sale</label>
+              <label for="i2"
+                >There is enough liquidity for the estate to meet costs and tax without forcing a
+                sale</label
+              >
             </div>
             <div class="check">
               <input type="checkbox" id="i3" data-est data-strike="i3" />
-              <label for="i3">Someone could find the accounts, policies and passwords<span class="sub">An asset nobody knows about is an asset nobody claims</span></label>
+              <label for="i3"
+                >Someone could find the accounts, policies and passwords<span class="sub"
+                  >An asset nobody knows about is an asset nobody claims</span
+                ></label
+              >
             </div>
             <div class="check">
               <input type="checkbox" id="i4" data-est data-strike="i4" />
-              <label for="i4">I have told the people affected what to expect<span class="sub">Most disputes are about surprise, not about the amount</span></label>
+              <label for="i4"
+                >I have told the people affected what to expect<span class="sub"
+                  >Most disputes are about surprise, not about the amount</span
+                ></label
+              >
             </div>
           </div>
-        </div>
-
-        <div class="progress-wrap" style="margin-top: 26px">
-          <span class="k">Checklist complete</span>
-          <span class="big" id="o-count">0 of 17</span>
-          <div class="track"><i id="o-track"></i></div>
-          <p id="o-note"></p>
         </div>
 
         <hr class="rule" />
@@ -468,9 +1080,9 @@
           <h3 class="step-h">The one test worth applying</h3>
           <p class="muted" style="margin-top: 10px">
             Take your largest three assets. For each, name the document that decides where it goes —
-            the will, a nomination, the title, or a deed. If you cannot name it for all three, that
-            is the gap, and it is usually resolved in a single conversation between your adviser and
-            your estate lawyer.
+            the will, a nomination, the title, or a deed. If you cannot name it for all three, that is
+            the gap, and it is usually closed in a single conversation between your adviser and your
+            estate lawyer.
           </p>
         </div>
 
@@ -478,11 +1090,12 @@
           <b>General information only, and not legal advice.</b> Estate planning involves succession
           law, which differs between Australian states and territories, as well as tax and
           superannuation law. The descriptions here are general, simplified and subject to exceptions
-          — the treatment of any particular asset depends on how it is held, the terms of the
-          relevant trust deed or policy, and your personal circumstances. Wills, powers of attorney,
-          binding nominations and trust succession should be prepared or reviewed by a qualified
-          estate lawyer, with tax and superannuation input where relevant. Nothing here is a
-          recommendation about any product, nomination or structure.
+          — the treatment of any particular asset depends on how it is held, the terms of the relevant
+          trust deed or policy, and your personal circumstances. Wills, powers of attorney, binding
+          nominations and trust succession should be prepared or reviewed by a qualified estate
+          lawyer, with tax and superannuation input where relevant. Nothing here is a recommendation
+          about any product, nomination or structure. The photographs on this sheet are illustrative
+          and do not depict clients of Prospa Financial.
         </div>
 
         <div class="row no-print" style="margin-top: 26px">
@@ -497,40 +1110,111 @@
     <script type="module">
       import { mountSheet, wirePrint } from '../assets/sheet.js'
       import { strikeList } from '../assets/components.js'
+      import { scoreGauge } from '../assets/widgets.js'
 
-      mountSheet({ no: '10', kind: 'Checklist' })
+      mountSheet({
+        no: '10',
+        kind: 'Checklist',
+        hero: {
+          src: 'photo/mature-couple-home-breakfast-affection.webp',
+          alt: '',
+          variant: 'photo',
+          pos: '50% 32%',
+        },
+      })
       wirePrint()
 
+      const reduced = () => window.matchMedia('(prefers-reduced-motion: reduce)').matches
+
       const boxes = Array.from(document.querySelectorAll('[data-est]'))
+      const stages = Array.from(document.querySelectorAll('[data-stage]'))
+      const TOTAL = boxes.length
+
+      const panel = document.getElementById('prog')
+      const note = document.getElementById('prog-note')
+      const gaugeHost = document.getElementById('prog-gauge')
+
+      /* The gauge is mounted empty, once, and then driven from here — the same
+         arrangement sheet 09 uses, and for the same reasons. Mounting it at a
+         value would hand it to the widget's scroll-triggered entrance, which
+         fails this sheet twice. The arc would stay empty until the panel came
+         into view, so a reader who restored saved ticks and pressed print
+         straight away would print a dial reading nought beside a ticked list.
+         And the entrance counts the digit up over a second, overwriting
+         whatever it is handed on the way — tick a box while that is running
+         and the figure settles back on the old number. So the entrance is cut
+         before it can fire, and the arc and the digit belong to this sheet
+         from the first frame. */
+      scoreGauge(gaugeHost, {
+        value: 0,
+        max: TOTAL,
+        caption: `of ${TOTAL} items confirmed current`,
+      })
+      gaugeHost.__play = null
+
+      const arc = gaugeHost.querySelector('.w-gauge-arc')
+      const face = gaugeHost.querySelector('.w-gauge-n')
+      const gaugeSvg = gaugeHost.querySelector('svg')
+      /* The widget writes its own arc length into stroke-dasharray. Reading it
+         back beats restating the geometry here, and beats measuring the path,
+         which can answer zero before layout has happened. */
+      const ARC = arc ? parseFloat(arc.getAttribute('stroke-dasharray')) || 0 : 0
+
+      function repaintGauge(done) {
+        if (!arc || !face) return
+        const pct = TOTAL ? Math.max(0, Math.min(1, done / TOTAL)) : 0
+        const off = (ARC * (1 - pct)).toFixed(1)
+        arc.style.transition = reduced() ? 'none' : 'stroke-dashoffset .5s var(--ease)'
+        /* Set now, so the dial is right even in a tab that never runs a frame,
+           and again next frame, so the transition takes. */
+        arc.setAttribute('stroke-dashoffset', off)
+        requestAnimationFrame(() => arc.setAttribute('stroke-dashoffset', off))
+        face.textContent = String(done)
+        // Otherwise the accessible value stays at whatever it was on mount.
+        gaugeSvg?.setAttribute('aria-label', `${done} of ${TOTAL} items confirmed current`)
+      }
 
       function sync() {
         const done = boxes.filter((b) => b.checked).length
-        const total = boxes.length
 
-        document.querySelectorAll('[data-count]').forEach((c) => {
-          const body = document.querySelector(`[data-block="${c.dataset.count}"]`)
-          const b = Array.from(body.querySelectorAll('[data-est]'))
-          c.textContent = `${b.filter((x) => x.checked).length} / ${b.length}`
+        // Each stage carries its own completion, so the sheet can be done
+        // in four sittings and each one visibly finishes.
+        stages.forEach((stage) => {
+          const own = Array.from(stage.querySelectorAll('[data-est]'))
+          const n = own.filter((b) => b.checked).length
+          const full = own.length > 0 && n === own.length
+
+          stage.classList.toggle('is-done', full)
+          const cnt = stage.querySelector('.stage-cnt')
+          if (cnt)
+            cnt.innerHTML =
+              `${n} / ${own.length}` +
+              // On its own, "4 / 4" read aloud is a riddle. The visible pair is
+              // unchanged; only the spoken version gains a noun.
+              `<span class="sr-only"> confirmed in this group</span>`
+          const fill = stage.querySelector('.stage-track i')
+          if (fill) fill.style.transform = `scaleX(${(own.length ? n / own.length : 0).toFixed(3)})`
+          const pip = document.querySelector(`[data-pip="${stage.dataset.stage}"]`)
+          if (pip) pip.classList.toggle('on', full)
         })
 
-        document.getElementById('o-count').textContent = `${done} of ${total}`
-        document.getElementById('o-track').style.transform = `scaleX(${(done / total).toFixed(3)})`
+        repaintGauge(done)
 
-        const note = document.getElementById('o-note')
-        if (done === total) {
+        panel.classList.toggle('is-done', done === TOTAL)
+
+        if (done === 0) {
           note.textContent =
-            'Everything on this list is current. The remaining work is a review date — most of these go out of date through life events rather than through time.'
-        } else if (done === 0) {
-          note.textContent =
-            'Nothing ticked yet. Start with section two: beneficiary nominations are the single most common gap, and usually the fastest to close.'
+            'Nothing ticked yet. Stage two is a sensible place to begin: of everything on this sheet, a lapsing nomination is the one item that can stop working without anybody being told.'
+        } else if (done === TOTAL) {
+          note.textContent = `All ${TOTAL} confirmed current. The only job left is a review date: a lapsing nomination goes out of date on the calendar, and everything else goes out of date on a life event.`
         } else {
-          const left = total - done
-          note.textContent = `${left} ${left === 1 ? 'item' : 'items'} still open. Print this page and bring the unticked ones — every one of them is a question with a definite answer that simply has not been checked.`
+          const left = TOTAL - done
+          note.textContent = `${left} ${left === 1 ? 'item' : 'items'} still open. Print this page and bring the unticked ones: each is a question with a definite answer that simply has not been checked.`
         }
       }
 
-      // strikeList owns the ticks: it persists them, crosses the item out, and
-      // calls back so the per-section counts and the progress panel stay in step.
+      // strikeList owns the ticks — it persists them in this browser, crosses the
+      // item out, and calls back so the stages, the pips and the gauge stay in step.
       strikeList('estate-checklist', sync)
     </script>
   </body>

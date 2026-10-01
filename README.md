@@ -1,7 +1,7 @@
 # lm-prospa — Prospa Financial lead magnets
 
 Twelve session tools for Prospa Financial's **Executive Financial Wellbeing Workshop**
-("From High Income to Financial Independence"), led by the **Executive Wealth Score**.
+("From High Income to Financial Independence"), led by **Your Wealth Score**.
 
 Built on the [Prospa Financial Design System](https://github.com/teamos-ai/prospa-financial-design-system)
 and grounded in the [Prospa Financial database](https://github.com/teamos-ai/prospafinancial-database).
@@ -18,18 +18,22 @@ used rather than filed and forgotten.
 
 | # | Tool | Type | Agenda item |
 |---|---|---|---|
-| 01 | **The Executive Wealth Score** | Scored assessment | 8 · Your Executive Financial Health Check |
-| 02 | **Your Work Optional Number** | Guided calculator | 5 · Making Work Optional |
-| 03 | The Gap Years Map | Calculator | 5 · Making Work Optional |
-| 04 | The Next Dollar Decision Map | Decision guide | 3 · Building Wealth Outside Super |
-| 05 | The Three Wealth Buckets | Worksheet | 3 · Building Wealth Outside Super |
-| 06 | The Bonus & Surplus Playbook | Planner | 1 · The Financial Freedom Gap |
-| 07 | The Executive Super Cheatsheet | Cheatsheet | 2 · Make Super Work Harder |
-| 08 | Wealth Structures, Compared | Comparison | 4 · Tax-Effective Wealth Structures |
-| 09 | The Income Protection Audit | Audit | 6 · Protecting What You Have Built |
-| 10 | The Estate & Beneficiary Checklist | Checklist | 7 · Passing on Wealth |
-| 11 | The Conversation Swipe File | Swipe file | 9 · Live Q&A, and after |
-| 12 | From High Income to Financial Independence | Guide (ebook) | The session in short |
+| 01 | **Your Wealth Score** | Scored assessment | 8 · Your Executive Financial Health Check |
+| 02 | **Your Freedom Score** | Guided calculator | 5 · Making Work Optional |
+| 03 | The Gap Years | Calculator | 5 · Making Work Optional |
+| 04 | Your Next Dollar | Route planner | 3 · Building Wealth Outside Super |
+| 05 | Your Three Buckets | Worksheet | 3 · Building Wealth Outside Super |
+| 06 | The Bonus Playbook | Planner | 1 · The Financial Freedom Gap |
+| 07 | The Super Cheatsheet | Cheatsheet | 2 · Make Super Work Harder |
+| 08 | Where Your Wealth Lives | Comparison | 4 · Tax-Effective Wealth Structures |
+| 09 | Is Your Income Covered? | Audit | 6 · Protecting What You Have Built |
+| 10 | The Estate Checklist | Checklist | 7 · Passing on Wealth |
+| 11 | What to Say | Swipe file | 9 · Live Q&A, and after |
+| 12 | From High Income to Real Wealth | Guide (ebook) | The session in short |
+
+> Names were simplified on 1 October 2026 at the client's request — shorter headings, plainer
+> subheadings. `MAGNETS` in [`assets/sheet.js`](assets/sheet.js) is the single source; the
+> gallery, the design system cards and every sheet read from it or match it.
 
 ### What came from the client, and what changed
 
@@ -38,7 +42,7 @@ Four pieces of attendee collateral were supplied. All four survive, substantiall
 | Supplied | Became | What changed |
 |---|---|---|
 | Executive Financial Health Check (PDF) | **01 Wealth Score** | The same six sections and the same Red/Amber/Green key, now weighted, scored out of 100, with a pattern engine reading the relationships between areas. A static tick-box became a diagnostic. |
-| Financial Freedom Number Calculator (XLSX) | **02 Freedom Score** | Every formula ported exactly — the default scenario still reproduces the workbook's $4,344,894 target and $1,417,247 projection to the dollar. Rebuilt as a four-step walk-through ending in a score out of 100, with a gauge, a metric strip, a funding breakdown, a projection chart and two figures the spreadsheet never surfaced: the freedom age and the required annual contribution. |
+| Financial Freedom Number Calculator (XLSX) | **02 Freedom Score** | Ported exactly, then **replaced** when Prospa's *Calculator workings* notes arrived and changed the model itself — from a portfolio that must last forever to one that must carry you from the day you stop to the day super unlocks. Now a five-step walk-through ending on two dashboards, with the life-path chart as its centrepiece. See below. |
 | Three Wealth Buckets Worksheet (PDF) | **05 Three Buckets** | Same three buckets, same prompts. Added live allocation visual and a read of the shape, which is where the insight was always hiding. |
 | 2-Minute Financial Freedom Check-In (PDF) | *informs 01 and the webinar* | Kept as the pre-session instrument it was designed to be. Its proposed "Wealth Score" follow-up is what 01 now implements — properly specified. See `SCORING.md`. |
 
@@ -51,7 +55,11 @@ moves until a conversation does; and the guide (12) is the session itself, as so
 
 ---
 
-## The Work Optional Number — what the spreadsheet became
+## Your Freedom Score — what the spreadsheet became
+
+The tool is **Your Freedom Score**. The figure it computes is your **Work Optional
+Number** — the capital you need at your target age. Both names are the client's, and the
+distinction is deliberate: the score is what you came for, the number is what it is made of.
 
 > Rebuilt a second time from Prospa's own notes (*Calculator workings*), which replaced the model
 > rather than tuning it. The analysis, the decisions and the gates are in
@@ -72,35 +80,22 @@ moves until a conversation does; and the guide (12) is the session itself, as so
 > 93% funded against their 92%, supported income $74,016 against their $73,000), which suggests
 > they were modelling start-of-year drawdown all along.
 
-### The previous model, kept for reference
+### What was removed, and why it is not kept here
 
-The supplied workbook produced six figures in a grid. Nobody looks at a grid and feels anything.
-Magnet 02 now walks a reader through four questions and ends on a dashboard, and **every original
-formula is untouched**:
+The first build ported the supplied workbook exactly: `capital = desired income ÷ withdrawal
+rate`, a perpetuity. That model, its funding split and its "freedom age" formula are **gone** —
+not deprecated, removed — because keeping a second set of formulas in a README is how a team ends
+up maintaining the wrong one. The history is in git, and `CLAIMS.md` §8a records what changed and
+on what date.
 
-```
-years      = max(target − age, 0)
-futureNeed = lifestyle × (1 + inflation)^years
-capital    = futureNeed ÷ withdrawalRate
-projected  = current × (1+r)^years + annual × (((1+r)^years − 1) ÷ r)      [annual × years when r = 0]
-gap        = projected − capital
-progress   = projected ÷ capital
-```
+The two things worth carrying forward from it:
 
-**The Freedom Score is the workbook's own "progress toward capital target"**, capped at 100 — so
-the headline number is not a new invention, it is the sheet's last row given a face.
-
-Three figures are derived from those same primitives and are the reason the tool lands:
-
-| Figure | How it is derived | Why it matters |
-|---|---|---|
-| **Funding split** | `current` + `annual × years` + `projected − current − (annual × years)` | The three parts sum exactly to the projection, including when the return is zero. It shows how much of the outcome is growth rather than contribution — which is the part nobody controls. |
-| **Required annual** | `(capital − current × (1+r)^years) × r ÷ ((1+r)^years − 1)` | What you would have to invest each year to land exactly on target at the age you chose. Fed back into the model it produces a score of exactly 100, which is how it was verified. |
-| **Freedom age** | the first age at which `grow(n) ≥ lifestyle × (1+i)^n ÷ w` | The age the trajectory actually meets the target — remembering the target keeps inflating too. On the workbook's own defaults this is **82**, against a chosen age of 55. It is the number that starts the conversation. |
-
-Edge cases are handled rather than hidden: a zero return gives a funding split with no growth
-component, a target age equal to today reports that there are no years left to contribute over, and
-a trajectory that never catches an inflating target says "beyond 95" and explains why.
+- **The withdrawal rate is gone with it.** It was the most compliance-sensitive input on the page —
+  a planning assumption that reads as a recommendation however carefully it is labelled — and the
+  bridge model does not need it.
+- **The headline went from $4.3m to about $691k.** Same reader, same inputs, same honesty. The old
+  tool told a high earner they had failed by $2.9m; the new one tells them they are 93% of the way
+  there and names the gap. That is the whole argument for the rebuild.
 
 ---
 
@@ -178,17 +173,58 @@ index.html              the gallery — the click-through hub
 magnets/                one self-contained HTML file per tool
 assets/
   prospa.css            the design language, ported from the design system's tokens
-  sheet.js              shared masthead, compliance footer, money formatting, persistence
+  sheet.js              shared masthead and hero band, compliance footer, money, persistence
+  widgets.js            the number and chart vocabulary — gauges, bars, donuts, life path
   components.js         shortcut tracker, strike lists, the swipe-file fan, the ebook
+  model.js              the Freedom Score arithmetic, pure and DOM-free
+  img/art/              generated brand artwork — hero bands and the guide's chapter plates
+  img/photo/            licensed lifestyle photography, from the design system library
   prospa-logo.png
   favicon.svg
+tools/model.test.mjs    67 assertions over model.js — `node tools/model.test.mjs`
 SCORING.md              the Wealth Score model, in full
 CLAIMS.md               every figure on every sheet, with its source and check date
+CALCULATOR-V2-PLAN.md   the Freedom Score rebuild: analysis, decisions, open gates
 ```
 
 `assets/sheet.js` is the single source for the AFSL line and the general-advice warning. Change it
 there and all thirteen pages change together — that is deliberate, and compliance text should never
 be edited into an individual sheet.
+
+---
+
+## Imagery
+
+Every sheet opens on a hero band, and several carry a faded photograph beside a block of content.
+The whole system is three classes in `prospa.css` — `.lm-hero`, `.lm-aside`, `.lm-photoband` —
+plus `mountHero()` in `sheet.js`, so a sheet declares its artwork in one line rather than
+hand-writing a band:
+
+```js
+mountSheet({
+  no: '04',
+  kind: 'Route planner',
+  hero: { src: 'art/04-routemap.webp', alt: '', variant: 'art', pos: '50% 50%' },
+})
+```
+
+Two rules shape all of it, and both are structural rather than stylistic:
+
+**The hero band never carries text.** It always sits above the title. That is why this is safe to
+put on twelve regulated documents: the title's contrast cannot fail, on screen, on paper, or in a
+high-contrast mode we never see. The one component that does set type on imagery — `.lm-photoband`
+— earns it by measurement rather than by assertion: 0.3 opacity under a near-opaque teal scrim,
+7.4:1 on the worst composited pixel, and no photograph at all in print.
+
+**The hero prints; everything else decorative does not.** `@media print` keeps one bounded band so
+a saved PDF still opens on a designed page, and hides the `.lm-plate` and `.lm-aside` imagery so it
+never becomes a brochure that drinks a cartridge of ink. A `.lm-photoband` degrades to a plain
+rule-left pull-quote — the sentence was always the point, the photograph was only the mood.
+
+Weight: **3.0MB for 51 images**. The generated art arrives as 5–10MB 2K PNGs and is resized to
+1700px (860px for the guide's chapter plates) and re-encoded to WebP, which is a 96% reduction and
+visually lossless at the sizes these ever display. See `CLAIMS.md` §8c for provenance, and the
+rule that imagery here is atmosphere and never evidence.
 
 ---
 

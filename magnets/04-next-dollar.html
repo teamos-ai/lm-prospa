@@ -3,10 +3,10 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>The Next Dollar Decision Map — Prospa Financial</title>
+    <title>Your Next Dollar — Prospa Financial</title>
     <meta
       name="description"
-      content="Mortgage, super, or investments outside super? The questions that decide where your next dollar works hardest — and why the easiest answer is rarely the most efficient."
+      content="Mortgage, super, or invest? Answer five questions and see the route your money should take — drawn as a map, with turn-by-turn directions."
     />
     <link rel="icon" type="image/svg+xml" href="../assets/favicon.svg" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -17,70 +17,1023 @@
     />
     <link rel="stylesheet" href="../assets/prospa.css" />
     <style>
-      .route {
+      /* ============================================================
+         SHEET 04 — THE ROUTE PLANNER
+         A map-like instrument, drawn by hand in SVG. No map library,
+         no tiles, no runtime dependency: the sheet still serves from
+         a folder and still prints to a clean A4.
+
+         Everything below is scoped to this sheet. Nothing here
+         touches a shared file.
+         ============================================================ */
+
+      /* ---------- 1 · The planner shell ---------- */
+
+      .rp {
+        margin-top: 26px;
+      }
+
+      .rp-grid {
         display: grid;
-        grid-template-columns: 54px 1fr;
+        grid-template-columns: minmax(0, 0.94fr) minmax(0, 1.06fr);
         gap: 22px;
-        padding: 30px 0;
+        align-items: start;
+      }
+
+      /* ---------- 2 · The directions panel ---------- */
+
+      .rp-panel {
+        border: 1px solid var(--line);
+        border-radius: var(--r-lg);
+        background: var(--white);
+        overflow: hidden;
+      }
+
+      .rp-panel-head {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        padding: 16px 20px;
+        background: var(--bg2);
         border-bottom: 1px solid var(--line);
       }
-      .route:last-of-type {
-        border-bottom: none;
+
+      .rp-panel-ic {
+        width: 38px;
+        height: 38px;
+        border-radius: var(--r-sm);
+        background: var(--teal);
+        color: var(--white);
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        flex: none;
       }
-      .route-q {
-        font-size: 19px;
+
+      .rp-panel-ic svg {
+        width: 19px;
+        height: 19px;
+      }
+
+      .rp-panel-head b {
+        display: block;
+        font-size: 15px;
+        color: var(--ink);
+        line-height: 1.25;
+      }
+
+      .rp-panel-head span {
+        display: block;
+        font-size: 11.5px;
+        color: var(--gray);
+        margin-top: 2px;
+      }
+
+      .rp-qs {
+        padding: 2px 20px 16px;
+      }
+
+      .rp-q {
+        border: 0;
+        margin: 0;
+        padding: 15px 0;
+        border-bottom: 1px solid var(--line-2);
+      }
+
+      .rp-q:last-of-type {
+        border-bottom: 0;
+        padding-bottom: 4px;
+      }
+
+      .rp-q legend {
+        padding: 0;
+        width: 100%;
+        font-size: 13.5px;
+        font-weight: 600;
+        color: var(--ink-2);
+        line-height: 1.45;
+      }
+
+      .rp-q-n {
+        font-family: 'JetBrains Mono', monospace;
+        font-size: 10.5px;
+        letter-spacing: 0.1em;
+        color: var(--teal);
+        margin-right: 7px;
+      }
+
+      .rp-off {
+        display: none;
+        margin-left: 7px;
+        font-family: 'JetBrains Mono', monospace;
+        font-size: 9.5px;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+        color: var(--gray);
+        background: var(--bg2);
+        border-radius: var(--r-pill);
+        padding: 3px 8px;
+        white-space: nowrap;
+      }
+
+      .rp-q[data-off='true'] .rp-off {
+        display: inline-block;
+      }
+
+      .rp-q[data-off='true'] .rp-q-t {
+        color: var(--gray);
+      }
+
+      .rp-q-hint {
+        font-size: 12px;
+        color: var(--gray);
+        margin: 5px 0 11px;
+      }
+
+      /* The segmented choice. Real radios, visually hidden but focusable,
+         so arrow keys walk the group and the label is the hit area. */
+      .rp-seg {
+        position: relative;
+        display: flex;
+        flex-wrap: wrap;
+        gap: 6px;
+      }
+
+      .rp-seg input {
+        position: absolute;
+        left: 0;
+        top: 0;
+        width: 1px;
+        height: 1px;
+        opacity: 0;
+        margin: 0;
+      }
+
+      .rp-seg label {
+        flex: 1 1 auto;
+        min-width: 0;
+        text-align: center;
+        font-size: 12.5px;
+        font-weight: 600;
+        color: var(--gray);
+        background: var(--bg2);
+        border: 1.5px solid transparent;
+        border-radius: var(--r-pill);
+        padding: 8px 11px;
+        cursor: pointer;
+        transition: background var(--dur-snap) var(--ease), color var(--dur-snap) var(--ease),
+          border-color var(--dur-snap) var(--ease);
+      }
+
+      .rp-seg label:hover {
+        color: var(--teal);
+        border-color: var(--accent);
+      }
+
+      .rp-seg input:checked + label {
+        background: var(--teal);
+        border-color: var(--teal);
+        color: var(--white);
+      }
+
+      .rp-seg input:focus-visible + label {
+        outline: 2px solid var(--teal);
+        outline-offset: 2px;
+      }
+
+      .rp-panel-foot {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 12px;
+        flex-wrap: wrap;
+        padding: 13px 20px;
+        border-top: 1px solid var(--line);
+        background: var(--bg2);
+      }
+
+      .rp-privacy {
+        font-size: 11.5px;
+        color: var(--gray);
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+      }
+
+      .rp-privacy svg {
+        width: 13px;
+        height: 13px;
+        flex: none;
+      }
+
+      .rp-reset {
+        font-family: 'Poppins', sans-serif;
+        font-size: 12.5px;
+        font-weight: 600;
+        color: var(--teal);
+        background: transparent;
+        border: 1.5px solid var(--line);
+        border-radius: var(--r-pill);
+        padding: 6px 14px;
+        cursor: pointer;
+        transition: border-color var(--dur-snap) var(--ease), color var(--dur-snap) var(--ease);
+      }
+
+      .rp-reset:hover {
+        border-color: var(--teal);
+      }
+
+      .rp-reset:focus-visible {
+        outline: 2px solid var(--teal);
+        outline-offset: 2px;
+      }
+
+      /* ---------- 3 · The map canvas ---------- */
+
+      .rp-map {
+        position: relative;
+        margin: 0;
+        border: 1px solid var(--line);
+        border-radius: var(--r-lg);
+        overflow: hidden;
+        background: var(--white);
+      }
+
+      .rp-map svg.rp-canvas {
+        display: block;
+        width: 100%;
+        height: auto;
+      }
+
+      /* The route summary reads as the map card's own header bar rather
+         than a floating overlay, so it can never cover the map. */
+      .rp-map-chip {
+        display: flex;
+        align-items: center;
+        gap: 9px;
+        padding: 11px 15px;
+        background: var(--bg2);
+        border-bottom: 1px solid var(--line);
+        font-size: 12px;
+        font-weight: 600;
+        color: var(--teal);
+        line-height: 1.35;
+      }
+
+      .rp-map-chip::before {
+        content: '';
+        width: 7px;
+        height: 7px;
+        border-radius: 50%;
+        background: var(--green);
+        flex: none;
+      }
+
+      /* --- terrain --- */
+      .rp-terrain {
+        fill: var(--white);
+      }
+
+      .rp-parks {
+        opacity: 0.62;
+      }
+
+      .rp-parks ellipse {
+        fill: var(--bg1);
+      }
+
+      .rp-lowland {
+        opacity: 0.55;
+      }
+
+      .rp-lowland ellipse {
+        fill: var(--bg2);
+      }
+
+      .rp-contours {
+        fill: none;
+        stroke: var(--teal);
+        stroke-width: 0.9;
+        opacity: 0.2;
+      }
+
+      /* --- roads: a grey casing with a white carriageway inside it,
+             which is what gives the double-hairline map look --- */
+      .rp-canvas g[data-road] {
+        transition: opacity var(--dur-reveal) var(--ease);
+      }
+
+      .rp-case,
+      .rp-ink {
+        fill: none;
+        stroke-linecap: round;
+        stroke-linejoin: round;
+        transition: stroke var(--dur-reveal) var(--ease),
+          stroke-width var(--dur-reveal) var(--ease);
+      }
+
+      .rp-case {
+        stroke: var(--teal);
+        stroke-opacity: 0.26;
+        stroke-width: 7;
+      }
+
+      .rp-ink {
+        stroke: var(--white);
+        stroke-width: 4.6;
+      }
+
+      g[data-road='spine'] .rp-case {
+        stroke-width: 9;
+      }
+
+      g[data-road='spine'] .rp-ink {
+        stroke-width: 6;
+      }
+
+      .rp-decoy .rp-case {
+        stroke-width: 5.4;
+        stroke-opacity: 0.17;
+      }
+
+      .rp-decoy .rp-ink {
+        stroke-width: 3.4;
+      }
+
+      .rp-decoy {
+        opacity: 0.8;
+      }
+
+      /* lit — the route these answers make */
+      g[data-state='on'] .rp-ink {
+        stroke: var(--green);
+      }
+
+      g[data-state='on'] .rp-case {
+        stroke: var(--green);
+        stroke-opacity: 0.3;
+        stroke-width: 15;
+      }
+
+      /* also open — the second road */
+      g[data-state='alt'] .rp-ink {
+        stroke: var(--teal);
+        stroke-dasharray: 7 6;
+      }
+
+      g[data-state='alt'] .rp-case {
+        stroke: var(--teal);
+        stroke-opacity: 0.2;
+        stroke-width: 12;
+      }
+
+      /* not taken */
+      g[data-state='dim'] {
+        opacity: 0.3;
+      }
+
+      /* --- junction nodes --- */
+      .rp-jn circle {
+        fill: var(--white);
+        stroke: var(--teal);
+        stroke-opacity: 0.34;
+        stroke-width: 1.8;
+        transition: stroke var(--dur-reveal) var(--ease),
+          stroke-opacity var(--dur-reveal) var(--ease);
+      }
+
+      .rp-jn text {
+        font-family: 'JetBrains Mono', monospace;
+        font-size: 10.5px;
+        fill: var(--gray);
+        text-anchor: middle;
+        transition: fill var(--dur-reveal) var(--ease);
+      }
+
+      .rp-jn[data-state='on'] circle {
+        stroke: var(--green);
+        stroke-opacity: 1;
+        stroke-width: 2.3;
+      }
+
+      .rp-jn[data-state='on'] text {
+        fill: var(--teal);
+      }
+
+      .rp-jn[data-state='dim'] {
+        opacity: 0.4;
+      }
+
+      /* --- start marker --- */
+      .rp-start-halo {
+        fill: var(--green);
+        opacity: 0.16;
+      }
+
+      .rp-start-dot {
+        fill: var(--green);
+        stroke: var(--white);
+        stroke-width: 2.4;
+      }
+
+      /* --- destination pins --- */
+      .rp-pin {
+        transition: opacity var(--dur-reveal) var(--ease);
+      }
+
+      .rp-pin-sh {
+        fill: var(--teal);
+        opacity: 0.14;
+      }
+
+      .rp-pin-body {
+        fill: var(--teal);
+        transition: fill var(--dur-reveal) var(--ease);
+      }
+
+      .rp-pin-l {
+        font-family: 'JetBrains Mono', monospace;
+        font-size: 12px;
+        font-weight: 500;
+        fill: var(--white);
+        text-anchor: middle;
+      }
+
+      .rp-pin-ring {
+        fill: none;
+        stroke: var(--green);
+        stroke-width: 1.6;
+        opacity: 0;
+        transition: opacity var(--dur-reveal) var(--ease);
+      }
+
+      .rp-pin[data-state='on'] .rp-pin-body {
+        fill: var(--green);
+      }
+
+      .rp-pin[data-state='on'] .rp-pin-ring {
+        opacity: 0.4;
+      }
+
+      .rp-pin[data-state='alt'] .rp-pin-body {
+        fill: var(--teal-700);
+      }
+
+      .rp-pin[data-state='dim'] {
+        opacity: 0.45;
+      }
+
+      .rp-pin[data-state='dim'] .rp-pin-body {
+        fill: var(--line);
+      }
+
+      .rp-pin[data-state='dim'] .rp-pin-l {
+        fill: var(--gray);
+      }
+
+      .rp-pin-name {
+        font-family: 'Poppins', sans-serif;
+        font-size: 14px;
+        font-weight: 600;
+        fill: var(--slate);
+        text-anchor: middle;
+        paint-order: stroke;
+        stroke: var(--white);
+        stroke-width: 4.5;
+        stroke-linejoin: round;
+      }
+
+      /* The label is a sibling of its pin, not a child, so the pin's own
+         states do not reach it. Without this a ruled-out destination kept
+         a full-strength name sitting beside a faded pin, and the map's
+         three states only really showed in two of them. */
+      .rp-pin[data-state='on'] + .rp-pin-name {
+        fill: var(--teal);
+      }
+
+      .rp-pin[data-state='dim'] + .rp-pin-name {
+        fill: var(--gray);
+        opacity: 0.55;
+      }
+
+      /* --- the closed road --- */
+      .rp-closure {
+        opacity: 0;
+        transition: opacity var(--dur-reveal) var(--ease);
+      }
+
+      .rp-closure[data-show='true'] {
+        opacity: 1;
+      }
+
+      .rp-closure rect {
+        fill: var(--gray);
+      }
+
+      .rp-closure line {
+        stroke: var(--white);
+        stroke-width: 2;
+        stroke-linecap: round;
+      }
+
+      /* --- compass + scale --- */
+      .rp-compass circle {
+        fill: var(--white);
+        stroke: var(--line);
+        stroke-width: 1.2;
+      }
+
+      .rp-compass path {
+        fill: var(--teal);
+        opacity: 0.55;
+      }
+
+      .rp-compass text,
+      .rp-scale text {
+        font-family: 'JetBrains Mono', monospace;
+        font-size: 8.5px;
+        letter-spacing: 0.14em;
+        fill: var(--gray);
+      }
+
+      .rp-compass text {
+        text-anchor: middle;
+      }
+
+      .rp-scale path {
+        fill: none;
+        stroke: var(--gray);
+        stroke-width: 1.1;
+        opacity: 0.7;
+      }
+
+      /* --- key under the map --- */
+      .rp-key {
+        list-style: none;
+        margin: 12px 0 0;
+        padding: 0;
+        display: flex;
+        flex-wrap: wrap;
+        gap: 7px 16px;
+        font-size: 11.5px;
+        color: var(--gray);
+      }
+
+      .rp-key li {
+        display: inline-flex;
+        align-items: center;
+        gap: 7px;
+      }
+
+      .rp-key i {
+        width: 18px;
+        height: 3px;
+        border-radius: 2px;
+        flex: none;
+      }
+
+      .rp-key .k-on {
+        background: var(--green);
+      }
+
+      .rp-key .k-alt {
+        background: var(--teal);
+        opacity: 0.55;
+      }
+
+      .rp-key .k-off {
+        background: var(--line);
+      }
+
+      /* ---------- 4 · Turn-by-turn directions ---------- */
+
+      .rp-dir {
+        margin-top: 26px;
+        border: 1px solid var(--line);
+        border-radius: var(--r-lg);
+        padding: 26px 28px 28px;
+      }
+
+      .rp-dir-head {
+        display: flex;
+        align-items: flex-end;
+        justify-content: space-between;
+        gap: 18px;
+        flex-wrap: wrap;
+        padding-bottom: 18px;
+        border-bottom: 1px solid var(--line);
+        margin-bottom: 8px;
+      }
+
+      .rp-dir-k {
+        display: block;
+        font-family: 'JetBrains Mono', monospace;
+        font-size: 10.5px;
+        letter-spacing: 0.14em;
+        text-transform: uppercase;
+        color: var(--gray);
+        margin-bottom: 6px;
+      }
+
+      .rp-dir-head h3 {
+        font-size: 21px;
+      }
+
+      .rp-dir-sum {
+        font-size: 13.5px;
+        color: var(--gray);
+        max-width: 38ch;
+      }
+
+      .rp-dir-cols {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr) minmax(0, 0.9fr);
+        gap: 28px;
+        align-items: start;
+      }
+
+      .rp-steps {
+        list-style: none;
+        margin: 0;
+        padding: 0;
+        position: relative;
+      }
+
+      /* the rail that runs behind the step marks */
+      .rp-steps::before {
+        content: '';
+        position: absolute;
+        left: 14px;
+        top: 32px;
+        bottom: 32px;
+        width: 2px;
+        background: var(--line);
+        border-radius: 2px;
+      }
+
+      .rp-step {
+        display: grid;
+        grid-template-columns: 30px minmax(0, 1fr);
+        gap: 14px;
+        padding: 12px 0;
+        position: relative;
+      }
+
+      .rp-m {
+        width: 30px;
+        height: 30px;
+        border-radius: 50%;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        flex: none;
+        background: var(--white);
+        border: 1.5px solid var(--line);
+        color: var(--gray);
+        position: relative;
+        z-index: 1;
+      }
+
+      .rp-m svg {
+        width: 15px;
+        height: 15px;
+      }
+
+      .rp-m b {
+        font-family: 'JetBrains Mono', monospace;
+        font-size: 12px;
+        font-weight: 500;
+        color: inherit;
+      }
+
+      .rp-step-go .rp-m {
+        background: var(--teal);
+        border-color: var(--teal);
+        color: var(--white);
+      }
+
+      .rp-step-arrive .rp-m {
+        background: var(--green);
+        border-color: var(--green);
+        color: var(--white);
+      }
+
+      /* The one warm accent on this sheet: the hard stop. */
+      .rp-step-stop .rp-m {
+        background: var(--ember);
+        border-color: transparent;
+        color: var(--white);
+      }
+
+      .rp-step-next .rp-m {
+        border-style: dashed;
+      }
+
+      .rp-step > div > b {
+        display: block;
+        font-size: 15px;
         font-weight: 700;
         color: var(--ink);
-        letter-spacing: -0.01em;
-        margin-bottom: 8px;
-        line-height: 1.3;
+        line-height: 1.35;
+        margin: 4px 0;
       }
-      .route-why {
+
+      .rp-step > div > span {
+        display: block;
+        font-size: 13.5px;
         color: var(--gray);
-        font-size: 15px;
-        margin-bottom: 18px;
+        line-height: 1.55;
       }
-      .route-then {
-        background: var(--bg2);
-        border-radius: var(--r-md);
-        padding: 18px 22px;
-        font-size: 15px;
-        color: var(--slate);
-      }
-      .route-then b {
-        color: var(--teal);
+
+      .rp-step-next > div > b {
+        color: var(--gray);
         font-weight: 600;
       }
-      .route-then + .route-then {
-        margin-top: 10px;
-      }
-      .route-then.stop {
+
+      .rp-endnote {
+        margin-top: 14px;
         background: var(--ember-soft);
+        border-left: 3px solid var(--ember-strong);
+        border-radius: var(--r-sm);
+        padding: 14px 17px;
+        font-size: 13.5px;
+        color: var(--slate);
       }
-      .route-then.stop b {
+
+      .rp-endnote b {
         color: var(--ember-strong);
+        font-weight: 600;
       }
+
+      /* ---------- 5 · Arrival card + roads not taken ---------- */
+
+      .rp-arrive {
+        border: 1px solid var(--line);
+        border-radius: var(--r-md);
+        padding: 22px 24px;
+        background: var(--bg1);
+      }
+
+      .rp-arrive.is-empty {
+        background: var(--bg2);
+      }
+
+      .rp-arrive-top {
+        display: flex;
+        align-items: center;
+        gap: 13px;
+        margin-bottom: 14px;
+      }
+
+      .rp-arrive-mark {
+        width: 36px;
+        height: 36px;
+        border-radius: 50%;
+        background: var(--green);
+        color: var(--white);
+        font-family: 'JetBrains Mono', monospace;
+        font-size: 14px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        flex: none;
+      }
+
+      .rp-arrive.is-empty .rp-arrive-mark {
+        background: var(--line);
+        color: var(--gray);
+      }
+
+      .rp-arrive-k {
+        display: block;
+        font-family: 'JetBrains Mono', monospace;
+        font-size: 9.5px;
+        letter-spacing: 0.14em;
+        text-transform: uppercase;
+        color: var(--gray);
+        margin-bottom: 3px;
+      }
+
+      .rp-arrive h3 {
+        font-size: 18px;
+        line-height: 1.2;
+      }
+
+      .rp-arrive-lede {
+        font-size: 14px;
+        color: var(--slate);
+        margin-bottom: 16px;
+      }
+
+      .rp-pair {
+        padding-top: 13px;
+        border-top: 1px solid var(--line);
+      }
+
+      .rp-pair + .rp-pair {
+        margin-top: 11px;
+      }
+
+      .rp-pk {
+        display: inline-flex;
+        align-items: center;
+        gap: 7px;
+        font-size: 10.5px;
+        font-weight: 600;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+        color: var(--gray);
+        margin-bottom: 5px;
+      }
+
+      .rp-pk::before {
+        content: '';
+        width: 7px;
+        height: 7px;
+        border-radius: 50%;
+        background: var(--green);
+        flex: none;
+      }
+
+      .rp-pk.watch::before {
+        background: var(--amber);
+      }
+
+      .rp-pk.alt::before {
+        background: var(--teal);
+      }
+
+      .rp-pair p {
+        font-size: 13.5px;
+        color: var(--slate);
+        line-height: 1.55;
+      }
+
+      .rp-arrive-link {
+        display: inline-flex;
+        align-items: center;
+        gap: 7px;
+        margin-top: 16px;
+        font-size: 13px;
+        font-weight: 700;
+        color: var(--teal);
+        transition: gap var(--dur-base) var(--ease);
+      }
+
+      .rp-arrive-link:hover {
+        gap: 11px;
+      }
+
+      .rp-arrive-link svg {
+        width: 14px;
+        height: 14px;
+      }
+
+      .rp-frame {
+        margin-top: 16px;
+        font-size: 12.5px;
+        color: var(--gray);
+        line-height: 1.55;
+      }
+
+      .rp-ruled {
+        margin-top: 20px;
+      }
+
+      .rp-ruled h4 {
+        font-size: 12px;
+        font-weight: 600;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+        color: var(--gray);
+        margin-bottom: 4px;
+      }
+
+      .rp-ruled ul {
+        list-style: none;
+        margin: 0;
+        padding: 0;
+      }
+
+      .rp-ruled li {
+        display: grid;
+        grid-template-columns: auto minmax(0, 1fr);
+        gap: 12px;
+        padding: 12px 0;
+        border-top: 1px solid var(--line-2);
+      }
+
+      .rp-ruled .m {
+        min-width: 24px;
+        height: 24px;
+        padding: 0 8px;
+        letter-spacing: 0.08em;
+        border-radius: var(--r-pill);
+        background: var(--bg2);
+        color: var(--gray);
+        font-family: 'JetBrains Mono', monospace;
+        font-size: 11px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        flex: none;
+        margin-top: 1px;
+      }
+
+      .rp-ruled b {
+        display: block;
+        font-size: 13.5px;
+        font-weight: 600;
+        color: var(--slate);
+      }
+
+      .rp-ruled span {
+        display: block;
+        font-size: 12.5px;
+        color: var(--gray);
+        line-height: 1.5;
+        margin-top: 2px;
+      }
+
+      .rp-note {
+        margin-top: 24px;
+        padding-top: 20px;
+        border-top: 1px solid var(--line);
+      }
+
+      /* ---------- 6 · The tax gap ---------- */
+
+      .rp-gap {
+        border: 1px solid var(--line);
+        border-radius: var(--r-md);
+        padding: 24px 26px;
+        margin-bottom: 24px;
+      }
+
+      .rp-tblwrap {
+        overflow-x: auto;
+      }
+
+      /* Two sub-captions sit inside the table. The figure columns are
+         nowrap, which a block caption inside one inherits — so the longest
+         word in the Division 293 caption could not break, and that single
+         unbreakable run is what used to push the fourth column out of
+         reach on a phone. The caption gets its wrapping back explicitly,
+         and a class rather than an inline style, so a phone width can
+         still adjust it. */
+      .rate-tbl .rate-sub {
+        display: block;
+        margin-top: 3px;
+        font-size: 12.5px;
+        white-space: normal;
+      }
+
+      .rate-tbl tr.hl {
+        background: var(--bg1);
+      }
+
+      .rate-tbl .rp-yourrow {
+        display: none;
+        margin-left: 9px;
+        font-family: 'JetBrains Mono', monospace;
+        font-size: 9.5px;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+        color: var(--green-600);
+        white-space: nowrap;
+      }
+
+      .rate-tbl tr.hl .rp-yourrow {
+        display: inline;
+      }
+
+      /* ---------- 7 · Destinations ---------- */
 
       .dest {
         border-radius: var(--r-lg);
-        padding: 28px;
+        padding: 26px;
         border: 1px solid var(--line);
         display: flex;
         flex-direction: column;
+        position: relative;
       }
+
       .dest h3 {
-        font-size: 19px;
+        font-size: 18px;
         margin: 14px 0 10px;
       }
-      .dest p {
+
+      .dest > p {
         color: var(--gray);
         font-size: 14.5px;
       }
+
       .dest ul {
         margin: 16px 0 0;
         padding: 0;
         list-style: none;
       }
+
       .dest li {
         font-size: 14px;
         color: var(--slate);
@@ -88,6 +1041,7 @@
         position: relative;
         border-top: 1px solid var(--line-2);
       }
+
       .dest li::before {
         content: '';
         position: absolute;
@@ -98,9 +1052,11 @@
         border-radius: 50%;
         background: var(--green);
       }
+
       .dest li.watch::before {
-        background: var(--ember);
+        background: var(--amber);
       }
+
       .dest .tag {
         font-family: 'JetBrains Mono', monospace;
         font-size: 10.5px;
@@ -112,17 +1068,281 @@
         border-top: 1px solid var(--line-2);
       }
 
-      .rate-tbl .hl {
+      .dest .dest-flag {
+        display: none;
+        position: absolute;
+        top: 20px;
+        right: 22px;
+        font-family: 'JetBrains Mono', monospace;
+        font-size: 9.5px;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+        color: var(--green-600);
         background: var(--bg1);
+        border-radius: var(--r-pill);
+        padding: 4px 10px;
       }
 
-      @media (max-width: 760px) {
-        .route {
+      .dest[data-arrival='true'] {
+        border-color: var(--green);
+      }
+
+      .dest[data-arrival='true'] .dest-flag {
+        display: inline-block;
+      }
+
+      /* ---------- 8 · Responsive ---------- */
+
+      @media (max-width: 860px) {
+        .rp-grid,
+        .rp-dir-cols {
           grid-template-columns: 1fr;
-          gap: 14px;
         }
-        .route-q {
-          font-size: 17px;
+        .rp-dir-cols {
+          gap: 22px;
+        }
+        .rp-dir {
+          padding: 22px 20px 24px;
+        }
+        .rp-gap {
+          padding: 20px;
+        }
+      }
+
+      @media (max-width: 560px) {
+        /* The shared stepper lets its steps shrink to the width of their mark
+           on a phone, which leaves the label nowhere to go. Scoped to this
+           sheet's own stepper: two to a row, so every label has room. */
+        #rp-stepper .w-step {
+          min-width: 45%;
+          padding: 10px 12px;
+        }
+
+        #rp-stepper .w-step-label {
+          font-size: 11.5px;
+        }
+
+        .rp-map-chip {
+          font-size: 11px;
+          padding: 6px 11px;
+        }
+        /* The section head points the reader at this table's last column,
+           so on a phone the table has to fit rather than disappear into a
+           scroller. Fixed columns, tighter gutters, and the sub-captions a
+           step smaller: four columns, all of them readable, no scroll. */
+        .rate-tbl {
+          font-size: 13px;
+          table-layout: fixed;
+        }
+        .rate-tbl th {
+          font-size: 10px;
+          letter-spacing: 0.08em;
+        }
+        .rate-tbl td,
+        .rate-tbl th {
+          padding-right: 8px;
+        }
+        .rate-tbl th:nth-child(1),
+        .rate-tbl td:nth-child(1) {
+          width: 36%;
+        }
+        .rate-tbl th:nth-child(2),
+        .rate-tbl td:nth-child(2) {
+          width: 18%;
+        }
+        .rate-tbl th:nth-child(3),
+        .rate-tbl td:nth-child(3) {
+          width: 18%;
+        }
+        .rate-tbl th:nth-child(4),
+        .rate-tbl td:nth-child(4) {
+          width: 28%;
+        }
+        .rate-tbl .rate-sub {
+          font-size: 11px;
+        }
+        /* The "your row" flag is nowrap, so on a phone it takes its own line
+           rather than widening the first column to hold it. */
+        .rate-tbl tr.hl .rp-yourrow {
+          display: block;
+          margin: 4px 0 0;
+        }
+        .dest {
+          padding: 22px;
+        }
+      }
+
+      /* ---------- 9 · Print ----------
+         The map is the one heavy visual on this sheet, so it gets its
+         own paper treatment rather than a blanket hide: the terrain,
+         the contours and the decoration go, the roads and the pins
+         stay as hairlines, and the page prints ink-light at a size
+         that sits beside the answers rather than swamping them. */
+
+      @media print {
+        .rp-grid,
+        .rp-dir-cols {
+          display: block;
+        }
+
+        .rp-panel,
+        .rp-dir,
+        .rp-arrive,
+        .rp-gap,
+        .dest {
+          break-inside: avoid;
+        }
+
+        .rp-panel-head,
+        .rp-panel-foot,
+        .rp-arrive,
+        .rp-endnote {
+          background: none;
+        }
+
+        .rp-reset,
+        .rp-privacy,
+        .rp-map-chip,
+        .rp-key,
+        .rp-arrive-link {
+          display: none !important;
+        }
+
+        /* the reader's own answers have to survive a mono printer */
+        .rp-seg label {
+          background: none;
+          opacity: 0.45;
+          border-color: var(--line);
+        }
+
+        .rp-seg input:checked + label {
+          background: none;
+          color: var(--teal);
+          border-color: var(--teal);
+          opacity: 1;
+          font-weight: 700;
+        }
+
+        .rp-map {
+          margin: 10pt auto 0;
+          max-width: 78mm;
+          break-inside: avoid;
+        }
+
+        .rp-contours,
+        .rp-parks,
+        .rp-lowland,
+        .rp-decoy,
+        .rp-pin-sh,
+        .rp-compass,
+        .rp-scale {
+          display: none;
+        }
+
+        .rp-case {
+          stroke: var(--gray);
+          stroke-opacity: 0.45;
+        }
+
+        g[data-state='on'] .rp-case,
+        g[data-state='alt'] .rp-case {
+          stroke: none;
+        }
+
+        g[data-state='on'] .rp-ink {
+          stroke: var(--teal);
+        }
+
+        g[data-state='alt'] .rp-ink {
+          stroke: var(--gray);
+        }
+
+        .rp-pin-body {
+          fill: none;
+          stroke: var(--teal);
+          stroke-width: 1.4;
+        }
+
+        .rp-pin[data-state='on'] .rp-pin-body {
+          fill: var(--teal);
+        }
+
+        .rp-pin[data-state='dim'] .rp-pin-body {
+          stroke: var(--gray);
+        }
+
+        /* On paper the second road is an outline, not a second arrival. */
+        .rp-pin[data-state='alt'] .rp-pin-body {
+          fill: none;
+          stroke: var(--teal);
+          stroke-dasharray: 2.5 2.5;
+        }
+
+        .rp-pin-l {
+          fill: var(--teal);
+        }
+
+        .rp-pin[data-state='on'] .rp-pin-l {
+          fill: var(--white);
+        }
+
+        .rp-dir {
+          margin-top: 14pt;
+        }
+
+        .rp-steps::before {
+          background: var(--line);
+        }
+
+        /* Browsers drop background colours on paper by default, so every
+           filled mark on this sheet becomes an outline rather than a white
+           figure on white. Specificity has to beat the on-screen rules. */
+        .rp-steps .rp-step .rp-m,
+        .rp-step-go .rp-m,
+        .rp-step-arrive .rp-m,
+        .rp-step-next .rp-m {
+          background: none;
+          border: 1.5px solid var(--teal);
+          color: var(--teal);
+        }
+
+        .rp-steps .rp-step-stop .rp-m,
+        .rp-step-stop .rp-m {
+          background: none;
+          border: 1.5px solid var(--ember-strong);
+          color: var(--ember-strong);
+        }
+
+        .rp-arrive .rp-arrive-mark,
+        .rp-arrive.is-empty .rp-arrive-mark {
+          background: none;
+          border: 1.5px solid var(--teal);
+          color: var(--teal);
+        }
+
+        .rp-panel-ic {
+          background: none;
+          border: 1px solid var(--line);
+          color: var(--teal);
+        }
+
+        .dest .num {
+          background: none;
+          border: 1.5px solid var(--teal);
+          color: var(--teal);
+        }
+
+        .dest[data-arrival='true'] .dest-flag {
+          background: none;
+          border: 1px solid var(--green-600);
+        }
+
+        .rp-tblwrap {
+          overflow: visible;
+        }
+
+        .rp-note textarea {
+          min-height: 60pt;
         }
       }
     </style>
@@ -132,212 +1352,476 @@
 
     <article class="sheet">
       <div data-sheet-masthead></div>
+      <div data-sheet-hero></div>
 
       <div class="pad">
-        <div class="eyebrow">Session tool 04 · Decision guide</div>
-        <h1 class="doc-title">The <em>Next Dollar</em> Decision Map</h1>
+        <div class="eyebrow">Session tool 04 · Route planner</div>
+        <h1 class="doc-title">Your <em>Next Dollar</em></h1>
         <p class="lede">
-          A bonus lands. A loan is repaid. Income steps up. The question is always the same —
-          mortgage, super, or investments outside super? There is no universal answer, but there is
-          a reliable order of questions. Work down it until one stops you.
+          Mortgage, super, or invest? Answer five questions and see the route your money should
+          take.
         </p>
 
-        <div class="card card-tint" style="margin: 32px 0 0">
+        <div class="card card-tint" style="margin: 30px 0 0">
           <p class="small">
-            <b style="color: var(--ink)">Why this order.</b> Each question below either removes a
-            destination or changes what the others are worth. Answering them out of order is how
-            people end up with a technically reasonable decision that does not suit them.
+            <b style="color: var(--ink)">Why this order.</b> Each question either removes a
+            destination or changes what the others are worth. Answered out of order, it is easy to
+            reach a technically reasonable decision that does not suit you.
           </p>
         </div>
 
         <hr class="rule" />
 
+        <!-- ================= THE PLANNER ================= -->
+
         <div class="sec-head">
-          <h2>Six questions, in order</h2>
-          <p>Each one is a fork. Some are hard stops.</p>
+          <h2>Plan your route</h2>
+          <p>Five questions. The map redraws as you answer them.</p>
         </div>
 
-        <div class="route">
-          <span class="num">01</span>
-          <div>
-            <p class="route-q">Is there any high-interest or non-deductible consumer debt?</p>
-            <p class="route-why">
-              Credit cards, personal loans, buy-now-pay-later balances. Nothing else competes with
-              a guaranteed, after-tax return equal to the interest rate you are paying.
-            </p>
-            <div class="route-then stop">
-              <b>If yes — stop here.</b> This is the only question on the page with a near-universal
-              answer. Clear it first.
-            </div>
-          </div>
-        </div>
+        <ol id="rp-stepper" class="w-stepper no-print" aria-label="Route planner progress"></ol>
 
-        <div class="route">
-          <span class="num">02</span>
-          <div>
-            <p class="route-q">Could you survive six to twelve months without income?</p>
-            <p class="route-why">
-              Liquidity is not a return, it is permission. Without it, the first unexpected event
-              forces you to sell a long-term asset at whatever price the market offers that week.
-            </p>
-            <div class="route-then stop">
-              <b>If no — stop here.</b> Build the reserve before committing capital to anything
-              with a timeframe attached.
-            </div>
-            <div class="route-then">
-              <b>If yes —</b> continue. The remaining questions are about efficiency rather than
-              safety.
-            </div>
-          </div>
-        </div>
-
-        <div class="route">
-          <span class="num">03</span>
-          <div>
-            <p class="route-q">When do you need this money back?</p>
-            <p class="route-why">
-              This single answer eliminates more options than any other. Money needed inside three
-              years does not belong anywhere it can fall, and money you want before 60 does not
-              belong inside superannuation.
-            </p>
-            <div class="route-then">
-              <b>Within 0–3 years —</b> the question is cash, offset or a term deposit. Growth
-              assets introduce a risk the timeframe cannot absorb.
-            </div>
-            <div class="route-then">
-              <b>Before preservation age —</b> superannuation is out, however attractive the tax
-              treatment. See the Gap Years Map.
-            </div>
-            <div class="route-then">
-              <b>After preservation age —</b> every destination stays on the table. Continue.
-            </div>
-          </div>
-        </div>
-
-        <div class="route">
-          <span class="num">04</span>
-          <div>
-            <p class="route-q">What is your marginal tax rate, and does Division 293 apply to you?</p>
-            <p class="route-why">
-              The gap between your marginal rate and the rate inside super is the entire case for a
-              concessional contribution. That gap narrows sharply once Division 293 applies, which
-              changes — but does not necessarily remove — the argument.
-            </p>
-            <div class="route-then">
-              <b>The arithmetic —</b> see the table below. The wider the gap, the more a dollar is
-              worth inside super rather than outside it.
-            </div>
-          </div>
-        </div>
-
-        <div class="route">
-          <span class="num">05</span>
-          <div>
-            <p class="route-q">Is your mortgage deductible or non-deductible?</p>
-            <p class="route-why">
-              Repaying non-deductible debt produces a guaranteed, tax-free return equal to your loan
-              rate. Repaying deductible debt does not — the interest was reducing your taxable
-              income, so the real return is lower than the headline rate suggests.
-            </p>
-            <div class="route-then">
-              <b>Non-deductible (your home) —</b> a certain return with no volatility. It competes
-              seriously with growth assets, and wins outright for anyone who values certainty.
-            </div>
-            <div class="route-then">
-              <b>Deductible (investment) —</b> compare the after-tax cost of the debt, not the rate
-              on the statement.
-            </div>
-          </div>
-        </div>
-
-        <div class="route">
-          <span class="num">06</span>
-          <div>
-            <p class="route-q">Whose name, and in what structure?</p>
-            <p class="route-why">
-              The last question, and the one most often skipped. Ownership is decided once and lived
-              with for decades; unwinding it later can trigger the very tax it was meant to manage.
-            </p>
-            <div class="route-then">
-              <b>Before you transfer —</b> personal name, spouse, joint, trust, company, bond and
-              super each behave differently on income, on sale and on death. See
-              <em>Wealth Structures, Compared</em>.
-            </div>
-          </div>
-        </div>
-
-        <hr class="rule" />
-
-        <!-- ---------- The tax gap ---------- -->
-        <div class="sec-head">
-          <h2>The gap that drives question four</h2>
-          <p>
-            Resident rates for the 2026–27 year, plus the 2% Medicare levy. The right-hand column is
-            what makes a concessional contribution worth considering — and what shrinks it.
-          </p>
-        </div>
-
-        <table class="tbl rate-tbl">
-          <thead>
-            <tr>
-              <th>Taxable income</th>
-              <th>Marginal rate</th>
-              <th>With Medicare levy</th>
-              <th>Gap to the 15% super rate</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td>$45,001 – $135,000</td>
-              <td class="n">30%</td>
-              <td class="n">32%</td>
-              <td class="n">17 points</td>
-            </tr>
-            <tr>
-              <td>$135,001 – $190,000</td>
-              <td class="n">37%</td>
-              <td class="n">39%</td>
-              <td class="n">24 points</td>
-            </tr>
-            <tr class="hl">
-              <td><b>$190,001 and above</b></td>
-              <td class="n">45%</td>
-              <td class="n">47%</td>
-              <td class="n">32 points</td>
-            </tr>
-            <tr>
-              <td>
-                <b>Above the $250,000 Division 293 threshold</b>
-                <span class="muted" style="display: block; font-size: 13px; margin-top: 3px">
-                  Income plus concessional contributions, combined
+        <div class="rp">
+          <div class="rp-grid">
+            <!-- ---- the directions panel ---- -->
+            <div class="rp-panel">
+              <div class="rp-panel-head">
+                <span class="rp-panel-ic" aria-hidden="true">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                       stroke-linecap="round" stroke-linejoin="round">
+                    <circle cx="6" cy="18" r="3" />
+                    <circle cx="18" cy="6" r="3" />
+                    <path d="M6 15V9a3 3 0 0 1 3-3h4M18 9v6a3 3 0 0 1-3 3h-4" />
+                  </svg>
                 </span>
-              </td>
-              <td class="n">45%</td>
-              <td class="n">47%</td>
-              <td class="n">17 points<span class="muted" style="display: block; font-size: 12.5px">contributions taxed at 30%</span></td>
-            </tr>
-          </tbody>
-        </table>
+                <div>
+                  <b>Plan your route</b>
+                  <span>Five answers, in the order that matters</span>
+                </div>
+              </div>
+
+              <div class="rp-qs">
+                <fieldset class="rp-q" data-q="1">
+                  <legend>
+                    <span class="rp-q-n">01</span><span class="rp-q-t">Any high-interest or
+                    non-deductible consumer debt?</span><span class="rp-off">off route</span>
+                  </legend>
+                  <p class="rp-q-hint">Credit cards, personal loans, buy-now-pay-later balances.</p>
+                  <div class="rp-seg">
+                    <input type="radio" name="q1" id="q1-yes" value="yes" />
+                    <label for="q1-yes">Yes</label>
+                    <input type="radio" name="q1" id="q1-no" value="no" />
+                    <label for="q1-no">No</label>
+                  </div>
+                </fieldset>
+
+                <fieldset class="rp-q" data-q="2">
+                  <legend>
+                    <span class="rp-q-n">02</span><span class="rp-q-t">Six to twelve months of
+                    expenses in reserve?</span><span class="rp-off">off route</span>
+                  </legend>
+                  <p class="rp-q-hint">Reachable within days, and not borrowed to get there.</p>
+                  <div class="rp-seg">
+                    <input type="radio" name="q2" id="q2-yes" value="yes" />
+                    <label for="q2-yes">Yes</label>
+                    <input type="radio" name="q2" id="q2-no" value="no" />
+                    <label for="q2-no">No</label>
+                  </div>
+                </fieldset>
+
+                <fieldset class="rp-q" data-q="3">
+                  <legend>
+                    <span class="rp-q-n">03</span><span class="rp-q-t">When do you need this money
+                    back?</span><span class="rp-off">off route</span>
+                  </legend>
+                  <p class="rp-q-hint">This answer removes more destinations than any other.</p>
+                  <div class="rp-seg">
+                    <input type="radio" name="q3" id="q3-short" value="0-3" />
+                    <label for="q3-short">0–3 years</label>
+                    <input type="radio" name="q3" id="q3-pre" value="before60" />
+                    <label for="q3-pre">Before 60</label>
+                    <input type="radio" name="q3" id="q3-post" value="after60" />
+                    <label for="q3-post">After 60</label>
+                  </div>
+                </fieldset>
+
+                <fieldset class="rp-q" data-q="4">
+                  <legend>
+                    <span class="rp-q-n">04</span><span class="rp-q-t">Your marginal tax
+                    rate</span><span class="rp-off">off route</span>
+                  </legend>
+                  <p class="rp-q-hint">Including the 2% Medicare levy. The table below sets them out.</p>
+                  <div class="rp-seg">
+                    <input type="radio" name="q4" id="q4-32" value="32" />
+                    <label for="q4-32">32%</label>
+                    <input type="radio" name="q4" id="q4-39" value="39" />
+                    <label for="q4-39">39%</label>
+                    <input type="radio" name="q4" id="q4-47" value="47" />
+                    <label for="q4-47">47%</label>
+                    <input type="radio" name="q4" id="q4-293" value="293" />
+                    <label for="q4-293">47% + Division 293</label>
+                  </div>
+                </fieldset>
+
+                <fieldset class="rp-q" data-q="5">
+                  <legend>
+                    <span class="rp-q-n">05</span><span class="rp-q-t">Is the mortgage deductible or
+                    non-deductible?</span><span class="rp-off">off route</span>
+                  </legend>
+                  <p class="rp-q-hint">Your home is non-deductible. An investment loan is deductible.</p>
+                  <div class="rp-seg">
+                    <input type="radio" name="q5" id="q5-nd" value="non-deductible" />
+                    <label for="q5-nd">Non-deductible</label>
+                    <input type="radio" name="q5" id="q5-d" value="deductible" />
+                    <label for="q5-d">Deductible</label>
+                    <input type="radio" name="q5" id="q5-none" value="none" />
+                    <label for="q5-none">No mortgage</label>
+                  </div>
+                </fieldset>
+              </div>
+
+              <div class="rp-panel-foot">
+                <span class="rp-privacy">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                       stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                    <rect x="4" y="10" width="16" height="10" rx="2" />
+                    <path d="M8 10V7a4 4 0 0 1 8 0v3" />
+                  </svg>
+                  Stays in this browser
+                </span>
+                <button type="button" class="rp-reset" data-reset>Clear the route</button>
+              </div>
+            </div>
+
+            <!-- ---- the map ---- -->
+            <div>
+              <figure class="rp-map">
+                <figcaption class="rp-map-chip" id="rp-chip" role="status" aria-live="polite">
+                  Answer question one to start the route
+                </figcaption>
+                <svg class="rp-canvas" viewBox="0 0 400 584" role="img" aria-labelledby="rp-map-title">
+                  <title id="rp-map-title">
+                    A route map with five junctions and four destinations. No answers yet, so no
+                    route is drawn.
+                  </title>
+
+                  <defs>
+                    <g id="rp-hill-a"><path d="M18 0C18 2 16 3 15 4C14 6 12 6 11 7C10 8 9 9 8 10C7 11 6 13 5 13C3 14 2 14 0 14C-2 14 -3 13 -5 13C-6 12 -7 12 -9 11C-10 10 -12 10 -14 9C-15 8 -16 6 -17 5C-18 3 -18 2 -18 0C-18 -2 -18 -3 -17 -5C-17 -7 -16 -8 -14 -9C-13 -10 -10 -11 -9 -11C-7 -11 -5 -10 -4 -10C-2 -10 -1 -11 0 -11C1 -12 3 -13 5 -13C6 -13 9 -13 10 -13C12 -12 14 -11 15 -10C16 -8 17 -7 18 -5C18 -4 19 -2 18 0Z"/><path d="M35 0C34 3 30 6 27 8C25 10 21 11 19 12C17 14 16 16 14 18C13 20 11 23 9 25C7 26 3 28 0 29C-3 30 -7 30 -11 29C-14 29 -18 28 -21 26C-24 25 -28 22 -29 19C-30 16 -30 12 -30 9C-30 6 -28 3 -28 0C-28 -3 -28 -5 -28 -8C-27 -11 -27 -14 -25 -16C-23 -19 -20 -20 -17 -21C-14 -22 -11 -22 -8 -23C-5 -24 -3 -25 0 -26C3 -26 7 -27 10 -27C13 -27 17 -26 20 -24C23 -23 26 -21 28 -18C31 -16 34 -13 35 -10C36 -7 37 -3 35 0Z"/><path d="M47 0C46 4 43 8 40 12C38 15 34 18 32 21C29 24 27 27 24 30C21 33 18 36 14 38C10 40 5 41 0 42C-5 43 -10 45 -16 44C-22 44 -29 44 -33 41C-38 39 -43 34 -44 29C-45 24 -43 17 -42 12C-40 7 -37 4 -36 0C-35 -4 -36 -7 -35 -10C-35 -14 -35 -18 -33 -22C-32 -25 -29 -29 -26 -32C-23 -36 -20 -39 -15 -42C-11 -45 -5 -48 0 -48C5 -49 12 -48 16 -45C21 -43 24 -38 27 -34C31 -30 33 -27 35 -23C38 -20 42 -17 44 -13C46 -9 48 -4 47 0Z"/><path d="M53 0C53 5 53 10 53 15C53 21 53 28 51 33C49 39 46 47 41 51C36 55 28 58 21 58C14 59 7 56 0 55C-7 54 -13 54 -19 52C-25 51 -33 51 -38 48C-44 44 -49 39 -51 34C-54 28 -53 21 -53 16C-53 10 -53 5 -52 0C-52 -5 -53 -10 -51 -15C-50 -20 -48 -25 -45 -29C-42 -34 -39 -38 -35 -43C-31 -48 -27 -54 -21 -59C-15 -63 -7 -69 0 -70C7 -70 17 -67 23 -63C28 -58 32 -49 35 -44C38 -38 39 -32 41 -27C44 -22 47 -19 48 -14C50 -10 52 -5 53 0Z"/><path d="M64 0C65 6 66 12 66 19C67 27 71 37 69 45C67 54 64 65 57 70C50 76 38 78 28 78C19 78 8 73 0 69C-8 66 -15 62 -21 59C-28 55 -34 52 -39 48C-44 44 -48 39 -52 34C-56 29 -59 24 -64 19C-68 13 -75 7 -77 0C-80 -7 -83 -16 -81 -24C-79 -31 -72 -38 -66 -43C-60 -48 -52 -51 -45 -55C-38 -60 -32 -65 -25 -68C-17 -72 -8 -77 0 -77C8 -77 18 -73 25 -69C32 -65 37 -58 42 -52C47 -46 51 -41 54 -36C58 -30 61 -24 63 -18C64 -12 64 -6 64 0Z"/><path d="M92 0C91 9 88 16 86 25C84 34 84 44 80 52C76 61 70 71 62 76C53 82 41 84 30 84C20 85 9 82 0 80C-9 78 -18 76 -26 72C-34 68 -40 62 -46 56C-51 51 -53 44 -58 38C-63 32 -69 28 -76 22C-83 16 -95 9 -101 0C-106 -9 -111 -22 -109 -32C-106 -41 -96 -51 -88 -57C-79 -64 -66 -67 -56 -70C-46 -73 -37 -75 -27 -76C-18 -76 -8 -76 0 -74C8 -72 16 -68 23 -65C31 -62 38 -60 47 -58C55 -55 66 -54 74 -48C82 -43 90 -35 93 -27C95 -19 93 -9 92 0Z"/><path d="M124 0C122 11 116 23 110 32C105 42 98 51 89 58C80 65 68 69 58 72C48 75 37 74 28 76C18 78 10 82 0 85C-10 87 -22 92 -33 91C-43 90 -55 84 -63 78C-71 72 -75 61 -81 53C-87 45 -93 38 -99 29C-105 20 -114 11 -117 0C-120 -11 -121 -24 -117 -34C-113 -45 -103 -54 -95 -62C-86 -70 -75 -76 -65 -80C-54 -85 -43 -88 -32 -88C-21 -88 -9 -84 0 -80C9 -77 16 -70 24 -67C33 -65 41 -67 53 -65C64 -64 81 -66 93 -61C105 -56 117 -46 122 -36C127 -26 126 -11 124 0Z"/></g>
+<g id="rp-hill-b"><path d="M17 0C16 2 16 4 15 5C14 7 13 8 12 9C10 10 9 10 7 11C6 11 5 11 3 11C2 11 1 12 0 13C-1 14 -3 15 -4 15C-6 15 -8 14 -9 13C-10 12 -11 11 -12 9C-12 8 -13 6 -14 5C-14 3 -15 2 -15 0C-15 -2 -15 -4 -14 -5C-14 -7 -13 -8 -12 -9C-11 -10 -9 -11 -8 -12C-7 -13 -6 -14 -4 -14C-3 -14 -1 -14 0 -13C1 -13 2 -12 3 -11C5 -11 6 -11 7 -11C9 -10 11 -11 12 -10C14 -9 15 -7 16 -6C17 -4 17 -2 17 0Z"/><path d="M29 0C29 3 29 7 28 10C26 13 25 16 22 17C20 19 16 19 13 20C11 20 8 20 6 21C4 21 3 23 0 25C-3 26 -6 29 -9 29C-12 30 -16 29 -18 27C-21 26 -24 23 -26 20C-28 17 -29 14 -30 11C-31 7 -30 3 -29 0C-28 -3 -25 -6 -23 -8C-21 -10 -19 -11 -17 -14C-16 -16 -15 -18 -14 -21C-12 -23 -11 -26 -8 -28C-6 -29 -3 -30 0 -29C3 -29 5 -28 8 -27C11 -26 14 -26 16 -24C19 -23 22 -21 24 -19C26 -16 27 -13 28 -10C29 -7 29 -3 29 0Z"/><path d="M33 0C33 4 35 8 35 12C35 16 34 22 32 25C30 29 26 31 22 33C19 36 15 37 12 39C8 41 4 43 0 44C-4 45 -9 45 -13 44C-18 43 -22 40 -25 38C-29 35 -33 32 -36 28C-39 24 -42 20 -43 15C-44 11 -44 4 -42 0C-40 -4 -35 -8 -32 -11C-29 -14 -26 -16 -24 -19C-22 -22 -22 -26 -20 -29C-18 -33 -16 -38 -12 -41C-9 -44 -4 -46 0 -47C4 -49 10 -49 14 -48C19 -47 25 -45 28 -42C32 -39 35 -33 36 -28C37 -23 35 -17 35 -12C34 -8 33 -4 33 0Z"/><path d="M40 0C40 5 42 9 42 15C42 20 42 26 40 32C39 37 36 43 32 48C29 53 24 59 19 63C14 67 6 70 0 70C-6 69 -13 65 -18 61C-23 56 -26 49 -29 43C-33 38 -35 34 -38 30C-42 26 -46 22 -48 17C-51 12 -52 6 -51 0C-51 -6 -48 -11 -46 -16C-44 -21 -42 -26 -39 -31C-37 -36 -35 -42 -31 -46C-27 -50 -22 -54 -17 -56C-12 -59 -6 -59 0 -60C6 -61 12 -63 19 -62C25 -61 33 -60 37 -56C42 -51 45 -43 46 -36C47 -29 44 -21 43 -15C42 -9 40 -5 40 0Z"/><path d="M60 0C61 7 61 14 60 21C59 28 55 34 52 41C49 47 45 53 40 59C35 66 31 75 24 80C17 85 8 89 0 89C-8 88 -17 81 -22 74C-28 68 -31 58 -34 51C-37 44 -39 39 -42 33C-45 28 -49 24 -52 18C-55 13 -57 7 -58 0C-60 -7 -61 -14 -62 -22C-62 -30 -63 -40 -61 -48C-59 -56 -53 -65 -47 -70C-41 -74 -30 -75 -22 -75C-15 -75 -7 -70 0 -69C7 -67 13 -67 20 -65C26 -63 34 -62 39 -58C44 -54 49 -47 51 -40C54 -34 55 -26 56 -20C57 -13 59 -7 60 0Z"/></g>
+                  </defs>
+
+                  <rect class="rp-terrain" x="0" y="0" width="400" height="584" />
+
+                  <g class="rp-lowland" aria-hidden="true">
+                    <ellipse cx="248" cy="198" rx="58" ry="38" transform="rotate(-24 248 198)" />
+                    <ellipse cx="86" cy="474" rx="50" ry="34" transform="rotate(16 86 474)" />
+                  </g>
+
+                  <g class="rp-parks" aria-hidden="true">
+                    <ellipse cx="344" cy="432" rx="54" ry="40" transform="rotate(-18 344 432)" />
+                    <ellipse cx="48" cy="118" rx="46" ry="34" transform="rotate(12 48 118)" />
+                    <ellipse cx="300" cy="86" rx="38" ry="26" transform="rotate(28 300 86)" />
+                  </g>
+
+                  <g class="rp-contours" aria-hidden="true">
+                    <use href="#rp-hill-a" transform="translate(318 96)" />
+                    <use href="#rp-hill-a" transform="translate(58 334) rotate(140) scale(0.82)" />
+                    <use href="#rp-hill-b" transform="translate(252 534) rotate(28) scale(1.18)" />
+                    <use href="#rp-hill-b" transform="translate(118 48) rotate(-62) scale(0.78)" />
+                    <use href="#rp-hill-a" transform="translate(372 486) rotate(205) scale(0.62)" />
+                    <use href="#rp-hill-b" transform="translate(238 346) rotate(96) scale(0.9)" />
+                    <use href="#rp-hill-b" transform="translate(16 228) rotate(-18) scale(0.66)" />
+                    <use href="#rp-hill-a" transform="translate(206 112) rotate(250) scale(0.5)" />
+                  </g>
+
+                  <!-- background network: roads that go nowhere on this map -->
+                  <g class="rp-decoy" aria-hidden="true">
+                    <g>
+                      <path class="rp-case" d="M0 150C60 160 110 140 164 150C220 160 290 146 400 166" />
+                      <path class="rp-ink" d="M0 150C60 160 110 140 164 150C220 160 290 146 400 166" />
+                    </g>
+                    <g>
+                      <path class="rp-case" d="M0 392C70 382 118 404 180 400C250 396 320 414 400 406" />
+                      <path class="rp-ink" d="M0 392C70 382 118 404 180 400C250 396 320 414 400 406" />
+                    </g>
+                    <g>
+                      <path class="rp-case" d="M268 0C262 60 286 110 278 168C270 226 300 268 292 330C286 392 306 440 300 516C298 544 300 562 300 584" />
+                      <path class="rp-ink" d="M268 0C262 60 286 110 278 168C270 226 300 268 292 330C286 392 306 440 300 516C298 544 300 562 300 584" />
+                    </g>
+                    <g>
+                      <path class="rp-case" d="M44 0C52 56 30 96 40 152C50 208 24 250 34 306C44 360 22 404 32 460C38 504 30 540 36 584" />
+                      <path class="rp-ink" d="M44 0C52 56 30 96 40 152C50 208 24 250 34 306C44 360 22 404 32 460C38 504 30 540 36 584" />
+                    </g>
+                  </g>
+
+                  <!-- ---- exit ramps (drawn under the spine) ---- -->
+                  <g data-road="ramp" data-leg="R2D" data-state="idle">
+                    <path class="rp-case" d="M126 196C114 208 94 216 78 232" />
+                    <path class="rp-ink" d="M126 196C114 208 94 216 78 232" />
+                  </g>
+                  <g data-road="ramp" data-leg="R3D" data-state="idle">
+                    <path class="rp-case" d="M178 274C150 268 112 248 78 232" />
+                    <path class="rp-ink" d="M178 274C150 268 112 248 78 232" />
+                  </g>
+                  <g data-road="ramp" data-leg="R5B" data-state="idle">
+                    <path class="rp-case" d="M198 438C238 430 280 398 302 358C308 346 316 336 322 326" />
+                    <path class="rp-ink" d="M198 438C238 430 280 398 302 358C308 346 316 336 322 326" />
+                  </g>
+                  <g data-road="ramp" data-leg="R5A" data-state="idle">
+                    <path class="rp-case" d="M198 438C226 452 256 474 286 488C300 494 312 498 322 500" />
+                    <path class="rp-ink" d="M198 438C226 452 256 474 286 488C300 494 312 498 322 500" />
+                  </g>
+                  <g data-road="ramp" data-leg="R5C" data-state="idle">
+                    <path class="rp-case" d="M198 438C168 458 132 478 104 492C96 496 86 498 78 500" />
+                    <path class="rp-ink" d="M198 438C168 458 132 478 104 492C96 496 86 498 78 500" />
+                  </g>
+
+                  <!-- ---- the spine ---- -->
+                  <g data-road="spine" data-leg="S0" data-state="idle">
+                    <path class="rp-case" d="M118 44C120 72 142 90 152 116" />
+                    <path class="rp-ink" d="M118 44C120 72 142 90 152 116" />
+                  </g>
+                  <g data-road="spine" data-leg="S1" data-state="idle">
+                    <path class="rp-case" d="M152 116C158 146 136 164 126 196" />
+                    <path class="rp-ink" d="M152 116C158 146 136 164 126 196" />
+                  </g>
+                  <g data-road="spine" data-leg="S2" data-state="idle">
+                    <path class="rp-case" d="M126 196C118 230 162 244 178 274" />
+                    <path class="rp-ink" d="M126 196C118 230 162 244 178 274" />
+                  </g>
+                  <g data-road="spine" data-leg="S3" data-state="idle">
+                    <path class="rp-case" d="M178 274C188 306 150 324 150 358" />
+                    <path class="rp-ink" d="M178 274C188 306 150 324 150 358" />
+                  </g>
+                  <g data-road="spine" data-leg="S4" data-state="idle">
+                    <path class="rp-case" d="M150 358C152 392 182 406 198 438" />
+                    <path class="rp-ink" d="M150 358C152 392 182 406 198 438" />
+                  </g>
+
+                  <!-- ---- closures ---- -->
+                  <g class="rp-closure" data-closure="1" data-show="false" aria-hidden="true"
+                     transform="translate(150 140) rotate(-16)">
+                    <rect x="-16" y="-4.5" width="32" height="9" rx="4.5" />
+                    <line x1="-9" y1="-3.4" x2="-4" y2="3.4" />
+                    <line x1="-1" y1="-3.4" x2="4" y2="3.4" />
+                    <line x1="7" y1="-3.4" x2="12" y2="3.4" />
+                  </g>
+                  <g class="rp-closure" data-closure="2" data-show="false" aria-hidden="true"
+                     transform="translate(128 218) rotate(14)">
+                    <rect x="-16" y="-4.5" width="32" height="9" rx="4.5" />
+                    <line x1="-9" y1="-3.4" x2="-4" y2="3.4" />
+                    <line x1="-1" y1="-3.4" x2="4" y2="3.4" />
+                    <line x1="7" y1="-3.4" x2="12" y2="3.4" />
+                  </g>
+
+                  <!-- ---- junction nodes ---- -->
+                  <g class="rp-jn" data-jn="1" data-state="idle" transform="translate(152 116)">
+                    <circle r="11" /><text y="4">1</text>
+                  </g>
+                  <g class="rp-jn" data-jn="2" data-state="idle" transform="translate(126 196)">
+                    <circle r="11" /><text y="4">2</text>
+                  </g>
+                  <g class="rp-jn" data-jn="3" data-state="idle" transform="translate(178 274)">
+                    <circle r="11" /><text y="4">3</text>
+                  </g>
+                  <g class="rp-jn" data-jn="4" data-state="idle" transform="translate(150 358)">
+                    <circle r="11" /><text y="4">4</text>
+                  </g>
+                  <g class="rp-jn" data-jn="5" data-state="idle" transform="translate(198 438)">
+                    <circle r="11" /><text y="4">5</text>
+                  </g>
+
+                  <!-- ---- start ---- -->
+                  <g class="rp-start" transform="translate(118 44)" aria-hidden="true">
+                    <circle class="rp-start-halo" r="13" />
+                    <circle class="rp-start-dot" r="5.5" />
+                  </g>
+                  <text class="rp-pin-name" x="196" y="48" style="font-size: 12.5px">Your next dollar</text>
+
+                  <!-- ---- destination pins ---- -->
+                  <g class="rp-pin" data-pin="D" data-state="open" transform="translate(78 232)">
+                    <ellipse class="rp-pin-sh" cx="0" cy="3" rx="9" ry="3.2" />
+                    <path class="rp-pin-body" d="M0 0C0 0-12-15-12-23A12 12 0 1 1 12-23C12-15 0 0 0 0Z" />
+                    <circle class="rp-pin-ring" r="18" cy="-23" />
+                    <text class="rp-pin-l" y="-19">D</text>
+                  </g>
+                  <text class="rp-pin-name" x="78" y="252">Cash &amp; reserve</text>
+
+                  <g class="rp-pin" data-pin="C" data-state="open" transform="translate(78 500)">
+                    <ellipse class="rp-pin-sh" cx="0" cy="3" rx="9" ry="3.2" />
+                    <path class="rp-pin-body" d="M0 0C0 0-12-15-12-23A12 12 0 1 1 12-23C12-15 0 0 0 0Z" />
+                    <circle class="rp-pin-ring" r="18" cy="-23" />
+                    <text class="rp-pin-l" y="-19">C</text>
+                  </g>
+                  <text class="rp-pin-name" x="78" y="520">Outside super</text>
+
+                  <g class="rp-pin" data-pin="B" data-state="open" transform="translate(322 326)">
+                    <ellipse class="rp-pin-sh" cx="0" cy="3" rx="9" ry="3.2" />
+                    <path class="rp-pin-body" d="M0 0C0 0-12-15-12-23A12 12 0 1 1 12-23C12-15 0 0 0 0Z" />
+                    <circle class="rp-pin-ring" r="18" cy="-23" />
+                    <text class="rp-pin-l" y="-19">B</text>
+                  </g>
+                  <text class="rp-pin-name" x="322" y="346">Superannuation</text>
+
+                  <g class="rp-pin" data-pin="A" data-state="open" transform="translate(322 500)">
+                    <ellipse class="rp-pin-sh" cx="0" cy="3" rx="9" ry="3.2" />
+                    <path class="rp-pin-body" d="M0 0C0 0-12-15-12-23A12 12 0 1 1 12-23C12-15 0 0 0 0Z" />
+                    <circle class="rp-pin-ring" r="18" cy="-23" />
+                    <text class="rp-pin-l" y="-19">A</text>
+                  </g>
+                  <text class="rp-pin-name" x="322" y="520">The mortgage</text>
+
+                  <!-- ---- map furniture ---- -->
+                  <g class="rp-compass" transform="translate(362 44)" aria-hidden="true">
+                    <circle r="14" />
+                    <path d="M0-8 4 3 0 0.6-4 3Z" />
+                    <text y="-18">N</text>
+                  </g>
+
+                  <g class="rp-scale" transform="translate(22 564)" aria-hidden="true">
+                    <path d="M0 0V7M0 3.5H62M62 0V7" />
+                    <text x="0" y="-5">FIVE QUESTIONS</text>
+                  </g>
+                </svg>
+
+              </figure>
+
+              <ul class="rp-key">
+                <li><i class="k-on"></i>Your route</li>
+                <li><i class="k-alt"></i>Also open</li>
+                <li><i class="k-off"></i>Not on this route</li>
+              </ul>
+            </div>
+          </div>
+
+          <!-- ---- turn-by-turn ---- -->
+          <div class="rp-dir">
+            <div class="rp-dir-head">
+              <div>
+                <span class="rp-dir-k">Turn by turn</span>
+                <h3>Your directions</h3>
+              </div>
+              <p class="rp-dir-sum" id="rp-sum">
+                Answer the five questions and the route is written out here, step by step.
+              </p>
+            </div>
+
+            <div class="rp-dir-cols">
+              <div>
+                <ol class="rp-steps" id="rp-steps"></ol>
+                <div id="rp-endnote"></div>
+              </div>
+
+              <div>
+                <div id="rp-arrival"></div>
+                <div class="rp-ruled" id="rp-ruled"></div>
+              </div>
+            </div>
+
+            <div class="field rp-note">
+              <label for="rp-ask">Take to the conversation</label>
+              <span class="hint">
+                One thing on this route you want tested before you act on it. This is the part of the
+                sheet worth printing.
+              </span>
+              <textarea id="rp-ask" rows="2"></textarea>
+            </div>
+          </div>
+        </div>
+
+        <div class="lm-photoband">
+          <img src="../assets/img/photo/mature-couple-roadtrip-tailgate-view.webp" alt="" />
+          <p>The questions come in the same order for everyone. Where they <em>land</em> does not.</p>
+          <span class="lm-band-k">General information only · not a recommendation</span>
+        </div>
+
+        <hr class="rule" />
+
+        <!-- ================= THE TAX GAP ================= -->
+
+        <div class="sec-head">
+          <h2>The gap behind question four</h2>
+          <p>
+            Resident rates for the 2026–27 year, plus the 2% Medicare levy. The last column is the
+            number question four is really about.
+          </p>
+        </div>
+
+        <div class="rp-gap" id="rp-gap"></div>
+
+        <div class="rp-tblwrap">
+          <table class="tbl rate-tbl">
+            <thead>
+              <tr>
+                <th>Taxable income</th>
+                <th>Marginal rate</th>
+                <th>With Medicare levy</th>
+                <th>Gap to the 15% super rate</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr data-rate="32">
+                <td>$45,001 – $135,000<span class="rp-yourrow">Your row</span></td>
+                <td class="n">30%</td>
+                <td class="n">32%</td>
+                <td class="n">17 points</td>
+              </tr>
+              <tr data-rate="39">
+                <td>$135,001 – $190,000<span class="rp-yourrow">Your row</span></td>
+                <td class="n">37%</td>
+                <td class="n">39%</td>
+                <td class="n">24 points</td>
+              </tr>
+              <tr data-rate="47">
+                <td><b>$190,001 and above</b><span class="rp-yourrow">Your row</span></td>
+                <td class="n">45%</td>
+                <td class="n">47%</td>
+                <td class="n">32 points</td>
+              </tr>
+              <tr data-rate="293">
+                <td>
+                  <b>Above the $250,000 Division 293 threshold</b><span class="rp-yourrow">Your row</span>
+                  <span class="muted rate-sub">
+                    Income plus concessional contributions, combined
+                  </span>
+                </td>
+                <td class="n">45%</td>
+                <td class="n">47%</td>
+                <td class="n">17 points<span class="muted rate-sub">contributions taxed at 30%</span></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
 
         <p class="small muted" style="margin-top: 16px">
-          Even at the narrowest, a 17-point gap is not nothing — it is the same gap that makes super
+          Even at its narrowest, a 17-point gap is not nothing — it is the same gap that makes super
           worth considering for someone on $135,000. The point of question four is not whether super
           wins. It is knowing which number you are actually comparing.
         </p>
 
         <hr class="rule" />
 
-        <!-- ---------- Destinations ---------- -->
-        <div class="sec-head">
-          <h2>The four destinations</h2>
-          <p>
-            What each one is genuinely good at, and the thing people most often miss about it.
-            Green marks a strength; amber marks the catch.
-          </p>
+        <!-- ================= DESTINATIONS ================= -->
+
+        <div class="lm-aside lm-aside--flip" style="--lm-aside-pos: 50% 40%">
+          <div class="lm-aside-img">
+            <img src="../assets/img/photo/mature-couple-cafe-conversation-iced-drinks.webp" alt="" />
+          </div>
+          <div>
+            <div class="sec-head" style="margin-bottom: 0">
+              <h2>The four destinations</h2>
+              <p>
+                What each one is genuinely good at, and the thing people most often miss about it.
+                Green marks a strength; amber marks the catch. The route picks one — you are free to
+                read all four.
+              </p>
+            </div>
+          </div>
         </div>
 
-        <div class="grid g2">
-          <div class="dest">
+        <div class="grid g2" style="margin-top: 26px">
+          <div class="dest" id="dest-A" data-dest="A">
+            <span class="dest-flag">Your arrival</span>
             <span class="num">A</span>
             <h3>The mortgage</h3>
             <p>A guaranteed, tax-free return equal to your loan rate, with no volatility.</p>
@@ -350,7 +1834,8 @@
             <div class="tag">Best when certainty matters and the debt is non-deductible</div>
           </div>
 
-          <div class="dest">
+          <div class="dest" id="dest-B" data-dest="B">
+            <span class="dest-flag">Your arrival</span>
             <span class="num">B</span>
             <h3>Superannuation</h3>
             <p>The most tax-effective structure most people will ever have access to.</p>
@@ -363,7 +1848,8 @@
             <div class="tag">Best when the timeframe is beyond 60 and the tax gap is wide</div>
           </div>
 
-          <div class="dest">
+          <div class="dest" id="dest-C" data-dest="C">
+            <span class="dest-flag">Your arrival</span>
             <span class="num">C</span>
             <h3>Investments outside super</h3>
             <p>The only pool that can fund the years before preservation age.</p>
@@ -376,7 +1862,8 @@
             <div class="tag">Best when you want optionality before 60</div>
           </div>
 
-          <div class="dest">
+          <div class="dest" id="dest-D" data-dest="D">
+            <span class="dest-flag">Your arrival</span>
             <span class="num">D</span>
             <h3>Cash and the reserve</h3>
             <p>Not an investment. The thing that stops you being forced to sell one.</p>
@@ -392,7 +1879,29 @@
 
         <hr class="rule" />
 
-        <div class="card card-green">
+        <!-- ================= THE SIXTH QUESTION ================= -->
+
+        <div class="card">
+          <span class="sub-h">One question the map cannot route</span>
+          <h3 class="step-h">Whose name, and in what structure?</h3>
+          <p class="muted" style="margin-top: 10px">
+            The last question, and the one most often skipped. Ownership is decided once and lived
+            with for decades; unwinding it later can trigger the very tax it was meant to manage.
+            Personal name, spouse, joint, trust, company, bond and super each behave differently on
+            income, on sale and on death.
+          </p>
+          <div class="row" style="margin-top: 16px">
+            <a class="btn btn-ghost btn-sm" href="08-structures.html" style="padding-left: 0">
+              Where Your Wealth Lives
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                   stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <path d="M5 12h14M12 5l7 7-7 7" />
+              </svg>
+            </a>
+          </div>
+        </div>
+
+        <div class="card card-green" style="margin-top: 18px">
           <h3 class="step-h">What the map cannot tell you</h3>
           <p class="muted" style="margin-top: 10px">
             Where the balance sits between these four depends on your marginal rate, your existing
@@ -404,10 +1913,11 @@
 
         <div class="disclaimer" style="margin-top: 32px">
           <b>General information only.</b> Rates and thresholds shown are for the 2026–27 Australian
-          financial year and may change. Nothing here is a recommendation to repay debt, contribute
-          to superannuation, or invest in anything. The appropriate destination for any amount
-          depends on your objectives, financial situation and needs, none of which this page
-          considers. Confirm current rates and thresholds at
+          financial year and may change. The route this page draws is a restatement of the questions
+          in order; it is not a recommendation to repay debt, contribute to superannuation, or invest
+          in anything. The appropriate destination for any amount depends on your objectives,
+          financial situation and needs, none of which this page considers. Confirm current rates and
+          thresholds at
           <a href="https://www.ato.gov.au" target="_blank" rel="noopener noreferrer"
              style="color: var(--teal); font-weight: 600">ato.gov.au</a>
           and seek personal advice before acting.
@@ -416,7 +1926,7 @@
         <div class="row no-print" style="margin-top: 26px">
           <button class="btn btn-outline btn-sm" data-print>Print or save as PDF</button>
           <a class="btn btn-ghost btn-sm" href="08-structures.html">
-            Next: Wealth Structures, Compared
+            Next: Where Your Wealth Lives
             <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor"
                  stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
               <path d="M5 12h14M12 5l7 7-7 7" />
@@ -429,9 +1939,679 @@
     </article>
 
     <script type="module">
-      import { mountSheet, wirePrint } from '../assets/sheet.js'
-      mountSheet({ no: '04', kind: 'Decision guide' })
+      import { mountSheet, wirePrint, store } from '../assets/sheet.js'
+      import { comparison, stepper } from '../assets/widgets.js'
+
+      mountSheet({
+        no: '04',
+        kind: 'Route planner',
+        hero: { src: 'art/04-routemap.webp', alt: '', variant: 'art', pos: '50% 50%' },
+      })
       wirePrint()
+
+      /* ==========================================================
+         1 · THE CONTENT THE ROUTE IS MADE OF
+         Every line below is a restatement of something already on
+         this sheet. Nothing here introduces a figure, a threshold
+         or a rate that is not in the table or in CLAIMS.md.
+         ========================================================== */
+
+      const DEST = {
+        A: {
+          name: 'The mortgage',
+          short: 'The mortgage',
+          lede: 'A guaranteed, tax-free return equal to your loan rate, with no volatility.',
+          good:
+            'Certain — no market risk, no timing risk, no fees. An offset keeps the money reachable while still saving interest.',
+          watch:
+            'Repaid directly, it may not be reachable again without refinancing. And it builds no income stream; it only reduces an expense.',
+        },
+        B: {
+          name: 'Superannuation',
+          short: 'Superannuation',
+          lede: 'The most tax-effective structure most people will ever have access to.',
+          good:
+            'Contributions and earnings are taxed concessionally, and unused concessional cap can be carried forward, within limits.',
+          watch:
+            'Locked until preservation age — 60 for everyone reaching it from 1 July 2024 — and the caps are annual and largely use-it-or-lose-it.',
+        },
+        C: {
+          name: 'Investments outside super',
+          short: 'Outside super',
+          lede: 'The only pool that can fund the years before preservation age.',
+          good:
+            'Reachable at any age, for any purpose, and the ownership can be chosen to suit your tax position.',
+          watch:
+            'Earnings are taxed at your marginal rate unless held elsewhere, and selling to fund something else can trigger capital gains tax.',
+        },
+        D: {
+          name: 'Cash and the reserve',
+          short: 'Cash & reserve',
+          lede: 'Not an investment. The thing that stops you being forced to sell one.',
+          good:
+            'Immediate and certain, with no sequencing risk. It funds short-term goals without touching long-term assets.',
+          watch:
+            'It loses purchasing power to inflation over long holdings, and interest is taxed at your marginal rate.',
+        },
+      }
+
+      /* The four rows of the table, and nothing beyond them. */
+      const RATES = {
+        '32': { rate: '32%', inside: '15%', gap: 17, insideLabel: 'Inside superannuation' },
+        '39': { rate: '39%', inside: '15%', gap: 24, insideLabel: 'Inside superannuation' },
+        '47': { rate: '47%', inside: '15%', gap: 32, insideLabel: 'Inside superannuation' },
+        '293': {
+          rate: '47%',
+          inside: '30%',
+          gap: 17,
+          insideLabel: 'Inside super, Division 293',
+        },
+      }
+
+      const RATE_STEP = {
+        '32': {
+          title: 'Marginal rate 32% — a 17-point gap',
+          why:
+            'The narrowest gap on the table, and still seventeen points between your rate and the 15% rate inside super.',
+        },
+        '39': {
+          title: 'Marginal rate 39% — a 24-point gap',
+          why: 'Twenty-four points between your rate and the rate inside super.',
+        },
+        '47': {
+          title: 'Marginal rate 47% — a 32-point gap',
+          why: 'The widest gap on the table between your rate and the rate inside super.',
+        },
+        '293': {
+          title: 'Division 293 applies — the gap narrows to 17 points',
+          why:
+            'Above the $250,000 threshold, concessional contributions are effectively taxed at 30% rather than 15%. That changes the argument. It does not necessarily remove it.',
+        },
+      }
+
+      const MORTGAGE_STEP = {
+        'non-deductible': {
+          title: 'Non-deductible mortgage alongside',
+          why:
+            'Repaying it returns your loan rate, guaranteed and tax-free. That is a real competitor, not a consolation prize.',
+        },
+        deductible: {
+          title: 'Deductible mortgage — compare the after-tax cost',
+          why:
+            'The interest was reducing your taxable income, so the real return on repaying it is lower than the rate on the statement.',
+        },
+        none: {
+          title: 'No mortgage in the way',
+          why: 'One destination fewer to weigh, and one less certainty to trade against.',
+        },
+      }
+
+      const ASK = {
+        1: ['Answer question one', 'High-interest debt is what everything else is measured against.'],
+        2: ['Answer question two', 'Whether six to twelve months of expenses is already set aside.'],
+        3: ['Answer question three', 'When you need this money back. It removes more destinations than any other answer.'],
+        4: ['Answer question four', 'Your marginal rate, and whether Division 293 applies to you.'],
+        5: ['Answer question five', 'Whether the mortgage is deductible, non-deductible, or not there at all.'],
+      }
+
+      const SECOND_WHY = {
+        A: 'Certainty instead of tax efficiency. Which of those matters more is a personal question, not an arithmetic one.',
+        C: 'Reachable at any age and owned however suits your position — at the cost of the treatment inside super.',
+        D: 'An offset keeps the money reachable while still saving interest.',
+      }
+
+      /* ==========================================================
+         2 · THE ROUTE
+         A pure function of the five answers. No DOM, no state, no
+         side effects: given the same five answers it returns the
+         same route, every time, which is what makes it checkable.
+
+         Each branch encodes a line that is already written on this
+         sheet. Where the sheet says a question is a hard stop, the
+         route stops. Where the sheet says the weighting is personal,
+         the route offers a second road rather than picking for you.
+         ========================================================== */
+
+      function planRoute(a) {
+        const legs = {
+          S0: 'idle', S1: 'idle', S2: 'idle', S3: 'idle', S4: 'idle',
+          R2D: 'idle', R3D: 'idle', R5B: 'idle', R5A: 'idle', R5C: 'idle',
+        }
+        const jn = { 1: 'idle', 2: 'idle', 3: 'idle', 4: 'idle', 5: 'idle' }
+        const pins = { A: 'open', B: 'open', C: 'open', D: 'open' }
+        const why = { A: null, B: null, C: null, D: null }
+        const steps = []
+        const r = {
+          legs, jn, pins, why, steps,
+          arrive: null, second: null, secondWhy: null,
+          stopAt: null, off: [], closure: null,
+        }
+
+        const dim = (list) => list.forEach((k) => (legs[k] = 'dim'))
+        const ask = (n) => steps.push({ kind: 'next', n, title: ASK[n][0], why: ASK[n][1] })
+        const arriveStep = (k, line) =>
+          steps.push({ kind: 'arrive', n: null, title: 'Arrive — ' + DEST[k].name, why: line })
+
+        /* ---- Question 1. The one near-universal answer on the sheet. ---- */
+        if (!a.q1) {
+          ask(1)
+          return r
+        }
+        legs.S0 = 'on'
+        jn[1] = 'on'
+
+        if (a.q1 === 'yes') {
+          r.stopAt = 1
+          r.off = [2, 3, 4, 5]
+          r.closure = 1
+          steps.push({
+            kind: 'stop',
+            n: 1,
+            title: 'Road closed — clear the consumer debt first',
+            why:
+              'Nothing on this map returns a guaranteed, after-tax amount equal to the interest rate you are already paying.',
+          })
+          dim(['S1', 'S2', 'S3', 'S4', 'R2D', 'R3D', 'R5A', 'R5B', 'R5C'])
+          Object.keys(pins).forEach((k) => {
+            pins[k] = 'dim'
+            why[k] = 'The route stops before here. That balance is cleared first.'
+          })
+          return r
+        }
+
+        steps.push({
+          kind: 'go',
+          n: 1,
+          title: 'Clear of consumer debt',
+          why: 'Nothing is standing in front of the next dollar, so the junction opens.',
+        })
+        legs.S1 = 'on'
+        jn[2] = 'on'
+
+        /* ---- Question 2. Liquidity is permission, not return. ---- */
+        if (!a.q2) {
+          ask(2)
+          return r
+        }
+
+        if (a.q2 === 'no') {
+          r.stopAt = 2
+          r.off = [3, 4, 5]
+          r.closure = 2
+          r.arrive = 'D'
+          legs.R2D = 'on'
+          dim(['S2', 'S3', 'S4', 'R3D', 'R5A', 'R5B', 'R5C'])
+          steps.push({
+            kind: 'stop',
+            n: 2,
+            title: 'Stop — build the reserve first',
+            why:
+              'Liquidity is not a return, it is permission. Without it, the first unexpected event forces a sale at whatever price the market offers that week.',
+          })
+          arriveStep('D', 'The reserve is the destination until it exists. Capital with a timeframe attached comes after it.')
+          pins.D = 'on'
+          ;['A', 'B', 'C'].forEach((k) => {
+            pins[k] = 'dim'
+            why[k] = 'Reachable once the reserve is built — not before it.'
+          })
+          return r
+        }
+
+        steps.push({
+          kind: 'go',
+          n: 2,
+          title: 'Reserve in place — continue',
+          why:
+            'Six to twelve months of expenses is what stops an unexpected event turning into a forced sale.',
+        })
+        legs.S2 = 'on'
+        jn[3] = 'on'
+
+        /* ---- Question 3. The answer that eliminates the most. ---- */
+        if (!a.q3) {
+          ask(3)
+          return r
+        }
+
+        if (a.q3 === '0-3') {
+          r.arrive = 'D'
+          r.off = [4]
+          legs.R3D = 'on'
+          dim(['S3', 'S4', 'R2D', 'R5A', 'R5B', 'R5C'])
+          steps.push({
+            kind: 'go',
+            n: 3,
+            title: 'Exit at three years',
+            why: 'Money needed inside three years does not belong anywhere it can fall.',
+          })
+          arriveStep('D', 'Cash, an offset or a term deposit. The timeframe decides this one, not the tax rate.')
+          pins.D = 'on'
+          pins.B = 'dim'
+          why.B = 'Locked until preservation age 60 — a great deal further away than this money is going.'
+          pins.C = 'dim'
+          why.C = 'Growth assets can fall, and three years may not be long enough to recover.'
+
+          if (a.q5 === 'non-deductible') {
+            r.second = 'A'
+            r.secondWhy = SECOND_WHY.D
+            pins.A = 'alt'
+          } else if (a.q5 === 'deductible') {
+            pins.A = 'dim'
+            why.A = 'Repaying deductible debt returns less than the rate on the statement.'
+          } else if (a.q5 === 'none') {
+            pins.A = 'dim'
+            why.A = 'There is no mortgage on this route.'
+          }
+          return r
+        }
+
+        const preSixty = a.q3 === 'before60'
+        steps.push(
+          preSixty
+            ? {
+                kind: 'go',
+                n: 3,
+                title: 'Take the pre-60 road',
+                why:
+                  'Money wanted before preservation age cannot sit in superannuation, however attractive the tax treatment.',
+              }
+            : {
+                kind: 'go',
+                n: 3,
+                title: 'Stay on the long road — after 60',
+                why: 'Nothing here is needed before preservation age, so every destination stays on the table.',
+              }
+        )
+        legs.S3 = 'on'
+        jn[4] = 'on'
+
+        pins.D = 'dim'
+        why.D = 'The reserve is already built. Beyond three years, cash gives up purchasing power.'
+        if (preSixty) {
+          pins.B = 'dim'
+          why.B = 'Locked until preservation age 60 — and this money is wanted before then.'
+        }
+
+        /* ---- Question 4. The gap, and only the gap. ---- */
+        if (!a.q4) {
+          ask(4)
+          return r
+        }
+        steps.push({ kind: 'go', n: 4, title: RATE_STEP[a.q4].title, why: RATE_STEP[a.q4].why })
+        legs.S4 = 'on'
+        jn[5] = 'on'
+
+        /* ---- Question 5. What the debt is really returning. ---- */
+        if (!a.q5) {
+          ask(5)
+          return r
+        }
+        steps.push({ kind: 'go', n: 5, title: MORTGAGE_STEP[a.q5].title, why: MORTGAGE_STEP[a.q5].why })
+
+        /* ---- Arrival ---- */
+        if (preSixty) {
+          if (a.q5 === 'non-deductible') {
+            r.arrive = 'A'
+            r.second = 'C'
+            arriveStep('A', 'A certain, tax-free return equal to your loan rate — reachable years before superannuation is.')
+          } else {
+            r.arrive = 'C'
+            arriveStep('C', 'The only pool that can fund the years before preservation age.')
+            /* Both answers take the mortgage off this route, and each has a
+               reason. Without one the pin stayed at full strength at the end
+               of a ramp the route had already dimmed, and the destination
+               never appeared under "roads not taken". Same two lines the
+               after-60 branch uses, so the sheet says one thing. */
+            pins.A = 'dim'
+            why.A =
+              a.q5 === 'none'
+                ? 'There is no mortgage on this route.'
+                : 'Repaying deductible debt returns less than the rate on the statement.'
+          }
+          dim(['R5B'])
+          if (r.arrive === 'A') { legs.R5A = 'on'; legs.R5C = 'alt' }
+          else { legs.R5C = 'on'; legs.R5A = 'dim' }
+        } else {
+          r.arrive = 'B'
+          legs.R5B = 'on'
+          const line = {
+            '47': 'The longest timeframe and the widest gap on the table point the same way.',
+            '39': 'A long timeframe and a 24-point gap point the same way.',
+            '32': 'A long timeframe and a 17-point gap — the narrowest on the table, and still a gap.',
+            '293': 'A long timeframe, and a gap Division 293 narrows to 17 points without closing.',
+          }[a.q4]
+          arriveStep('B', line)
+
+          if (a.q5 === 'non-deductible') {
+            r.second = 'A'
+            pins.A = 'alt'
+            legs.R5A = 'alt'
+            legs.R5C = 'dim'
+            /* At the narrow end of the table the two are a closer comparison,
+               which is the one place question four changes the weighting
+               rather than only the size of the case. */
+            if (a.q4 === '32' || a.q4 === '293') {
+              r.secondWhy =
+                'Certainty against tax efficiency. At a 17-point gap — the narrowest on the table — that is a closer comparison than at 32 points. Which matters more is personal.'
+            }
+          } else {
+            r.second = 'C'
+            pins.C = 'alt'
+            legs.R5C = 'alt'
+            legs.R5A = 'dim'
+            if (a.q5 === 'none') why.A = 'There is no mortgage on this route.'
+            else why.A = 'Repaying deductible debt returns less than the rate on the statement.'
+            pins.A = 'dim'
+          }
+        }
+
+        dim(['R2D', 'R3D'])
+        if (r.arrive) pins[r.arrive] = 'on'
+        if (r.second) pins[r.second] = 'alt'
+        return r
+      }
+
+      /* ==========================================================
+         3 · WIRING
+         ========================================================== */
+
+      const QKEYS = ['q1', 'q2', 'q3', 'q4', 'q5']
+      const SAVE = store('next-dollar')
+      const el = (id) => document.getElementById(id)
+      const svg = document.querySelector('.rp-canvas')
+      const esc = (s) =>
+        String(s).replace(/[&<>"']/g, (c) =>
+          ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c])
+        )
+
+      /* A step that belongs to a question carries that question's number, so a
+         row in the directions and a junction on the map are the same object.
+         Only the arrival has no question behind it, so only it gets an icon. */
+      const PIN_ICON =
+        '<path d="M12 21s7-6.2 7-11a7 7 0 1 0-14 0c0 4.8 7 11 7 11Z"/><circle cx="12" cy="10" r="2.4"/>'
+
+      const mark = (s) =>
+        s.n
+          ? `<span class="rp-m"><b>${s.n}</b></span>`
+          : `<span class="rp-m"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"
+               stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${PIN_ICON}</svg></span>`
+
+      function answers() {
+        const a = {}
+        QKEYS.forEach((k) => {
+          const picked = document.querySelector('input[name="' + k + '"]:checked')
+          if (picked) a[k] = picked.value
+        })
+        return a
+      }
+
+      function persist() {
+        const a = answers()
+        a.note = el('rp-ask').value
+        SAVE.write(a)
+      }
+
+      function restore() {
+        const saved = SAVE.read() || {}
+        QKEYS.forEach((k) => {
+          if (typeof saved[k] !== 'string') return
+          const input = document.querySelector('input[name="' + k + '"][value="' + saved[k] + '"]')
+          if (input) input.checked = true
+        })
+        if (typeof saved.note === 'string') el('rp-ask').value = saved.note
+      }
+
+      /* ---- the map ---- */
+      function paintMap(r) {
+        svg.querySelectorAll('g[data-leg]').forEach((g) => {
+          g.setAttribute('data-state', r.legs[g.dataset.leg] || 'idle')
+        })
+        svg.querySelectorAll('.rp-jn').forEach((g) => {
+          g.setAttribute('data-state', r.jn[g.dataset.jn] || 'idle')
+        })
+        svg.querySelectorAll('.rp-pin').forEach((g) => {
+          g.setAttribute('data-state', r.pins[g.dataset.pin] || 'open')
+        })
+        svg.querySelectorAll('.rp-closure').forEach((g) => {
+          g.setAttribute('data-show', String(Number(g.dataset.closure) === r.closure))
+        })
+
+        const title = svg.querySelector('#rp-map-title')
+        if (r.stopAt) {
+          title.textContent =
+            'Route map. The road is closed at junction ' + r.stopAt + ', so no destination is reached.'
+        } else if (r.arrive) {
+          title.textContent =
+            'Route map. The lit route runs from the start through the junctions answered so far and arrives at ' +
+            DEST[r.arrive].name +
+            (r.second ? ', with ' + DEST[r.second].name + ' shown as a second road.' : '.')
+        } else {
+          title.textContent =
+            'Route map with five junctions and four destinations. The route is drawn as far as the questions answered so far.'
+        }
+      }
+
+      /* ---- turn by turn ---- */
+      function paintSteps(r) {
+        el('rp-steps').innerHTML = r.steps
+          .map(
+            (s) => `
+            <li class="rp-step rp-step-${s.kind}">
+              ${mark(s)}
+              <div>
+                <b>${esc(s.title)}</b>
+                <span>${esc(s.why)}</span>
+              </div>
+            </li>`
+          )
+          .join('')
+
+        el('rp-endnote').innerHTML = r.stopAt
+          ? `<p class="rp-endnote"><b>The route ends here.</b> ${
+              r.stopAt === 1
+                ? 'Questions two to five do not change it. This is the only question on the sheet with a near-universal answer — and it is the most valuable thing this page can tell you.'
+                : 'Questions three to five do not change it. Build the reserve, then come back and run the rest of the route.'
+            }</p>`
+          : ''
+      }
+
+      /* ---- arrival card + roads not taken ---- */
+      function paintArrival(r) {
+        const box = el('rp-arrival')
+
+        if (!r.arrive && r.stopAt === 1) {
+          box.className = 'rp-arrive is-empty'
+          box.innerHTML = `
+            <div class="rp-arrive-top">
+              <span class="rp-arrive-mark">—</span>
+              <div>
+                <span class="rp-arrive-k">The route stops at</span>
+                <h3>None of the four</h3>
+              </div>
+            </div>
+            <p class="rp-arrive-lede">
+              Clearing that balance is the destination. It returns a guaranteed, after-tax amount
+              equal to the rate you are paying — which is more than any of the four below can
+              promise. Come back to the map once it is gone.
+            </p>`
+        } else if (!r.arrive) {
+          box.className = 'rp-arrive is-empty'
+          box.innerHTML = `
+            <div class="rp-arrive-top">
+              <span class="rp-arrive-mark">?</span>
+              <div>
+                <span class="rp-arrive-k">Destination</span>
+                <h3>Not yet decided</h3>
+              </div>
+            </div>
+            <p class="rp-arrive-lede">
+              Keep answering. The map narrows as each question removes a destination or changes what
+              the others are worth.
+            </p>`
+        } else {
+          const d = DEST[r.arrive]
+          box.className = 'rp-arrive'
+          box.innerHTML = `
+            <div class="rp-arrive-top">
+              <span class="rp-arrive-mark">${esc(r.arrive)}</span>
+              <div>
+                <span class="rp-arrive-k">${r.stopAt ? 'The route stops at' : 'Where these answers lead'}</span>
+                <h3>${esc(d.name)}</h3>
+              </div>
+            </div>
+            <p class="rp-arrive-lede">${esc(d.lede)}</p>
+            <div class="rp-pair">
+              <span class="rp-pk">Good at</span>
+              <p>${esc(d.good)}</p>
+            </div>
+            <div class="rp-pair">
+              <span class="rp-pk watch">The catch</span>
+              <p>${esc(d.watch)}</p>
+            </div>
+            ${
+              r.second
+                ? `<div class="rp-pair">
+                     <span class="rp-pk alt">Also open — ${esc(DEST[r.second].short)}</span>
+                     <p>${esc(r.secondWhy || SECOND_WHY[r.second] || '')}</p>
+                   </div>`
+                : ''
+            }
+            <a class="rp-arrive-link" href="#dest-${esc(r.arrive)}">
+              Read the full destination
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3"
+                   stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <path d="M5 12h14M12 5l7 7-7 7" />
+              </svg>
+            </a>
+            <p class="rp-frame">
+              This is where the five questions lead, in order. It is not a recommendation — the
+              weighting between these destinations is personal.
+            </p>`
+        }
+
+        /* Roads not taken, grouped by reason: when one answer rules out three
+           destinations at once, that is one fact, not three. */
+        const ruled = Object.keys(r.why).filter((k) => r.pins[k] === 'dim' && r.why[k])
+        const groups = []
+        ruled.forEach((k) => {
+          const g = groups.find((x) => x.why === r.why[k])
+          if (g) g.keys.push(k)
+          else groups.push({ why: r.why[k], keys: [k] })
+        })
+
+        el('rp-ruled').innerHTML = groups.length
+          ? `<h4>Roads not taken</h4>
+             <ul>
+               ${groups
+                 .map(
+                   (g) => `<li>
+                     <span class="m">${esc(g.keys.join(' '))}</span>
+                     <div>
+                       <b>${esc(g.keys.map((k) => DEST[k].short).join(' · '))}</b>
+                       <span>${esc(g.why)}</span>
+                     </div>
+                   </li>`
+                 )
+                 .join('')}
+             </ul>`
+          : ''
+
+        document.querySelectorAll('.dest').forEach((card) => {
+          card.setAttribute('data-arrival', String(card.dataset.dest === r.arrive))
+        })
+      }
+
+      /* ---- the tax gap, as the reader's own comparison ---- */
+      function paintGap(a) {
+        const box = el('rp-gap')
+        if (!a.q4) {
+          comparison(box, {
+            aLabel: 'Your marginal rate, with levy',
+            a: '—',
+            bLabel: 'Inside superannuation',
+            b: '15%',
+            note:
+              'Answer question four and this becomes the two numbers you are actually comparing.',
+          })
+        } else {
+          const g = RATES[a.q4]
+          comparison(box, {
+            aLabel: 'Your marginal rate, with levy',
+            a: g.rate,
+            bLabel: g.insideLabel,
+            b: g.inside,
+            note: `A <b style="color:var(--teal)">${g.gap}-point</b> gap. That gap is the whole of the case for a concessional contribution — and the whole of what question four is asking.`,
+          })
+        }
+
+        document.querySelectorAll('.rate-tbl tbody tr').forEach((tr) => {
+          tr.classList.toggle('hl', tr.dataset.rate === a.q4)
+        })
+      }
+
+      /* ---- the panel's own feedback ---- */
+      function paintPanel(a, r) {
+        document.querySelectorAll('.rp-q').forEach((f) => {
+          const n = Number(f.dataset.q)
+          f.setAttribute('data-off', String(r.off.includes(n)))
+        })
+
+        const done = QKEYS.map((k) => Boolean(a[k]))
+        const firstOpen = done.indexOf(false)
+
+        /* The stepper tracks the questions still worth answering, not the
+           blanks. A question this route has taken off the map is not the
+           reader's next move, so it cannot be the current step — otherwise
+           the stepper points at question two while the sheet is saying the
+           route ended at question one. */
+        const firstLive = QKEYS.findIndex((k, i) => !a[k] && !r.off.includes(i + 1))
+        stepper(el('rp-stepper'), ['Debt', 'Reserve', 'Timeframe', 'Tax rate', 'Mortgage'],
+          firstLive === -1 ? QKEYS.length : firstLive)
+
+        const chip = el('rp-chip')
+        if (r.stopAt) chip.textContent = 'Road closed at question ' + r.stopAt
+        else if (r.arrive) chip.textContent = 'Route ends at ' + DEST[r.arrive].short
+        else {
+          const next = firstOpen === -1 ? 5 : firstOpen + 1
+          chip.textContent = 'Answer question ' + ['one', 'two', 'three', 'four', 'five'][next - 1] + ' to continue'
+        }
+
+        const sum = el('rp-sum')
+        if (r.stopAt) {
+          sum.textContent =
+            'The route stops at question ' + r.stopAt + '. That is the answer, and it is a complete one.'
+        } else if (r.arrive) {
+          sum.textContent =
+            r.steps.length + ' steps, ending at ' + DEST[r.arrive].short + '.' +
+            (r.second ? ' A second road stays open.' : '')
+        } else {
+          sum.textContent = 'Answer the five questions and the route is written out here, step by step.'
+        }
+      }
+
+      function sync() {
+        const a = answers()
+        const r = planRoute(a)
+        paintMap(r)
+        paintSteps(r)
+        paintArrival(r)
+        paintGap(a)
+        paintPanel(a, r)
+        persist()
+      }
+
+      document.querySelectorAll('.rp-seg input').forEach((i) => i.addEventListener('change', sync))
+      el('rp-ask').addEventListener('input', persist)
+
+      document.querySelector('[data-reset]').addEventListener('click', () => {
+        document.querySelectorAll('.rp-seg input').forEach((i) => (i.checked = false))
+        el('rp-ask').value = ''
+        SAVE.clear()
+        sync()
+      })
+
+      restore()
+      sync()
     </script>
   </body>
 </html>

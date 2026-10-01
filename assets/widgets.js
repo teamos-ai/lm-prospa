@@ -29,8 +29,19 @@ const esc = (s) =>
 
 const reduced = () => window.matchMedia('(prefers-reduced-motion: reduce)').matches
 
-/* One observer for every widget on the page. */
+/* One observer for every widget on the page.
+   `seen` records which elements have already been revealed; `pending` records
+   the ones still waiting. Both matter — see onSeen and the beforeprint hook. */
 const seen = new WeakSet()
+const pending = new Set()
+
+function reveal(el, instant) {
+  pending.delete(el)
+  seen.add(el)
+  io?.unobserve(el)
+  el.__playFn?.(instant)
+}
+
 const io =
   typeof IntersectionObserver === 'undefined'
     ? null
@@ -38,20 +49,41 @@ const io =
         (entries) => {
           entries.forEach((e) => {
             if (!e.isIntersecting || seen.has(e.target)) return
-            seen.add(e.target)
-            e.target.__play?.()
-            io.unobserve(e.target)
+            reveal(e.target, false)
           })
         },
         { threshold: 0.35 }
       )
 
-/** Run `play` when the element is first seen — or straight away if it cannot be observed. */
+/**
+ * Run `play` when the element is first seen — or straight away if it cannot be
+ * observed, or if it has been seen already.
+ *
+ * That last clause is the important one. A widget redrawn with new data calls
+ * onSeen again on the same element, but the observer's `seen` set made the
+ * callback early-return, so the redraw never ran and the widget sat empty at
+ * scaleX(0) or stroke-dasharray="0 C". Every magnet that re-renders on input
+ * had to carry its own workaround for it. A second call means the element is
+ * already on screen with new numbers on it, so there is nothing to wait for:
+ * play it immediately, and without the animation nobody wants on every
+ * keystroke of a slider.
+ */
 function onSeen(el, play) {
-  if (reduced() || !io) return play(true)
-  el.__play = () => play(false)
+  el.__playFn = play
+  if (reduced() || !io || seen.has(el)) return reveal(el, true)
+  pending.add(el)
   io.observe(el)
   // Already in view on load: the observer fires on the next frame anyway.
+}
+
+/* A sheet printed before a widget scrolled into view would print it blank —
+   the donut has no CSS print fallback, because its arcs carry their length in
+   a data attribute that CSS cannot read. Reveal everything still pending
+   before the browser takes its print snapshot. */
+if (typeof window !== 'undefined' && window.addEventListener) {
+  window.addEventListener('beforeprint', () => {
+    Array.from(pending).forEach((el) => reveal(el, true))
+  })
 }
 
 /** Count a figure up to its value. Returns immediately under reduced motion. */
@@ -294,6 +326,15 @@ export function progressRows(el, rows) {
    7 · COMPARISON — two figures either side of a rule.
    ========================================================== */
 
+/**
+ * Two figures set against each other.
+ *
+ * `a`, `b`, `aLabel` and `bLabel` are data and are escaped. `note` is NOT:
+ * it is author-supplied rich text and callers pass markup through it to
+ * emphasise the number that matters (magnet 04 does). Nothing user-typed ever
+ * reaches it — the sheets take numbers, never free text — so keep it that way:
+ * if a caller ever needs to put a reader's own words here, escape at the call.
+ */
 export function comparison(el, { a, b, aLabel, bLabel, note }) {
   el.classList.add('w-compare')
   el.innerHTML = `
@@ -515,7 +556,9 @@ export function lifePath(el, {
   const postPts = post.length ? [{ age: superAccessAge, balance: post[0].balance }, ...post] : []
 
   const emptyEarly = exhaustedAtAge !== null
-  const bridgeColour = emptyEarly ? TONE.ember : TONE.teal
+  // TONE.teal here would match 'Building' exactly, so the legend's two swatches
+  // became indistinguishable in the case where the plan actually works.
+  const bridgeColour = emptyEarly ? TONE.ember : TONE.tealSoft
 
   // The step: non-super remaining, then the same instant with super added.
   const remaining = bridge.length ? bridge[bridge.length - 1].balance : accum[accum.length - 1].balance

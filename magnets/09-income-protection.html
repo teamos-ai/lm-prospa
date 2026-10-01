@@ -3,10 +3,10 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>The Income Protection Audit — Prospa Financial</title>
+    <title>Is Your Income Covered? — Prospa Financial</title>
     <meta
       name="description"
-      content="While you are still accumulating, your future income is the largest asset you own. Eleven questions to test whether the cover around it still matches the life it is insuring."
+      content="Everything you own was bought with income you have not earned yet. Twelve questions to find out what is actually insured."
     />
     <link rel="icon" type="image/svg+xml" href="../assets/favicon.svg" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -17,74 +17,231 @@
     />
     <link rel="stylesheet" href="../assets/prospa.css" />
     <style>
+      /* ========================================================
+         09 · IS YOUR INCOME COVERED?
+         Everything below is local to this sheet. Tokens only —
+         no brand hex is written here. The warm accent appears
+         exactly once, on the one-way-door warning at the end.
+         ======================================================== */
+
+      /* ---- 1 · The asset panel ---- */
+
+      .asset-inputs {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
+        gap: 22px;
+        margin-bottom: 26px;
+      }
+
       .asset-panel {
         background: var(--teal);
         border-radius: var(--r-xl);
         padding: 40px 44px;
-        color: #fff;
+        color: var(--white);
       }
-      .asset-panel .k {
+
+      .asset-k {
+        display: flex;
+        align-items: center;
+        gap: 10px;
         font-size: 11.5px;
         font-weight: 600;
         letter-spacing: 0.14em;
         text-transform: uppercase;
-        color: #9fd8c4;
-        display: block;
-        margin-bottom: 10px;
+        color: rgba(255, 255, 255, 0.72);
+        margin-bottom: 16px;
       }
-      .asset-panel .big {
+
+      .asset-k::before {
+        content: '';
+        width: 22px;
+        height: 2px;
+        border-radius: 2px;
+        background: var(--green);
+        flex: none;
+      }
+
+      .asset-big {
+        display: block;
+        max-width: 100%;
         font-family: 'JetBrains Mono', monospace;
-        font-size: 46px;
+        font-size: clamp(34px, 7.2vw, 54px);
         font-weight: 500;
-        letter-spacing: -0.04em;
+        letter-spacing: -0.045em;
         line-height: 1;
         font-variant-numeric: tabular-nums;
+        /* A grouped figure has no break opportunity of its own. The fields
+           accept any number, so an implausible one would otherwise run past
+           the panel and be clipped by the sheet. It wraps instead. */
+        overflow-wrap: anywhere;
       }
+
+      .asset-eq {
+        display: block;
+        margin-top: 14px;
+        font-family: 'JetBrains Mono', monospace;
+        font-size: 13px;
+        letter-spacing: 0.01em;
+        /* 0.6 on the teal panel is 3.8:1 at this size. 0.72 is 4.6:1, and
+           the uppercase tracking above still keeps the two lines apart. */
+        color: rgba(255, 255, 255, 0.72);
+      }
+
       .asset-panel p {
-        color: #cfe0e2;
+        margin-top: 20px;
+        padding-top: 20px;
+        border-top: 1px solid rgba(255, 255, 255, 0.16);
         font-size: 15px;
-        margin-top: 16px;
-        max-width: 54ch;
+        line-height: 1.6;
+        color: rgba(255, 255, 255, 0.84);
+        max-width: 56ch;
       }
-      .asset-inputs {
+
+      /* ---- 2 · The comparison with the asset you do insure ---- */
+
+      .compare-card {
+        margin-top: 24px;
+      }
+
+      .compare-card .sub-h {
+        margin-bottom: 20px;
+      }
+
+      .compare-empty {
+        font-size: 14px;
+        color: var(--gray);
+      }
+
+      /* ---- 3 · Before and after ---- */
+
+      .vs {
         display: grid;
-        grid-template-columns: repeat(2, 1fr);
-        gap: 24px;
-        margin-bottom: 24px;
+        grid-template-columns: 1fr 1fr;
+        gap: 20px;
       }
+
+      .vs .side {
+        border-radius: var(--r-lg);
+        padding: 28px;
+        background: var(--bg2);
+      }
+
+      .vs .side-now {
+        background: var(--bg1);
+      }
+
+      .vs .when {
+        display: block;
+        font-family: 'JetBrains Mono', monospace;
+        font-size: 11px;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+        color: var(--teal);
+        margin-bottom: 12px;
+      }
+
+      .vs .side h4 {
+        font-size: 17.5px;
+        margin-bottom: 10px;
+      }
+
+      .vs .side > p {
+        font-size: 14.5px;
+        color: var(--gray);
+      }
+
+      .vs .side ul {
+        margin: 16px 0 0;
+        padding-left: 18px;
+      }
+
+      .vs .side li {
+        font-size: 14.5px;
+        line-height: 1.55;
+        color: var(--slate);
+        margin-bottom: 9px;
+      }
+
+      .vs .side li:last-child {
+        margin-bottom: 0;
+      }
+
+      /* ---- 4 · The twelve questions ---- */
 
       .audit-q {
         display: grid;
-        grid-template-columns: 34px 1fr;
-        gap: 16px;
-        padding: 22px 0;
-        border-bottom: 1px solid var(--line-2);
+        grid-template-columns: 34px minmax(0, 1fr) auto;
+        gap: 10px 16px;
+        padding: 20px 14px;
+        margin: 0 -14px;
+        border-radius: var(--r-md);
+        box-shadow: inset 0 -1px 0 var(--line-2);
+        transition: background var(--dur-base) var(--ease);
       }
+
       .audit-q:last-of-type {
-        border-bottom: none;
+        box-shadow: none;
       }
+
+      .audit-q:hover,
+      .audit-q:focus-within {
+        background: var(--bg2);
+      }
+
+      .audit-q .num {
+        grid-column: 1;
+        grid-row: 1;
+        margin-top: 1px;
+      }
+
+      .audit-body {
+        grid-column: 2;
+        grid-row: 1;
+      }
+
       .audit-q b {
         display: block;
         color: var(--ink);
         font-size: 16.5px;
-        margin-bottom: 7px;
+        font-weight: 600;
         line-height: 1.4;
+        margin-bottom: 7px;
       }
+
       .audit-q p {
         color: var(--gray);
         font-size: 14.5px;
+        line-height: 1.55;
       }
-      .audit-q .hd {
-        display: flex;
-        gap: 10px;
+
+      /* The answer toggle. A real checkbox, dressed as a pill. */
+      .ans {
+        grid-column: 3;
+        grid-row: 1;
+        align-self: start;
+        display: inline-flex;
         align-items: center;
-        margin-top: 12px;
+        gap: 9px;
+        padding: 9px 14px 9px 11px;
+        border: 1px solid var(--line);
+        border-radius: var(--r-pill);
+        background: var(--white);
+        cursor: pointer;
+        white-space: nowrap;
+        transition: border-color var(--dur-snap) var(--ease),
+          background var(--dur-snap) var(--ease);
       }
-      .audit-q .hd input[type='checkbox'] {
+
+      .ans:hover {
+        border-color: var(--teal);
+      }
+
+      .ans input[type='checkbox'] {
         appearance: none;
         -webkit-appearance: none;
         width: 19px;
         height: 19px;
+        margin: 0;
         border: 2px solid var(--line);
         border-radius: 6px;
         flex: none;
@@ -93,97 +250,194 @@
         transition: background var(--dur-snap) var(--ease),
           border-color var(--dur-snap) var(--ease);
       }
-      .audit-q .hd input[type='checkbox']:checked {
+
+      .ans input[type='checkbox']:checked {
         background: var(--green);
         border-color: var(--green);
       }
-      .audit-q .hd input[type='checkbox']:checked::after {
+
+      .ans input[type='checkbox']:checked::after {
         content: '';
         position: absolute;
-        left: 5px;
-        top: 1.5px;
+        left: 4.5px;
+        top: 1px;
         width: 4.5px;
         height: 9px;
-        border: solid #fff;
+        border: solid var(--white);
         border-width: 0 2.4px 2.4px 0;
         transform: rotate(45deg);
       }
-      .audit-q .hd label {
-        font-size: 13.5px;
-        color: var(--gray);
-        cursor: pointer;
+
+      .ans input[type='checkbox']:focus-visible {
+        outline: 2px solid var(--teal);
+        outline-offset: 3px;
       }
 
-      .vs {
+      .ans-t {
+        font-size: 13px;
+        font-weight: 600;
+        color: var(--gray);
+        transition: color var(--dur-snap) var(--ease);
+      }
+
+      .ans:has(input:checked) {
+        background: var(--bg1);
+        border-color: transparent;
+      }
+
+      /* The tick and the struck heading carry the green. The label itself
+         goes teal: the brand green on the pale-green pill measures 2.5:1,
+         which is not a legible 13px. Teal on the same pill is 6.9:1. */
+      .ans:has(input:checked) .ans-t {
+        color: var(--teal);
+      }
+
+      /* prospa.css turns the marker green on a struck row, and .audit-q
+         exists on this sheet alone. White on that green is 2:1 at 13px;
+         ink on it is 9.2:1, and the badge still reads as answered. */
+      .audit-q.struck .num {
+        color: var(--ink);
+      }
+
+      /* ---- 5 · The readout ---- */
+
+      .audit-out {
         display: grid;
-        grid-template-columns: 1fr 1fr;
-        gap: 20px;
-      }
-      .vs .side {
+        grid-template-columns: 230px minmax(0, 1fr);
+        gap: 34px;
+        align-items: center;
+        margin-top: 34px;
+        padding: 30px 32px;
         border-radius: var(--r-lg);
-        padding: 26px;
         background: var(--bg2);
-      }
-      .vs .side h4 {
-        font-size: 17px;
-        margin-bottom: 10px;
-      }
-      .vs .side p {
-        font-size: 14.5px;
-        color: var(--gray);
-      }
-      .vs .side ul {
-        margin: 14px 0 0;
-        padding-left: 18px;
-      }
-      .vs .side li {
-        font-size: 14px;
-        color: var(--slate);
-        margin-bottom: 7px;
       }
 
-      .score-out {
-        border-radius: var(--r-lg);
-        padding: 26px 30px;
-        margin-top: 24px;
+      #aud-metrics.w-metrics {
+        grid-template-columns: repeat(2, 1fr);
+      }
+
+      .audit-note {
+        margin-top: 18px;
+        font-size: 14.5px;
+        line-height: 1.6;
+        color: var(--slate);
+      }
+
+      .audit-note b {
+        color: var(--ink);
+        font-weight: 600;
+      }
+
+      /* ---- 6 · The one-way door. The single warm accent. ---- */
+
+      .oneway {
+        border-left: 3px solid var(--ember);
+        border-radius: 0 var(--r-md) var(--r-md) 0;
         background: var(--bg2);
+        padding: 24px 26px;
       }
-      .score-out.flag {
-        background: var(--ember-soft);
-      }
-      .score-out h3 {
-        font-size: 19px;
+
+      .oneway .sub-h {
         margin-bottom: 10px;
+      }
+
+      .oneway-body {
+        font-size: 15px;
+        line-height: 1.6;
+        color: var(--slate);
+      }
+
+      /* ---- 7 · Asides carry their own heading spacing ---- */
+
+      .lm-aside .sec-head {
+        margin-bottom: 14px;
+        max-width: none;
+      }
+
+      /* ---- Responsive ---- */
+
+      @media (max-width: 860px) {
+        .audit-out {
+          grid-template-columns: 1fr;
+          gap: 26px;
+          padding: 26px 24px;
+        }
       }
 
       @media (max-width: 760px) {
         .asset-panel {
           padding: 28px 24px;
         }
-        .asset-panel .big {
-          font-size: 34px;
-        }
-        .asset-inputs,
         .vs {
           grid-template-columns: 1fr;
         }
+        .audit-q {
+          grid-template-columns: 34px minmax(0, 1fr);
+        }
+        .ans {
+          grid-column: 2;
+          grid-row: 2;
+          justify-self: start;
+        }
       }
+
+      @media (max-width: 560px) {
+        #aud-metrics.w-metrics {
+          grid-template-columns: 1fr;
+        }
+      }
+
+      /* ---- Print: ink-light, and nothing animated ---- */
+
       @media print {
         .asset-panel {
           background: var(--bg2);
           color: var(--ink);
+          border-radius: var(--r-md);
+          padding: 16pt 18pt;
+          break-inside: avoid;
         }
-        .asset-panel .k {
+        .asset-k,
+        .asset-eq {
           color: var(--gray);
         }
-        .asset-panel .big {
+        .asset-big {
           color: var(--teal);
         }
         .asset-panel p {
           color: var(--gray);
+          border-top-color: var(--line);
         }
         .audit-q {
           break-inside: avoid;
+          margin: 0;
+          padding: 9pt 0;
+          box-shadow: none;
+          border-bottom: 1px solid var(--line-2);
+        }
+        .audit-q:last-of-type {
+          border-bottom: none;
+        }
+        .ans {
+          border-color: var(--line);
+          background: transparent;
+        }
+        .audit-out,
+        .compare-card,
+        .vs .side,
+        .oneway {
+          break-inside: avoid;
+        }
+        .oneway {
+          /* Every other tinted surface goes to paper as outline only.
+             This one follows, and the rule down its edge carries it. */
+          background: transparent;
+          padding: 10pt 0 10pt 12pt;
+        }
+        .audit-out {
+          background: transparent;
+          border: 1px solid var(--line);
+          padding: 12pt 14pt;
         }
       }
     </style>
@@ -193,81 +447,167 @@
 
     <article class="sheet">
       <div data-sheet-masthead></div>
+      <div data-sheet-hero></div>
 
       <div class="pad">
         <div class="eyebrow">Session tool 09 · Audit</div>
-        <h1 class="doc-title">The <em>Income Protection</em> Audit</h1>
+        <h1 class="doc-title">Is Your <em>Income</em> Covered?</h1>
         <p class="lede">
-          Everything on your balance sheet was bought with income you have not earned yet. While you
-          are still accumulating, <strong>your future earnings are the largest asset you own</strong>
-          — and the one most likely to be insured against the wrong figure, under terms agreed years
-          ago.
+          Everything you own was bought with income you have not earned yet. Twelve questions to
+          find out what is actually insured.
         </p>
 
         <hr class="rule" />
 
-        <!-- ---------- The asset ---------- -->
+        <!-- ================= 1 · SIZE THE ASSET ================= -->
         <div class="sec-head">
-          <h2>First, size the asset</h2>
-          <p>Not a valuation — a sense of scale. Most people have never put a number on it.</p>
+          <h2>What your income is worth</h2>
+          <p>Not a valuation. A sense of scale — most people have never put a number on it.</p>
         </div>
 
         <div class="asset-inputs">
           <div class="field">
-            <label for="i-income">Current annual income, before tax</label>
+            <label for="i-income">Annual income, before tax</label>
             <div class="input-wrap">
               <span class="affix">$</span>
-              <input type="number" id="i-income" inputmode="numeric" value="250000" data-persist="ip-income" />
+              <input
+                type="number"
+                id="i-income"
+                inputmode="numeric"
+                min="0"
+                step="1000"
+                value="250000"
+                data-persist="ip-income"
+              />
             </div>
           </div>
           <div class="field">
-            <label for="i-years">Years you expect to keep earning</label>
+            <label for="i-years">Years you still expect to earn</label>
             <div class="input-wrap">
-              <input type="number" id="i-years" inputmode="numeric" value="15" data-persist="ip-years" />
+              <input
+                type="number"
+                id="i-years"
+                inputmode="numeric"
+                min="0"
+                max="60"
+                step="1"
+                value="15"
+                data-persist="ip-years"
+                aria-describedby="h-years"
+              />
               <span class="affix suf">yrs</span>
             </div>
+            <span class="hint" id="h-years">To the age you would like work to become optional.</span>
+          </div>
+          <div class="field">
+            <label for="i-home">What your home is insured for</label>
+            <div class="input-wrap">
+              <span class="affix">$</span>
+              <input
+                type="number"
+                id="i-home"
+                inputmode="numeric"
+                min="0"
+                step="10000"
+                placeholder="Optional"
+                data-persist="ip-home"
+                aria-describedby="h-home"
+              />
+            </div>
+            <span class="hint" id="h-home">Optional — the sum insured on your renewal notice.</span>
           </div>
         </div>
 
         <div class="asset-panel">
-          <span class="k">Gross income still ahead of you</span>
-          <span class="big" id="o-asset">—</span>
+          <span class="asset-k">Income you have not earned yet</span>
+          <span class="asset-big" id="o-asset" aria-hidden="true">—</span>
+          <span class="asset-eq" id="o-asset-eq" aria-hidden="true"></span>
+          <span class="sr-only" id="o-asset-sr" aria-live="polite"></span>
           <p id="o-asset-note"></p>
         </div>
 
-        <p class="small muted" style="margin-top: 14px">
-          A simple multiplication — no pay rises, no promotions, no inflation, no discounting to
-          today's value. It is here to make the scale visible, nothing more. Compare it against the
-          home you insure every year without hesitating.
+        <div class="card compare-card">
+          <p class="sub-h">Against the asset you already insure</p>
+          <div id="o-compare"></div>
+          <p class="compare-empty" id="o-compare-empty">
+            Add the sum insured on your home above, and the two sit side by side.
+          </p>
+        </div>
+
+        <p class="small muted" style="margin-top: 18px">
+          A simple multiplication. No pay rises, no promotions, no inflation, and
+          <b>no discounting to today's dollars</b> — it is here to make the scale visible, not to
+          forecast anything. Compare it against the home you insure every year without hesitating.
         </p>
+
+        <!-- ================= THE BAND ================= -->
+        <div class="lm-photoband" style="--lm-band-pos: 66% 38%">
+          <img
+            src="../assets/img/photo/businessman-car-tablet-working-travel.webp"
+            alt=""
+            loading="lazy"
+            decoding="async"
+          />
+          <p>
+            The house is insured. The car is insured. The income that <em>bought them both</em>
+            deserves the same ten minutes.
+          </p>
+          <span class="lm-band-k">Agenda item 6 · Protecting what you have built</span>
+        </div>
 
         <hr class="rule" />
 
-        <!-- ---------- What changed ---------- -->
-        <div class="sec-head">
-          <h2>What changed, and why old policies are different</h2>
-          <p>
-            If your cover was arranged before 2021, it may not resemble what is available now — in
-            ways that can favour you.
-          </p>
+        <!-- ================= 2 · WHAT CHANGED ================= -->
+        <div class="lm-aside" style="--lm-aside-pos: 54% 30%">
+          <div class="lm-aside-img">
+            <img
+              src="../assets/img/photo/senior-man-blazer-window-reflective.webp"
+              alt=""
+              loading="lazy"
+              decoding="async"
+            />
+          </div>
+          <div>
+            <div class="sec-head">
+              <h2>What changed in 2020 and 2021</h2>
+            </div>
+            <p class="muted">
+              If your cover was arranged before 2021, it may not look like what is sold today — in
+              ways that can favour you. Knowing which side of the line your policy sits on is the
+              first thing a reviewer will ask.
+            </p>
+          </div>
         </div>
 
         <div class="vs">
           <div class="side">
-            <h4>Before the changes</h4>
+            <span class="when">The earlier market</span>
+            <h4>What older policies can still hold</h4>
             <p>Policies written under the earlier market.</p>
             <ul>
-              <li><b>Agreed value</b> cover was available: the benefit was fixed when the policy was issued, regardless of what your income did afterwards.</li>
-              <li>Insurers expected to no longer offer agreed value contracts from 31 March 2020.</li>
+              <li>
+                <b>Agreed value</b> cover was available: the benefit was fixed when the policy was
+                issued, regardless of what your income did afterwards.
+              </li>
+              <li>
+                Insurers expected to no longer offer agreed value contracts from 31 March 2020.
+              </li>
               <li>Older contracts generally keep their original terms while they remain in force.</li>
             </ul>
           </div>
-          <div class="side">
-            <h4>From 1 July 2021</h4>
+          <div class="side side-now">
+            <span class="when">From 1 July 2021</span>
+            <h4>What newer cover looks like</h4>
             <p>The terms applying to newer individual cover.</p>
             <ul>
-              <li><b>Indemnity</b> basis: benefits are based on your income over the preceding twelve months, assessed at claim time.</li>
-              <li>Benefits plus other earned income are limited to 100% of income for the first six months.</li>
+              <li>
+                <b>Indemnity</b> basis: benefits are based on your income over the preceding twelve
+                months, assessed at claim time.
+              </li>
+              <li>
+                Benefits plus other earned income are limited to 100% of income for the first six
+                months.
+              </li>
               <li>Beyond six months, that limit reduces to 75% of income.</li>
             </ul>
           </div>
@@ -286,9 +626,9 @@
 
         <hr class="rule" />
 
-        <!-- ---------- The audit ---------- -->
+        <!-- ================= 3 · THE AUDIT ================= -->
         <div class="sec-head">
-          <h2>Eleven questions</h2>
+          <h2>Twelve questions</h2>
           <p>
             Tick the ones you can answer with certainty. The ones you leave blank are the agenda.
           </p>
@@ -297,116 +637,218 @@
         <div id="audit">
           <div class="audit-q">
             <span class="num">01</span>
-            <div>
-              <b>What monthly benefit would actually be paid, and against which income figure?</b>
-              <p>Most cover pays a percentage of income. The figure it is measured against — and when it is measured — is what decides the cheque.</p>
-              <div class="hd"><input type="checkbox" data-audit data-strike="a1" id="a1" /><label for="a1">I know this</label></div>
+            <div class="audit-body">
+              <b>What would actually be paid each month, and against which income figure?</b>
+              <p>
+                Most cover pays a percentage of income. Which income, and when it is measured, is
+                what decides the cheque.
+              </p>
             </div>
+            <label class="ans" for="a1">
+              <input type="checkbox" data-strike="a1" id="a1" />
+              <span class="ans-t">I can answer this</span>
+            </label>
           </div>
 
           <div class="audit-q">
             <span class="num">02</span>
-            <div>
+            <div class="audit-body">
               <b>Is my cover agreed value or indemnity?</b>
-              <p>It determines whether the benefit was fixed at the start or will be assessed against your recent earnings at claim time.</p>
-              <div class="hd"><input type="checkbox" data-audit data-strike="a2" id="a2" /><label for="a2">I know this</label></div>
+              <p>
+                It decides whether the benefit was fixed when the policy was issued, or will be
+                worked out from your recent earnings at claim time.
+              </p>
             </div>
+            <label class="ans" for="a2">
+              <input type="checkbox" data-strike="a2" id="a2" />
+              <span class="ans-t">I can answer this</span>
+            </label>
           </div>
 
           <div class="audit-q">
             <span class="num">03</span>
-            <div>
+            <div class="audit-body">
               <b>How long is the waiting period, and who funds it?</b>
-              <p>Thirty, sixty or ninety days of no benefit. That gap is funded by your reserve, your leave entitlements, or by selling something.</p>
-              <div class="hd"><input type="checkbox" data-audit data-strike="a3" id="a3" /><label for="a3">I know this</label></div>
+              <p>
+                Thirty, sixty or ninety days with no benefit. Something has to carry that gap — a
+                cash reserve, leave entitlements, or selling an asset.
+              </p>
             </div>
+            <label class="ans" for="a3">
+              <input type="checkbox" data-strike="a3" id="a3" />
+              <span class="ans-t">I can answer this</span>
+            </label>
           </div>
 
           <div class="audit-q">
             <span class="num">04</span>
-            <div>
-              <b>How long is the benefit period — two years, five, or to 65?</b>
-              <p>A two-year benefit period and a to-65 benefit period are different products at different prices. Many people hold the first while assuming the second.</p>
-              <div class="hd"><input type="checkbox" data-audit data-strike="a4" id="a4" /><label for="a4">I know this</label></div>
+            <div class="audit-body">
+              <b>How long does the benefit last — two years, five, or to 65?</b>
+              <p>
+                A two-year benefit and a to-65 benefit are different products at different prices.
+                Plenty of people hold the first while assuming the second.
+              </p>
             </div>
+            <label class="ans" for="a4">
+              <input type="checkbox" data-strike="a4" id="a4" />
+              <span class="ans-t">I can answer this</span>
+            </label>
           </div>
 
           <div class="audit-q">
             <span class="num">05</span>
-            <div>
+            <div class="audit-body">
               <b>Is my cover inside super, outside it, or both?</b>
-              <p>Inside super the premium comes from the balance rather than cash flow, but definitions can be narrower and benefits must satisfy a condition of release to be paid out.</p>
-              <div class="hd"><input type="checkbox" data-audit data-strike="a5" id="a5" /><label for="a5">I know this</label></div>
+              <p>
+                Inside super the premium comes from the balance rather than cash flow. Definitions
+                can be narrower, and a benefit must satisfy a condition of release before it is paid
+                out.
+              </p>
             </div>
+            <label class="ans" for="a5">
+              <input type="checkbox" data-strike="a5" id="a5" />
+              <span class="ans-t">I can answer this</span>
+            </label>
           </div>
 
           <div class="audit-q">
             <span class="num">06</span>
-            <div>
-              <b>Does my income protection cover bonuses and incentives, or only base salary?</b>
-              <p>For a senior executive, the variable component can be a large share of total earnings — and the part most often excluded from the definition.</p>
-              <div class="hd"><input type="checkbox" data-audit data-strike="a6" id="a6" /><label for="a6">I know this</label></div>
+            <div class="audit-body">
+              <b>If I changed employer or fund tomorrow, what happens to this cover?</b>
+              <p>
+                Cover arranged through an employer or a default fund belongs to that arrangement
+                rather than to you. Whether it follows you, and on what terms, is a question for the
+                policy — not an assumption.
+              </p>
             </div>
+            <label class="ans" for="a6">
+              <input type="checkbox" data-strike="a6" id="a6" />
+              <span class="ans-t">I can answer this</span>
+            </label>
           </div>
 
           <div class="audit-q">
             <span class="num">07</span>
-            <div>
-              <b>Are my TPD definitions "own occupation" or "any occupation"?</b>
-              <p>The difference is whether you must be unable to do your job, or unable to do almost any job. It is the difference between a claim paid and a claim declined.</p>
-              <div class="hd"><input type="checkbox" data-audit data-strike="a7" id="a7" /><label for="a7">I know this</label></div>
+            <div class="audit-body">
+              <b>Does it cover bonuses and incentives, or only base salary?</b>
+              <p>
+                For a senior executive the variable part can be a large share of total earnings. It
+                is also the part most often left outside the definition.
+              </p>
             </div>
+            <label class="ans" for="a7">
+              <input type="checkbox" data-strike="a7" id="a7" />
+              <span class="ans-t">I can answer this</span>
+            </label>
           </div>
 
           <div class="audit-q">
             <span class="num">08</span>
-            <div>
-              <b>Are my premiums stepped or level?</b>
-              <p>Stepped premiums rise each year with age; level premiums start higher and rise more slowly. Which is cheaper depends entirely on how long you hold the policy.</p>
-              <div class="hd"><input type="checkbox" data-audit data-strike="a8" id="a8" /><label for="a8">I know this</label></div>
+            <div class="audit-body">
+              <b>Is my TPD cover "own occupation" or "any occupation"?</b>
+              <p>
+                The difference is whether you must be unable to do your job, or unable to do almost
+                any job. That is the difference between a claim paid and a claim declined.
+              </p>
             </div>
+            <label class="ans" for="a8">
+              <input type="checkbox" data-strike="a8" id="a8" />
+              <span class="ans-t">I can answer this</span>
+            </label>
           </div>
 
           <div class="audit-q">
             <span class="num">09</span>
-            <div>
-              <b>Would my life cover clear the debts and support the family, not just repay the mortgage?</b>
-              <p>Clearing the loan and replacing two decades of income are very different sums.</p>
-              <div class="hd"><input type="checkbox" data-audit data-strike="a9" id="a9" /><label for="a9">I know this</label></div>
+            <div class="audit-body">
+              <b>Are my premiums stepped or level?</b>
+              <p>
+                Stepped premiums rise each year with age. Level premiums start higher and rise more
+                slowly. Which is cheaper depends entirely on how long you hold the policy.
+              </p>
             </div>
+            <label class="ans" for="a9">
+              <input type="checkbox" data-strike="a9" id="a9" />
+              <span class="ans-t">I can answer this</span>
+            </label>
           </div>
 
           <div class="audit-q">
             <span class="num">10</span>
-            <div>
-              <b>When was this last reviewed against my current income and debt?</b>
-              <p>Cover arranged against an earlier salary rarely matches a later one. The gap widens quietly, every year you are promoted.</p>
-              <div class="hd"><input type="checkbox" data-audit data-strike="a10" id="a10" /><label for="a10">I know this</label></div>
+            <div class="audit-body">
+              <b>Would my life cover clear the debts and support the family, not just repay the mortgage?</b>
+              <p>Clearing the loan and replacing two decades of income are very different sums.</p>
             </div>
+            <label class="ans" for="a10">
+              <input type="checkbox" data-strike="a10" id="a10" />
+              <span class="ans-t">I can answer this</span>
+            </label>
           </div>
 
           <div class="audit-q">
             <span class="num">11</span>
-            <div>
-              <b>Who receives any benefit paid, and would it reach them without delay?</b>
-              <p>Ownership, nomination and structure decide where the money lands and how fast. See the Estate &amp; Beneficiary Checklist.</p>
-              <div class="hd"><input type="checkbox" data-audit data-strike="a11" id="a11" /><label for="a11">I know this</label></div>
+            <div class="audit-body">
+              <b>When was this last reviewed against my income and debt today?</b>
+              <p>
+                Cover arranged against an earlier salary rarely matches a later one. The gap widens
+                quietly with every promotion.
+              </p>
             </div>
+            <label class="ans" for="a11">
+              <input type="checkbox" data-strike="a11" id="a11" />
+              <span class="ans-t">I can answer this</span>
+            </label>
+          </div>
+
+          <div class="audit-q">
+            <span class="num">12</span>
+            <div class="audit-body">
+              <b>Who receives a benefit, and would it reach them without delay?</b>
+              <p>
+                Ownership, nomination and structure decide where the money lands and how fast. See
+                The Estate Checklist.
+              </p>
+            </div>
+            <label class="ans" for="a12">
+              <input type="checkbox" data-strike="a12" id="a12" />
+              <span class="ans-t">I can answer this</span>
+            </label>
           </div>
         </div>
 
-        <div class="score-out" id="score-out"></div>
+        <div class="audit-out">
+          <div id="aud-gauge"></div>
+          <div>
+            <div id="aud-metrics"></div>
+            <p class="audit-note" id="aud-note" aria-live="polite"></p>
+          </div>
+        </div>
 
         <hr class="rule" />
 
-        <div class="card card-green">
-          <h3 class="step-h">The sequence that matters</h3>
-          <p class="muted" style="margin-top: 10px">
-            Review before you replace. Never cancel existing cover until replacement cover has been
-            issued and accepted — underwriting is assessed against your health now, and a condition
-            that has appeared since the original policy was written can change what is available to
-            you, or make it unavailable entirely.
-          </p>
+        <!-- ================= 4 · BEFORE YOU CHANGE ANYTHING ================= -->
+        <div class="lm-aside lm-aside--flip" style="--lm-aside-pos: 50% 46%">
+          <div class="lm-aside-img">
+            <img
+              src="../assets/img/photo/women-financial-planning-documents-home.webp"
+              alt=""
+              loading="lazy"
+              decoding="async"
+            />
+          </div>
+          <div>
+            <div class="sec-head">
+              <h2>Before you change anything</h2>
+            </div>
+            <div class="oneway">
+              <p class="sub-h">A one-way door</p>
+              <p class="oneway-body">
+                Review before you replace. Never cancel existing cover until replacement cover has
+                been issued and accepted — underwriting is assessed against your health now, and a
+                condition that has appeared since the original policy was written can change what is
+                available to you, or make it unavailable entirely.
+              </p>
+            </div>
+          </div>
         </div>
 
         <div class="disclaimer" style="margin-top: 32px">
@@ -416,7 +858,8 @@
           Policy terms, definitions, exclusions, eligibility and pricing vary between insurers and
           between individual contracts — only your own policy documents and Product Disclosure
           Statement state what you are covered for. Insurance advice is personal advice: speak with
-          a licensed adviser before making any change.
+          a licensed adviser before making any change. Nothing you type into this sheet leaves your
+          browser.
         </div>
 
         <div class="row no-print" style="margin-top: 26px">
@@ -429,48 +872,243 @@
     </article>
 
     <script type="module">
-      import { mountSheet, wirePrint, money, persistFields } from '../assets/sheet.js'
+      import { mountSheet, wirePrint, persistFields } from '../assets/sheet.js'
       import { strikeList } from '../assets/components.js'
+      import {
+        countUp,
+        money,
+        moneyShort,
+        scoreGauge,
+        metricStrip,
+        comparison,
+      } from '../assets/widgets.js'
 
-      mountSheet({ no: '09', kind: 'Audit' })
+      mountSheet({
+        no: '09',
+        kind: 'Audit',
+        hero: { src: 'art/09-dome.webp', alt: '', variant: 'art', pos: '50% 62%' },
+      })
       wirePrint()
 
       const el = (id) => document.getElementById(id)
-
-      function syncAsset() {
-        const income = Number(el('i-income').value) || 0
-        const years = Number(el('i-years').value) || 0
-        const total = income * years
-        el('o-asset').textContent = money(total)
-        el('o-asset-note').textContent = total
-          ? `${money(income)} a year for ${years} more ${years === 1 ? 'year' : 'years'}. That is the asset your income protection is standing in front of — and it is almost certainly larger than anything else you insure.`
-          : 'Enter your income and the years ahead to size the asset.'
+      const reduced = () => window.matchMedia('(prefers-reduced-motion: reduce)').matches
+      const num = (id) => {
+        const v = Number(el(id).value)
+        return Number.isFinite(v) && v > 0 ? v : 0
       }
 
-      function syncAudit() {
-        const boxes = Array.from(document.querySelectorAll('[data-audit]'))
-        const known = boxes.filter((b) => b.checked).length
-        const out = el('score-out')
-        const unknown = boxes.length - known
+      /* ------------------------------------------------------------
+         1 · THE ASSET
+         Income × years. A multiplication, not a projection: no
+         growth, no inflation, no discounting. The page says so.
+         ------------------------------------------------------------ */
 
-        if (known === boxes.length) {
-          out.className = 'score-out'
-          out.innerHTML = `<h3>All eleven answered</h3><p class="muted">That is unusual. The remaining question is whether the answers still suit the income and the responsibilities you have now, rather than the ones you had when the cover was arranged.</p>`
-        } else if (known === 0) {
-          out.className = 'score-out flag'
-          out.innerHTML = `<h3>Eleven questions open</h3><p class="muted">Nothing ticked yet. Work down the list — the ones you cannot answer from memory are exactly the ones worth putting in front of someone who can read the policy with you.</p>`
+      let assetFig = el('o-asset')
+      const assetEq = el('o-asset-eq')
+      const assetSr = el('o-asset-sr')
+      const assetNote = el('o-asset-note')
+      const compareEl = el('o-compare')
+      const compareEmpty = el('o-compare-empty')
+      let assetFirstPaint = true
+      let assetCounting = false
+
+      /**
+       * Write the figure, and make sure nothing writes over it afterwards.
+       * countUp owns the element for the length of its animation, so the first
+       * write after one starts retires that node and puts a fresh one in its
+       * place — otherwise a reader who edits the field mid-count would watch
+       * their new number be replaced by the old one.
+       */
+      function setAsset(text) {
+        if (assetCounting) {
+          const fresh = assetFig.cloneNode(false)
+          assetFig.replaceWith(fresh)
+          assetFig = fresh
+          assetCounting = false
+        }
+        assetFig.textContent = text
+      }
+
+      /**
+       * Speak the figure, but only once the reader has stopped typing.
+       * Writing straight into the live region would announce a whole
+       * sentence on every keystroke — six interruptions to type an income —
+       * which is worse than silence for the one reader who depends on it.
+       */
+      let srTimer
+      function sayAsset(text) {
+        clearTimeout(srTimer)
+        if (!text) {
+          assetSr.textContent = ''
+          return
+        }
+        srTimer = setTimeout(() => {
+          assetSr.textContent = text
+        }, 700)
+      }
+
+      function syncAsset() {
+        const income = num('i-income')
+        const years = num('i-years')
+        const home = num('i-home')
+        const total = income * years
+
+        if (!total) {
+          setAsset('—')
+          assetEq.textContent = ''
+          /* The visible figure is aria-hidden, so the live region speaks for it.
+             With nothing to report, the note below carries the message on its own
+             and the region stays quiet rather than saying it twice. */
+          sayAsset('')
+          assetNote.textContent = 'Enter your income and the years ahead to size the asset.'
+          assetFirstPaint = false
         } else {
-          out.className = 'score-out flag'
-          out.innerHTML = `<h3>${known} of ${boxes.length} answered with certainty</h3>
-            <p class="muted">${unknown} ${unknown === 1 ? 'question remains' : 'questions remain'} open. Each one is a term already written into a contract you hold — the answer exists, it is simply not yet known to you. Take the unticked list to a review.</p>`
+          /* Write the settled figure first, then animate over it. A tab that loads
+             in the background never runs a frame, and the number has to be right
+             there anyway — on screen and on paper. */
+          setAsset(money(total))
+          if (assetFirstPaint) {
+            countUp(assetFig, total, { format: money })
+            assetCounting = true
+          }
+          assetFirstPaint = false
+          assetEq.textContent = `${money(income)} × ${years} ${
+            years === 1 ? 'year' : 'years'
+          } = ${moneyShort(total)}`
+          sayAsset(
+            `${money(total)} of income still ahead of you — ${money(
+              income
+            )} a year for ${years} more ${years === 1 ? 'year' : 'years'}.`
+          )
+          assetNote.textContent =
+            'That is the asset your income protection stands in front of. It is undiscounted — no pay rises, no inflation, no reduction to today’s dollars — and it is almost certainly larger than anything else you insure.'
+        }
+
+        /* The comparison only exists if the reader gives us the second figure.
+           Three cases, because two was one too few: a reader whose home is
+           insured for several times the income still ahead of them must not
+           be told the two are close in size. */
+        if (total && home) {
+          const ratio = total / home
+          const shown = ratio >= 10 ? Math.round(ratio) : Math.round(ratio * 10) / 10
+          let note
+          if (ratio >= 1.1) {
+            note = `Your future income is about <b>${shown}&times;</b> the sum insured on your home — and the smaller of the two is the one you renew every year without thinking about it.`
+          } else if (ratio >= 0.9) {
+            note = 'The two are close in size. Only one of them is reviewed every twelve months.'
+          } else {
+            note =
+              'On these figures the home is insured for more than the income still ahead of you. Only one of the two is reviewed every twelve months.'
+          }
+          compareEl.hidden = false
+          compareEmpty.hidden = true
+          comparison(compareEl, {
+            a: moneyShort(total),
+            aLabel: 'Income still to come',
+            b: moneyShort(home),
+            bLabel: 'Home, sum insured',
+            note,
+          })
+        } else {
+          compareEl.hidden = true
+          compareEl.innerHTML = ''
+          /* Ask for whichever figure is actually missing. */
+          compareEmpty.textContent = home
+            ? 'Add your income and the years ahead, and the two sit side by side.'
+            : 'Add the sum insured on your home above, and the two sit side by side.'
+          compareEmpty.hidden = false
         }
       }
 
-      ;['i-income', 'i-years'].forEach((id) => el(id).addEventListener('input', syncAsset))
-      // The two number fields persist on their own; strikeList owns the eleven ticks,
-      // crossing each one out and calling back so the count stays in step.
+      /* ------------------------------------------------------------
+         2 · THE AUDIT READOUT
+         strikeList owns the twelve ticks and crosses each row out.
+         The gauge is mounted once and then driven directly, so it
+         is correct the moment it is drawn — including on paper,
+         where a scroll-triggered reveal would never have fired.
+         ------------------------------------------------------------ */
+
+      const TOTAL = document.querySelectorAll('[data-strike]').length
+      const gaugeEl = el('aud-gauge')
+      const metricsEl = el('aud-metrics')
+      const noteEl = el('aud-note')
+
+      scoreGauge(gaugeEl, {
+        value: 0,
+        max: TOTAL,
+        unit: 'answered',
+        caption: 'Questions you could answer today without opening the policy.',
+      })
+      gaugeEl.__play = null /* we drive the arc ourselves, see above */
+
+      const arcEl = gaugeEl.querySelector('.w-gauge-arc')
+      const gaugeNum = gaugeEl.querySelector('.w-gauge-n')
+      const gaugeSvg = gaugeEl.querySelector('svg')
+      const ARC = arcEl ? parseFloat(arcEl.getAttribute('stroke-dasharray')) || 0 : 0
+
+      function paintGauge(known) {
+        if (!arcEl || !gaugeNum) return
+        const pct = TOTAL ? Math.max(0, Math.min(1, known / TOTAL)) : 0
+        const off = (ARC * (1 - pct)).toFixed(1)
+        arcEl.style.transition = reduced() ? 'none' : 'stroke-dashoffset .8s var(--ease)'
+        /* Written twice on purpose. Now, so the dial is correct even in a tab that
+           never runs a frame; and again next frame, so the transition takes and so
+           it lands after the widget's own mount frame rather than under it. */
+        arcEl.setAttribute('stroke-dashoffset', off)
+        requestAnimationFrame(() => arcEl.setAttribute('stroke-dashoffset', off))
+        /* The sweep carries the motion; the digit settles at once. Counting it up
+           as well would leave an animation running over a figure the reader can
+           change at any moment, and a stale number is worse than a still one. */
+        gaugeNum.textContent = String(known)
+        gaugeSvg?.setAttribute(
+          'aria-label',
+          `${known} of ${TOTAL} questions answered with certainty`
+        )
+      }
+
+      function syncAudit() {
+        const known = document.querySelectorAll('[data-strike]:checked').length
+        const unknown = TOTAL - known
+
+        paintGauge(known)
+
+        metricStrip(metricsEl, [
+          {
+            label: 'Answered with certainty',
+            value: `${known} of ${TOTAL}`,
+            tone: known === TOTAL ? 'good' : undefined,
+          },
+          {
+            label: 'Still "I don’t know"',
+            value: String(unknown),
+            note: unknown ? 'Every one of these is already written into a contract you hold.' : '',
+            tone: unknown ? 'key' : undefined,
+          },
+        ])
+
+        if (known === TOTAL) {
+          noteEl.innerHTML =
+            '<b>All twelve answered.</b> That is unusual. The remaining question is whether the answers still suit the income and the responsibilities you have now, rather than the ones you had when the cover was arranged.'
+        } else if (known === 0) {
+          noteEl.innerHTML =
+            '<b>Twelve questions open.</b> Nothing ticked yet. Work down the list — the ones you cannot answer from memory are exactly the ones worth putting in front of someone who can read the policy with you.'
+        } else {
+          noteEl.innerHTML = `<b>${unknown} ${
+            unknown === 1 ? 'question remains' : 'questions remain'
+          } open.</b> The answer to each one already exists; it is simply not yet known to you. Take the unticked list to a review — that list is the agenda.`
+        }
+      }
+
+      /* ------------------------------------------------------------
+         3 · WIRING
+         ------------------------------------------------------------ */
+
+      ;['i-income', 'i-years', 'i-home'].forEach((id) =>
+        el(id).addEventListener('input', syncAsset)
+      )
+
       persistFields('income-protection')
-      strikeList('income-protection-audit', syncAudit)
+      strikeList('income-protection', syncAudit)
       syncAsset()
     </script>
   </body>

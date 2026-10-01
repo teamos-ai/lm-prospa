@@ -3,10 +3,10 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Your Work Optional Number — Prospa Financial</title>
+    <title>Your Freedom Score — Prospa Financial</title>
     <meta
       name="description"
-      content="How much you need outside super to make work optional before 60 — what you are projected to have, how long it lasts, and the moment superannuation takes over. Every figure in today's dollars."
+      content="How much you need outside super to make work optional before 60 — and how close you already are. A guided five-step calculator, every figure in today's dollars."
     />
     <link rel="icon" type="image/svg+xml" href="../assets/favicon.svg" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -17,12 +17,32 @@
     />
     <link rel="stylesheet" href="../assets/prospa.css" />
     <style>
+      /* ============================================================
+         02 · YOUR FREEDOM SCORE — sheet-local styles only.
+         Tokens from assets/prospa.css. No raw brand colour here.
+         The warm accent --ember appears exactly once on this page:
+         on the "money runs out" flag, which is the only genuine
+         warning the sheet can produce.
+         ============================================================ */
+
+      /* ---------- Step machinery ---------- */
       .step { display: none; animation: rise var(--dur-reveal) var(--ease) both; }
       .step.on { display: block; }
       @keyframes rise { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: none; } }
 
+      /* ---------- Intro ---------- */
+      .lede-2 { color: var(--slate); font-size: 15.5px; max-width: 62ch; margin-top: 16px; }
+      .lede-2 strong { color: var(--ink); font-weight: 600; }
+
+      /* ---------- The question pages ---------- */
       .ask { font-size: 27px; letter-spacing: -0.025em; margin-bottom: 12px; }
-      .ask-why { color: var(--gray); font-size: 16px; max-width: 58ch; margin-bottom: 32px; }
+      .ask-why { color: var(--gray); font-size: 16px; max-width: 58ch; }
+      .dials { margin-top: 32px; }
+
+      /* The one faded photograph on a question page: the step that asks what
+         the reader actually wants the money for. */
+      .step .lm-aside { margin: 14px 0 32px; }
+      .step .lm-aside .ask-why { max-width: 44ch; }
 
       .dial + .dial { margin-top: 30px; }
       .dial label { display: block; font-size: 13.5px; font-weight: 600; color: var(--ink-2); margin-bottom: 4px; }
@@ -37,15 +57,20 @@
       .chips { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 12px; }
       .chip {
         font-family: 'JetBrains Mono', monospace; font-size: 13px; padding: 8px 15px;
-        border: 1.5px solid var(--line); border-radius: var(--r-pill); background: #fff;
+        border: 1.5px solid var(--line); border-radius: var(--r-pill); background: var(--white);
         color: var(--gray); cursor: pointer;
         transition: border-color var(--dur-snap) var(--ease), background var(--dur-snap) var(--ease), color var(--dur-snap) var(--ease);
       }
       .chip:hover { border-color: var(--accent); color: var(--teal); }
-      .chip[aria-pressed='true'] { border-color: var(--teal); background: var(--teal); color: #fff; }
+      .chip[aria-pressed='true'] { border-color: var(--teal); background: var(--teal); color: var(--white); }
       .chip:focus-visible { outline: 2px solid var(--teal); outline-offset: 2px; }
 
-      .live { background: var(--bg1); border-radius: var(--r-md); padding: 18px 22px; font-size: 14.5px; color: var(--slate); margin-top: 30px; }
+      .live { background: var(--bg1); border-radius: var(--r-md); padding: 18px 22px; margin-top: 30px; }
+      .live-k {
+        display: block; font-family: 'JetBrains Mono', monospace; font-size: 10px;
+        letter-spacing: 0.16em; text-transform: uppercase; color: var(--teal); margin-bottom: 8px;
+      }
+      .live p { font-size: 14.5px; color: var(--slate); }
       .live b { color: var(--green-600); font-family: 'JetBrains Mono', monospace; font-weight: 500; }
 
       .nav-row { display: flex; justify-content: space-between; align-items: center; gap: 16px; padding-top: 30px; margin-top: 34px; border-top: 1px solid var(--line); }
@@ -65,44 +90,133 @@
       .adv-body .dial-read { font-size: 22px; }
 
       .pair { display: grid; grid-template-columns: repeat(2, 1fr); gap: 26px; }
+      /* Side by side, the grid gap is the spacing — and the two sliders line up
+         with each other even when only one of the pair carries a hint. */
+      .pair .dial + .dial { margin-top: 0; }
+      .pair .dial,
+      .adv-body .dial { display: flex; flex-direction: column; }
+      .pair .dial .dial-hint,
+      .adv-body .dial .dial-hint { margin-bottom: 12px; }
+      .pair .dial input[type='range'],
+      .adv-body .dial input[type='range'] { margin-top: auto; }
 
-      /* Result */
+      /* ---------- Result: the score panel ---------- */
       .result-hero {
-        background: radial-gradient(120% 150% at 85% 0%, #1a7079 0%, var(--teal) 45%, var(--teal-900) 100%);
-        border-radius: var(--r-xl); padding: 42px 46px; color: #fff;
-        display: grid; grid-template-columns: 270px 1fr; gap: 42px; align-items: center;
+        background: radial-gradient(130% 160% at 86% 0%, var(--teal) 0%, var(--teal-700) 46%, var(--teal-900) 100%);
+        border-radius: var(--r-xl); padding: 42px 46px;
+        display: grid; grid-template-columns: 272px 1fr; gap: 42px; align-items: center;
       }
       .result-hero .band-k {
         display: inline-flex; align-items: center; gap: 8px; font-size: 11px; font-weight: 600;
-        letter-spacing: 0.16em; text-transform: uppercase; color: #a8e88f; margin-bottom: 14px;
+        letter-spacing: 0.16em; text-transform: uppercase; color: var(--green); margin-bottom: 14px;
       }
-      .result-hero .band-k::before { content: ''; width: 22px; height: 2px; background: var(--green); border-radius: 2px; }
-      .result-hero h2 { color: #fff; font-size: 31px; letter-spacing: -0.025em; margin-bottom: 14px; }
-      .result-hero p { color: #cfe0e2; font-size: 16px; max-width: 50ch; }
+      .result-hero .band-k::before { content: ''; width: 22px; height: 2px; background: var(--green); border-radius: 2px; flex: none; }
+      .result-hero h2 { color: var(--white); font-size: 31px; letter-spacing: -0.025em; margin-bottom: 14px; }
+      .result-hero p { color: var(--accent); font-size: 16px; max-width: 50ch; }
+      .result-hero .hero-foot {
+        margin-top: 18px; padding-top: 16px; border-top: 1px solid rgba(255, 255, 255, 0.16);
+        font-size: 13.5px; line-height: 1.6; color: var(--accent); max-width: 56ch;
+      }
 
+      /* ---------- Result: the chart stage ----------
+         The life path is the argument of this page, so it gets a band of its
+         own: tinted ground, a white panel, a milestone rail that stays legible
+         at any width, and a legend you cannot miss. */
+      .stage-band { margin: 38px -64px 0; padding: 46px 64px 48px; background: var(--bg2); }
+      .stage-band .sec-head { margin-bottom: 26px; }
+      .stage {
+        background: var(--white); border-radius: var(--r-lg);
+        padding: 26px 30px 24px; box-shadow: var(--sh-card);
+      }
+      .stage-top {
+        display: flex; align-items: baseline; justify-content: space-between;
+        gap: 14px 28px; flex-wrap: wrap; margin-bottom: 14px;
+      }
+      .stage-top .sub-h { margin: 0; }
+
+      .rail { list-style: none; margin: 0; padding: 0; display: flex; gap: 8px; flex-wrap: wrap; }
+      .rail li {
+        display: inline-flex; align-items: center; gap: 9px;
+        padding: 7px 14px 7px 11px; border-radius: var(--r-pill);
+        background: var(--bg2); font-size: 12.5px; color: var(--gray);
+      }
+      .rail b {
+        font-family: 'JetBrains Mono', monospace; font-size: 14px; font-weight: 500;
+        color: var(--ink); letter-spacing: -0.02em; font-variant-numeric: tabular-nums;
+      }
+      /* The dots are the only key the rail has, so they have to survive the
+         printer dropping backgrounds. */
+      .rail i {
+        width: 9px; height: 9px; border-radius: 50%; flex: none;
+        -webkit-print-color-adjust: exact; print-color-adjust: exact;
+      }
+      .rail-teal { background: var(--teal); }
+      .rail-green { background: var(--green); }
+      /* --accent is a pale wash meant for text on teal. As a 9px dot on the
+         chip's own tint it is 1.3:1 — not quiet, absent. The plan-to marker is
+         the least important of the three, not an invisible one. */
+      .rail-line { background: var(--gray); }
+
+      /* The widget draws its own key and tick captions into the SVG, where they
+         shrink with the viewBox. We say the same things in HTML instead, at a
+         size that survives a phone. */
+      #lifepath { margin-top: 4px; }
+      #lifepath .w-lp-key,
+      #lifepath .w-lp-ticklabel { display: none; }
+      #lifepath .w-lp-legend { margin-top: 20px; gap: 10px; }
+      #lifepath .w-lp-legend li {
+        gap: 10px; padding: 9px 15px; border-radius: var(--r-pill);
+        background: var(--bg2); font-size: 12.5px; font-weight: 600; color: var(--ink-2);
+      }
+      #lifepath .w-lp-legend i {
+        width: 18px; height: 4px; border-radius: 2px;
+        -webkit-print-color-adjust: exact; print-color-adjust: exact;
+      }
+
+      /* ---------- Result: the one flag ---------- */
+      .flag {
+        display: grid; grid-template-columns: 44px 1fr; gap: 18px; align-items: start;
+        margin-top: 22px; border-radius: var(--r-lg); padding: 24px 26px;
+      }
+      .flag[hidden] { display: none; }
+      .flag-ic {
+        width: 44px; height: 44px; border-radius: 50%; flex: none;
+        display: inline-flex; align-items: center; justify-content: center; background: var(--white);
+      }
+      .flag-ic svg { width: 21px; height: 21px; }
+      .flag h3 { font-size: 20px; letter-spacing: -0.015em; margin-bottom: 8px; }
+      .flag p { font-size: 14.5px; color: var(--slate); max-width: 62ch; }
+      .flag p strong { color: var(--ink); font-weight: 600; }
+      /* The single use of the warm accent on this sheet. */
+      .flag-warn { background: var(--ember-soft); box-shadow: inset 3px 0 0 0 var(--ember); }
+      .flag-warn .flag-ic { color: var(--ember-strong); }
+      .flag-warn h3 { color: var(--ember-strong); }
+      .flag-ok { background: var(--bg1); }
+      .flag-ok .flag-ic { color: var(--green-600); }
+
+      /* ---------- Result: the two decisive numbers ---------- */
       .big-pair { display: grid; grid-template-columns: repeat(2, 1fr); gap: 18px; }
-      .big { border-radius: var(--r-xl); padding: 32px 34px; }
-      .big-warn { background: var(--ember-soft); }
-      .big-calm { background: var(--bg2); }
+      .big { border-radius: var(--r-xl); padding: 32px 34px; background: var(--bg2); }
       .big .k { display: block; font-size: 11px; font-weight: 600; letter-spacing: 0.14em; text-transform: uppercase; color: var(--gray); margin-bottom: 12px; }
-      .big .v { font-family: 'JetBrains Mono', monospace; font-size: 42px; font-weight: 500; letter-spacing: -0.04em; line-height: 1; font-variant-numeric: tabular-nums; }
-      .big-warn .v { color: var(--ember-strong); }
-      .big-calm .v { color: var(--teal); }
+      .big .v { font-family: 'JetBrains Mono', monospace; font-size: 42px; font-weight: 500; letter-spacing: -0.04em; line-height: 1; font-variant-numeric: tabular-nums; color: var(--teal); }
       .big p { font-size: 14px; color: var(--slate); margin-top: 14px; max-width: 42ch; }
 
-      /* Next step options */
-      .opt { display: grid; grid-template-columns: 42px 1fr; gap: 16px; padding: 20px 0; border-bottom: 1px solid var(--line-2); }
+      /* ---------- Result: next step options ---------- */
+      .opt { display: grid; grid-template-columns: 46px 1fr; gap: 18px; padding: 22px 0; border-bottom: 1px solid var(--line-2); }
       .opt:last-child { border-bottom: none; }
       .opt b { display: block; color: var(--ink); font-size: 16.5px; margin-bottom: 5px; }
       .opt p { color: var(--gray); font-size: 14px; }
-      .opt .or { width: 42px; height: 42px; border-radius: 50%; background: var(--bg1); color: var(--green-600);
+      .opt .or {
+        width: 46px; height: 46px; border-radius: 50%; background: var(--bg2); color: var(--gray);
         display: inline-flex; align-items: center; justify-content: center; flex: none;
-        font-family: 'JetBrains Mono', monospace; font-size: 11px; letter-spacing: 0.06em; }
+        font-family: 'JetBrains Mono', monospace; font-size: 11px; letter-spacing: 0.06em;
+      }
+      .opt .or-do { background: var(--teal); color: var(--white); }
 
-      /* Scenario presets */
+      /* ---------- Result: scenario + adjust ---------- */
       .scen { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; }
       .scen button {
-        text-align: left; background: #fff; border: 1px solid var(--line); border-radius: var(--r-lg);
+        text-align: left; background: var(--white); border: 1px solid var(--line); border-radius: var(--r-lg);
         padding: 20px 22px; cursor: pointer; font-family: 'Poppins', sans-serif;
         transition: transform var(--dur-base) var(--ease), box-shadow var(--dur-base) var(--ease), border-color var(--dur-base) var(--ease);
       }
@@ -118,25 +232,107 @@
       .tray-grid label { display: flex; justify-content: space-between; align-items: baseline; gap: 10px; font-size: 12.5px; font-weight: 600; color: var(--ink-2); }
       .tray-grid label .v { font-family: 'JetBrains Mono', monospace; font-size: 13px; color: var(--teal); font-weight: 500; font-variant-numeric: tabular-nums; }
 
-      @media (max-width: 860px) {
+      /* ---------- Result: the conversation ---------- */
+      .cta { margin-top: 36px; background: var(--teal); border-radius: var(--r-xl); padding: 40px 44px; }
+      .cta h3 { color: var(--white); font-size: 23px; letter-spacing: -0.02em; margin-bottom: 12px; }
+      .cta p { color: var(--accent); font-size: 15.5px; max-width: 58ch; margin-bottom: 24px; }
+      .cta .btn-ghost { color: var(--white); }
+      /* Nothing in the shared sheet gives a button a focus ring, and the two in
+         here sit on teal, where the browser's own is easy to lose. */
+      .cta .btn:focus-visible { outline: 2px solid var(--white); outline-offset: 3px; }
+
+      /* ============ RESPONSIVE (screen only — print is tuned separately) ============ */
+      @media screen and (max-width: 860px) {
         .result-hero { grid-template-columns: 1fr; gap: 26px; padding: 30px 24px; text-align: center; justify-items: center; }
         .result-hero h2 { font-size: 24px; }
+        .result-hero .hero-foot { max-width: none; }
         .big-pair, .pair, .adv-body, .scen { grid-template-columns: 1fr; }
         .tray-grid { grid-template-columns: repeat(2, 1fr); }
         .dial-read { font-size: 28px; }
         .ask { font-size: 22px; }
       }
-      @media (max-width: 560px) { .tray-grid { grid-template-columns: 1fr; } }
+      @media screen and (max-width: 720px) {
+        .stage-band { margin: 30px -24px 0; padding: 32px 24px 34px; }
+        .stage { padding: 18px 15px 20px; border-radius: var(--r-md); }
+        /* SVG text scales with the viewBox, so the age ticks have to grow as the
+           chart narrows. The widget's own "empty at N" marker is too small to
+           read down here — the flag below the chart says it in words instead. */
+        #lifepath .w-lp-tick { font-size: 14px; }
+        #lifepath .w-lp-warn { display: none; }
+        .flag { grid-template-columns: 1fr; gap: 14px; padding: 22px 20px; }
+        .flag-ic { width: 38px; height: 38px; }
+        .flag-ic svg { width: 18px; height: 18px; }
+        .big { padding: 26px 24px; }
+        .big .v { font-size: 36px; }
+        .cta { padding: 30px 24px; }
+      }
+      @media screen and (max-width: 560px) {
+        #lifepath .w-lp-tick { font-size: 20px; }
+        /* One legend row per idea, so none of it can be mistaken at phone width. */
+        #lifepath .w-lp-legend { flex-direction: column; align-items: stretch; gap: 7px; margin-top: 16px; }
+        #lifepath .w-lp-legend li { border-radius: var(--r-sm); padding: 9px 13px; font-size: 12.5px; }
+        /* On a phone the chart takes the full width of the sheet: every pixel of
+           it is argument, and the milestone chips then sit on one line. */
+        .stage-band { padding-left: 0; padding-right: 0; }
+        .stage-band .sec-head,
+        .stage-band .flag { margin-left: 24px; margin-right: 24px; }
+        .stage {
+          border-radius: 0; padding: 18px 12px 16px; box-shadow: none;
+          border-top: 1px solid var(--line); border-bottom: 1px solid var(--line);
+        }
+        .stage-top { gap: 10px 14px; margin-bottom: 12px; }
+        .rail { gap: 7px; }
+        .rail li { padding: 6px 12px 6px 10px; font-size: 12px; }
+        .tray-grid { grid-template-columns: 1fr; }
 
+        /* The shared stepper lets its five labels collide below 560px. Down here
+           the eyebrow underneath already names the step, so the marks carry the
+           progress on their own — and the labels stay readable to a screen
+           reader rather than being removed. */
+        .w-stepper { gap: 6px; }
+        .w-step { min-width: 0; padding: 11px 8px; justify-content: center; }
+        .w-step-label {
+          position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px;
+          overflow: hidden; clip: rect(0, 0, 0, 0); white-space: nowrap; border: 0;
+        }
+      }
+      @media screen and (max-width: 400px) {
+        #lifepath .w-lp-tick { font-size: 26px; }
+      }
+
+      /* ============ PRINT ============ */
       @media print {
         .step { display: none !important; }
         .step.on { display: block !important; }
-        .result-hero { background: var(--bg2); color: var(--ink); }
+
+        .result-hero { background: var(--bg2); }
         .result-hero h2 { color: var(--ink); }
-        .result-hero p { color: var(--gray); }
+        .result-hero p, .result-hero .hero-foot { color: var(--gray); }
+        .result-hero .hero-foot { border-top-color: var(--line); }
         .result-hero .band-k { color: var(--teal); }
         .on-dark .w-gauge-n { color: var(--ink); }
         .on-dark .w-gauge-u, .on-dark .w-gauge-cap { color: var(--gray); }
+
+        /* The chart keeps its panel but loses the staging. */
+        .stage-band { margin: 0; padding: 0; background: transparent; }
+        .stage { box-shadow: none; border: 1px solid var(--line); border-radius: 0; padding: 8pt 10pt; break-inside: avoid; }
+        .rail li { background: transparent; padding: 0 12pt 0 0; }
+        #lifepath .w-lp-legend li { background: transparent; padding: 0; }
+
+        .flag {
+          background: transparent !important; box-shadow: none; border-radius: 0;
+          grid-template-columns: 1fr; padding: 8pt 0 8pt 12pt; margin-top: 12pt;
+          border-left: 2.5pt solid var(--teal); break-inside: avoid;
+        }
+        .flag-warn { border-left-color: var(--ember); }
+        .flag-ok { border-left-color: var(--green-600); }
+        .flag-ic { display: none; }
+
+        .big { background: transparent; border: 1px solid var(--line); border-radius: 0; padding: 10pt 12pt; break-inside: avoid; }
+        .cta { background: transparent; border: 1px solid var(--line); border-radius: 0; padding: 10pt 12pt; margin-top: 14pt; }
+        .cta h3 { color: var(--ink); }
+        .cta p { color: var(--gray); }
+
         input[type='range'] { display: none; }
         .tray, .adv { display: none; }
       }
@@ -147,17 +343,21 @@
 
     <article class="sheet sheet-wide">
       <div data-sheet-masthead></div>
+      <div data-sheet-hero></div>
 
       <!-- ============ INTRO ============ -->
       <section class="step on" id="step-intro">
         <div class="pad">
           <div class="eyebrow">Session tool 02 · Guided calculator</div>
-          <h1 class="doc-title">Your <em>Work Optional</em> Number</h1>
+          <h1 class="doc-title">Your <em>Freedom Score</em></h1>
           <p class="lede">
-            One question, answered properly: <strong>how much do you need outside super to make work
-            optional before 60?</strong> Not a number that has to last forever — the capital that
-            carries you from the day you stop to the day superannuation unlocks. Five steps, about
-            three minutes.
+            How much you need outside super to make work optional before 60 — and how close you
+            already are.
+          </p>
+          <p class="lede-2">
+            The score is out of 100. The figure behind it is your <strong>Work Optional Number</strong>:
+            the capital that has to carry you from the day you stop to the day super unlocks. Five
+            steps, about three minutes.
           </p>
 
           <div class="grid g3" style="margin: 36px 0 30px">
@@ -170,8 +370,8 @@
             <div class="card card-tint">
               <div class="stat"><span class="k">You get</span><span class="figure fig-lg">6 numbers</span></div>
               <p class="small muted" style="margin-top: 10px">
-                Your number, your projection, the gap, the required monthly, the age it becomes
-                achievable, and how long the money lasts.
+                Your Work Optional Number, your projection, the gap, the required monthly, the age it
+                becomes achievable, and how long the money lasts.
               </p>
             </div>
             <div class="card card-tint">
@@ -207,7 +407,7 @@
       <!-- ============ RESULT ============ -->
       <section class="step" id="step-5">
         <div class="pad">
-          <div class="eyebrow">Your plan</div>
+          <div class="eyebrow">Your result</div>
 
           <div class="result-hero">
             <div class="on-dark" id="gauge"></div>
@@ -215,24 +415,33 @@
               <span class="band-k" id="band-k"></span>
               <h2 id="band-name"></h2>
               <p id="band-copy"></p>
+              <p class="hero-foot">
+                Out of 100. A hundred means the projection covers your Work Optional Number — the
+                capital that carries you from the day you stop to the day super unlocks.
+              </p>
             </div>
           </div>
 
-          <div class="sub-h" style="margin-top: 38px">Your work optional plan</div>
+          <div class="sub-h" style="margin-top: 38px">Your plan in four numbers</div>
           <div id="metrics"></div>
 
-          <hr class="rule" />
+          <!-- The chart gets a band of its own. -->
+          <div class="stage-band">
+            <div class="sec-head">
+              <h2>The whole plan, in one picture</h2>
+              <p>Building, then drawing down, then the moment super takes over.</p>
+            </div>
 
-          <div class="sec-head">
-            <h2>The whole plan, in one picture</h2>
-            <p>
-              Building, then drawing down, then the moment superannuation takes over. Every figure in
-              today's dollars.
-            </p>
+            <div class="stage">
+              <div class="stage-top">
+                <span class="sub-h">Accessible capital · today's dollars</span>
+                <ul class="rail" id="rail"></ul>
+              </div>
+              <div id="lifepath"></div>
+            </div>
+
+            <div id="runout" hidden></div>
           </div>
-          <div class="card"><div id="lifepath"></div></div>
-
-          <div class="card" id="runout" style="margin-top: 20px" hidden></div>
 
           <hr class="rule" />
 
@@ -241,13 +450,13 @@
             <p>Both fall straight out of what you entered.</p>
           </div>
           <div class="big-pair">
-            <div class="big big-warn">
+            <div class="big">
               <span class="k">Work becomes optional at</span>
               <span class="v" id="o-age">—</span>
               <p id="o-age-note"></p>
             </div>
-            <div class="big big-calm">
-              <span class="k">To hit your chosen age</span>
+            <div class="big">
+              <span class="k">Monthly to hit your chosen age</span>
               <span class="v" id="o-req">—</span>
               <p id="o-req-note"></p>
             </div>
@@ -261,7 +470,11 @@
           </div>
           <div id="options"></div>
 
-          <hr class="rule" />
+          <div class="lm-photoband">
+            <img src="../assets/img/photo/golden-hour-meadow-grass-bokeh.webp" alt="" loading="lazy" decoding="async" />
+            <p>Super cannot fund the years before it unlocks. That stretch is <em>the whole problem</em>, and the only one this number solves.</p>
+            <span class="lm-band-k">Today's dollars throughout · a general illustration, not a forecast</span>
+          </div>
 
           <div class="sec-head">
             <h2>After super unlocks</h2>
@@ -287,16 +500,14 @@
             </div>
           </div>
 
-          <div style="margin-top: 32px; background: var(--teal); color: #fff; border-radius: var(--r-xl); padding: 38px 42px">
-            <h3 style="color: #fff; font-size: 23px; letter-spacing: -0.02em; margin-bottom: 12px">
-              Take these numbers to a conversation
-            </h3>
-            <p style="color: #cfe0e2; font-size: 15.5px; max-width: 58ch; margin-bottom: 22px" id="cta-line"></p>
+          <div class="cta">
+            <h3>Take these numbers to a conversation</h3>
+            <p id="cta-line"></p>
             <div class="row no-print">
               <a class="btn btn-primary" href="https://www.prospafinancial.com.au" target="_blank" rel="noopener noreferrer">
                 Book a complimentary consultation
               </a>
-              <button class="btn btn-ghost" style="color: #fff" data-print>Print or save as PDF</button>
+              <button class="btn btn-ghost" data-print>Print or save as PDF</button>
             </div>
           </div>
 
@@ -327,7 +538,17 @@
         scoreGauge, metricStrip, breakdownBar, goalProgress, stepper, lifePath, moneyShort, TONE,
       } from '../assets/widgets.js'
 
-      mountSheet({ no: '02', kind: 'Guided calculator', wide: true })
+      mountSheet({
+        no: '02',
+        kind: 'Guided calculator',
+        wide: true,
+        hero: {
+          src: 'photo/senior-couple-coastal-hike-ocean-vista.webp',
+          alt: '',
+          variant: 'photo',
+          pos: '50% 38%',
+        },
+      })
       wirePrint()
 
       const el = (id) => document.getElementById(id)
@@ -423,6 +644,10 @@
         { eyebrow: 'Step 2 of 5 · Where you want to be',
           ask: 'When should work become optional, and on what income?',
           why: 'This is the pair that sets your number: the age decides how many years the money has to carry you, and the income decides what each of those years costs.',
+          // The most human question on the sheet, so it is the one that gets a
+          // photograph. Not a hike: the hero is already two people in boots on a
+          // trail, and repeating it half a screen later reads as stock wallpaper.
+          aside: { src: 'mature-couple-roadtrip-tailgate-view.webp', pos: '50% 40%', ar: '3 / 2' },
           body: `<div class="pair">${dial('workOptionalAge')}${dial('lifestyle')}</div>` +
             advanced(dial('superAccessAge') + dial('inflation') + dial('partTime') + dial('partTimeUntil')) },
         { eyebrow: 'Step 3 of 5 · What you invest',
@@ -459,15 +684,32 @@
             advanced(dial('postReturn')) },
       ]
 
-      el('steps').innerHTML = STEP_HTML.map((s, i) => `
+      el('steps').innerHTML = STEP_HTML.map((s, i) => {
+        const head = `<div class="eyebrow">${s.eyebrow}</div>
+            <h2 class="ask">${s.ask}</h2>
+            <p class="ask-why">${s.why}</p>`
+        const opening = s.aside
+          ? `<div class="lm-aside" style="--lm-aside-ar:${s.aside.ar};--lm-aside-pos:${s.aside.pos}">
+               <div class="lm-aside-img">
+                 <!-- Not lazy. Every step starts display:none, so the browser cannot
+                      place this image and defers it; revealing the step is not a scroll,
+                      so nothing ever re-triggers the fetch and the reader gets an empty
+                      tinted plate. One 64KB file on a step everyone walks through. -->
+                 <img src="../assets/img/photo/${s.aside.src}" alt="" decoding="async" />
+               </div>
+               <div>${head}</div>
+             </div>`
+          : head
+        return `
         <section class="step" id="step-${i}">
           <div class="pad">
             <ol class="w-stepper no-print" id="stepper-${i}" style="margin-bottom: 36px"></ol>
-            <div class="eyebrow">${s.eyebrow}</div>
-            <h2 class="ask">${s.ask}</h2>
-            <p class="ask-why">${s.why}</p>
-            ${s.body}
-            <div class="live" id="live-${i}"></div>
+            ${opening}
+            <div class="dials">${s.body}</div>
+            <div class="live">
+              <span class="live-k">As it stands</span>
+              <p id="live-${i}"></p>
+            </div>
             <div class="nav-row">
               <button class="btn btn-ghost btn-sm" data-go="${i - 1}">Back</button>
               <button class="btn btn-primary" data-go="${i + 1}">
@@ -479,7 +721,8 @@
               </button>
             </div>
           </div>
-        </section>`).join('')
+        </section>`
+      }).join('')
 
       STEPS.forEach((_, i) => stepper(el('stepper-' + i), STEPS, i))
 
@@ -507,7 +750,16 @@
       }
 
       function syncInputs() {
-        document.querySelectorAll('[data-field]').forEach((i) => (i.value = state[i.dataset.field]))
+        document.querySelectorAll('[data-field]').forEach((i) => {
+          const k = i.dataset.field
+          i.value = state[k]
+          // Without this a slider announces its raw value — "25000", or "1" for
+          // the partner switch. Say to a screen reader what the page says.
+          i.setAttribute(
+            'aria-valuetext',
+            k === 'partnerIncluded' ? (state.partnerIncluded ? 'Yes' : 'No') : FIELDS[k].fmt(state[k])
+          )
+        })
         document.querySelectorAll('[data-read]').forEach((r) => {
           const k = r.dataset.read
           r.textContent = k === 'partnerIncluded' ? (state.partnerIncluded ? 'Yes' : 'No') : FIELDS[k].fmt(state[k])
@@ -592,29 +844,114 @@
         { max: 1e9, name: 'Funded, on these assumptions', copy: 'Your projection covers the bridge. The questions change: where the capital sits, what it costs in tax on the way out, and what the plan does in a poor decade.' },
       ]
 
+      /* The shared widgets play their entrance animation once per element: the
+         observer in widgets.js remembers the node, so a redraw leaves the arc
+         empty and the bars at zero width — which is exactly what happens every
+         time the reader moves a slider in the adjust tray. We cannot change the
+         shared module, so after the first paint we finish the measurement here
+         instead. This only ever writes the value the widget was already given,
+         and it writes it instantly, which is the right behaviour for a figure
+         that is being dragged. */
+      const ARC_LEN = Math.PI * 84 // the gauge arc's length, from widgets.js
+      let firstPaint = true
+
+      function finish(host, { gauge = null, fill = null } = {}) {
+        host.querySelectorAll('.w-breakdown-bar span').forEach((s) => {
+          s.style.transition = 'none'
+          s.style.transform = 'scaleX(1)'
+        })
+        if (fill !== null) {
+          const bar = host.querySelector('.w-goal-track i')
+          if (bar) {
+            bar.style.transition = 'none'
+            bar.style.transform = `scaleX(${fill.toFixed(3)})`
+          }
+        }
+        if (gauge !== null) {
+          const arc = host.querySelector('.w-gauge-arc')
+          const num = host.querySelector('.w-gauge-n')
+          if (arc) {
+            arc.style.transition = 'none'
+            arc.setAttribute('stroke-dashoffset', (ARC_LEN * (1 - gauge / 100)).toFixed(1))
+          }
+          if (num) num.textContent = String(Math.round(gauge))
+        }
+      }
+
+      const ICON_WARN = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1"
+          stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <path d="M10.3 3.9 1.8 18a2 2 0 0 0 1.7 3h17a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0Z"/>
+          <path d="M12 9v4"/><path d="M12 17h.01"/></svg>`
+      const ICON_OK = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6"
+          stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg>`
+
       function render() {
         const v = toModel()
         const m = workOptionalModel(v)
-        const pct = Math.round(m.funded * 100)
+
+        /* Rounding must never promise more than the year-by-year walk delivers.
+           At 99.6% funded the portfolio still empties before super unlocks, and
+           a bare Math.round would print that as 100 — a hundred sitting directly
+           above a flag that says the money ran out. The walk is the arbiter. */
+        const raw = Math.round(m.funded * 100)
+        const pct = m.exhaustedAtAge !== null ? Math.min(99, raw) : raw
         const band = BANDS.find((b) => pct <= b.max)
 
+        /* With work optional at or after super access there is no bridge: the
+           Work Optional Number is nil and the ratio is trivially 1. A hundred
+           there reads as wealth. It only means the question does not bite, and
+           the panel has to say so rather than let the gauge imply otherwise. */
+        const noBridge = m.bridgeYears === 0
+
+        /* The tool is the Freedom Score. The figure it produces is the Work
+           Optional Number — both names belong on this panel, once each. */
+        const score = Math.min(100, pct)
         scoreGauge(el('gauge'), {
-          value: Math.min(100, pct), max: 100, unit: 'Target funded',
-          caption: `${moneyShort(m.projected)} projected against a ${moneyShort(m.workOptionalNumber)} number`,
+          value: score, max: 100, unit: 'Freedom Score',
+          caption: noBridge
+            ? 'No bridge to fund — super is available from the age you chose'
+            : `${moneyShort(m.projected)} projected against a ${moneyShort(m.workOptionalNumber)} Work Optional Number`,
         })
-        el('band-k').textContent = `${pct}% funded`
-        el('band-name').textContent = band.name
-        el('band-copy').textContent = band.copy
+        el('band-k').textContent = noBridge ? 'No bridge to fund' : `${pct}% funded`
+        el('band-name').textContent = noBridge ? 'Nothing to bridge' : band.name
+        el('band-copy').textContent = noBridge
+          ? `You have set work optional at ${v.workOptionalAge}, when super is already available. There is no stretch for accessible capital to cover, so the score has nothing to measure. Bring the age forward to see what a bridge would cost.`
+          : band.copy
 
         const short = m.gap < 0
         metricStrip(el('metrics'), [
-          { label: 'Work optional number', value: money(m.workOptionalNumber), tone: 'key',
+          { label: 'Work Optional Number', value: money(m.workOptionalNumber), tone: 'key',
             note: m.bridgeYears > 0 ? `To fund ${money(v.lifestyle)} a year for ${m.bridgeYears} years` : 'No bridge to fund' },
           { label: 'Projected portfolio', value: money(m.projected), note: `At age ${v.workOptionalAge}, ${m.yearsToTarget} years away` },
-          { label: short ? 'Gap' : 'Surplus', value: money(Math.abs(m.gap)), tone: short ? 'warn' : 'good',
-            note: short ? 'Still to cover' : 'Ahead of the number' },
+          // The shortfall already has a flag of its own under the chart, so this
+          // tile stays quiet: the page carries one warm accent, not three.
+          { label: short ? 'Gap' : 'Surplus', value: money(Math.abs(m.gap)), tone: short ? undefined : 'good',
+            note: short ? 'Still to cover before super unlocks' : 'Ahead of the number' },
           { label: 'Years to target', value: String(m.yearsToTarget), note: m.bridgeYears > 0 ? `Then ${m.bridgeYears} bridging to super` : 'No bridge to fund' },
         ])
+
+        /* The milestone rail: the same ages the chart marks, said in HTML so they
+           are still legible when the SVG is 300px wide. The plan-to age appears
+           only when the chart runs that far — the same test the widget makes —
+           so the rail can never promise a marker the picture does not show. */
+        const chartEnd = m.postPath.length
+          ? m.postPath[m.postPath.length - 1].age
+          : m.bridgePath.length
+            ? m.bridgePath[m.bridgePath.length - 1].age
+            : m.accumPath[m.accumPath.length - 1].age
+        const rail = noBridge
+          // Both milestones land on the same year; two chips reading "65" would
+          // look like a mistake rather than a coincidence.
+          ? [{ age: v.workOptionalAge, tone: 'green', label: 'Work optional · super unlocks' }]
+          : [
+              { age: v.workOptionalAge, tone: 'teal', label: 'Work optional' },
+              { age: v.superAccessAge, tone: 'green', label: 'Super unlocks' },
+            ]
+        if (v.lifeExpectancy > v.superAccessAge && v.lifeExpectancy <= chartEnd)
+          rail.push({ age: v.lifeExpectancy, tone: 'line', label: 'Plan to' })
+        el('rail').innerHTML = rail
+          .map((r) => `<li><i class="rail-${r.tone}"></i><b>${r.age}</b><span>${r.label}</span></li>`)
+          .join('')
 
         lifePath(el('lifepath'), {
           accum: m.accumPath, bridge: m.bridgePath, post: m.postPath,
@@ -628,18 +965,28 @@
         if (m.exhaustedAtAge !== null) {
           const hole = v.superAccessAge - m.exhaustedAtAge
           ro.hidden = false
-          ro.className = 'card'
-          ro.style.background = 'var(--ember-soft)'
-          ro.style.borderColor = 'transparent'
-          ro.innerHTML = `<h3 class="step-h">The money runs out at ${m.exhaustedAtAge}</h3>
-            <p class="muted" style="margin-top:10px">Super unlocks at ${v.superAccessAge}. That leaves <strong>${hole} ${hole === 1 ? 'year' : 'years'}</strong> with nothing to draw on — the one thing a plan like this has to avoid, and the reason the number above exists.</p>`
+          ro.className = 'flag flag-warn'
+          ro.innerHTML = `<span class="flag-ic">${ICON_WARN}</span>
+            <div>
+              <h3>The money runs out at ${m.exhaustedAtAge}</h3>
+              <p>Super unlocks at ${v.superAccessAge}. That leaves <strong>${hole} ${hole === 1 ? 'year' : 'years'}</strong>
+                 with nothing to draw on — the one thing a plan like this has to avoid, and the reason the
+                 number above exists.</p>
+            </div>`
         } else if (m.bridgeYears > 0) {
           ro.hidden = false
-          ro.className = 'card card-green'
-          ro.style.background = ''
-          ro.innerHTML = `<h3 class="step-h">The bridge holds</h3>
-            <p class="muted" style="margin-top:10px">On these assumptions the portfolio carries you to ${v.superAccessAge} with <strong>${money(m.remainingAtAccess)}</strong> still in it, which then joins your super.</p>`
-        } else ro.hidden = true
+          ro.className = 'flag flag-ok'
+          ro.innerHTML = `<span class="flag-ic">${ICON_OK}</span>
+            <div>
+              <h3>The bridge holds</h3>
+              <p>On these assumptions the portfolio carries you to ${v.superAccessAge} with
+                 <strong>${money(m.remainingAtAccess)}</strong> still in it, which then joins your super.</p>
+            </div>`
+        } else {
+          ro.hidden = true
+          ro.className = ''
+          ro.innerHTML = ''
+        }
 
         // Work optional age
         el('o-age').textContent = m.achievableAge === null ? 'Not yet' : String(m.achievableAge)
@@ -675,7 +1022,7 @@
                 partTime: [`Earn about ${money(s.amount)} a year part-time until ${v.workOptionalAge + s.years}`, `Part-time income reduces what the portfolio has to provide, for the years it runs.`],
               }[s.kind]
               return `<div class="opt">
-                <span class="or">${i === 0 ? 'DO' : 'OR'}</span>
+                <span class="or${i === 0 ? ' or-do' : ''}">${i === 0 ? 'DO' : 'OR'}</span>
                 <div><b>${text[0]}</b><p>${text[1]}</p></div>
               </div>`
             }).join('')
@@ -698,9 +1045,10 @@
 
         const yearsPlan = Math.max(1, v.lifeExpectancy - v.superAccessAge)
         const yearsLast = (m.lastsTo ?? v.lifeExpectancy) - v.superAccessAge
+        const yearsShown = Math.min(yearsLast, yearsPlan)
         goalProgress(el('longevity'), {
           label: 'How long the combined pool lasts',
-          current: Math.min(yearsLast, yearsPlan), target: yearsPlan,
+          current: yearsShown, target: yearsPlan,
           onTrack: m.outlivesPlan, fmt: (n) => `${Math.round(n)} yrs`,
         })
         el('longevity').insertAdjacentHTML('beforeend',
@@ -713,9 +1061,18 @@
           }</p>`)
 
         el('cta-line').textContent =
-          `A number of ${money(m.workOptionalNumber)}, a projection of ${money(m.projected)}, work optional at ${
+          `A Work Optional Number of ${money(m.workOptionalNumber)}, a projection of ${money(m.projected)}, work optional at ${
             m.achievableAge ?? 'not yet'
           } against the ${v.workOptionalAge} you wanted, and a combined ${money(m.combinedAtAccess)} once super unlocks. Far better opening numbers than "I'd like to retire early".`
+
+        // First paint keeps the entrance animation; every redraw after it lands
+        // straight on the answer. See `finish` above.
+        if (!firstPaint) {
+          finish(el('gauge'), { gauge: score })
+          finish(el('pool'))
+          finish(el('longevity'), { fill: Math.max(0, Math.min(1, yearsShown / yearsPlan)) })
+        }
+        firstPaint = false
       }
 
       /* ---------- Boot ---------- */

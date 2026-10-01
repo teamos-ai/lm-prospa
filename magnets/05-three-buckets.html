@@ -3,10 +3,10 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>The Three Wealth Buckets — Prospa Financial</title>
+    <title>Your Three Buckets — Prospa Financial</title>
     <meta
       name="description"
-      content="Map where your wealth sits today across three timeframes, and see whether it is available when you actually want to use it."
+      content="Money for now, money for before 60, money for after. Map where your wealth actually sits across the three timeframes, and see the split for yourself."
     />
     <link rel="icon" type="image/svg+xml" href="../assets/favicon.svg" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -17,109 +17,472 @@
     />
     <link rel="stylesheet" href="../assets/prospa.css" />
     <style>
-      .bucket {
-        border-radius: var(--r-lg);
-        border: 1px solid var(--line);
-        overflow: hidden;
-        margin-bottom: 22px;
+      /* ==========================================================
+         05 · THREE BUCKETS — sheet-local styles.
+         Everything here is scoped to this document. No shared file
+         is touched, and every colour is a token from prospa.css.
+
+         The page echoes its own hero: three glass vessels, three
+         fill levels. The fill is the reader's own share of their
+         own total, so the picture cannot say anything the figures
+         do not already say.
+         ========================================================== */
+
+      /* ---- The three vessels ---- */
+
+      .ves-grid {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 16px;
       }
-      .bucket-head {
-        padding: 24px 28px;
+
+      .ves-card {
+        --ves: var(--teal);
         display: flex;
-        align-items: flex-start;
-        gap: 18px;
+        flex-direction: column;
+        min-width: 0;
+        background: var(--white);
+        border: 1px solid var(--line);
+        border-radius: var(--r-lg);
+        overflow: hidden;
+      }
+
+      .ves--freedom {
+        --ves: var(--green);
+      }
+
+      .ves--retire {
+        --ves: var(--teal-900);
+      }
+
+      /* The pale studio ground the vessel stands on. */
+      .ves-fig {
+        border-top: 3px solid var(--ves);
         border-bottom: 1px solid var(--line);
+        background: var(--bg2);
+        background: color-mix(in srgb, var(--ves) 5%, var(--bg2));
+        display: flex;
+        align-items: flex-end;
+        justify-content: center;
+        padding: 22px 0 16px;
       }
-      .bucket-head .num {
-        margin-top: 2px;
+
+      .ves {
+        display: block;
+        width: 74px;
+        height: auto;
       }
-      .bucket-head h3 {
-        font-size: 21px;
-        margin-bottom: 5px;
+
+      .ves-shadow {
+        fill: var(--line);
       }
-      .bucket-head .when {
+
+      /* The glass itself. --accent alone is too pale to read as a vessel
+         against this backdrop, and disappears entirely on paper, so the
+         outline is that same pale tone carried toward the brand teal —
+         still glass, but a line you can actually see. */
+      .ves-glass,
+      .ves-rim {
+        fill: none;
+        stroke: var(--accent);
+        stroke: color-mix(in srgb, var(--teal) 45%, var(--accent));
+        stroke-width: 1.4;
+        stroke-linecap: round;
+        stroke-linejoin: round;
+      }
+
+      .ves-gleam {
+        fill: var(--white);
+        opacity: 0.45;
+      }
+
+      .ves-liq {
+        fill: var(--ves);
+        opacity: 0.58;
+      }
+
+      .ves-top {
+        fill: var(--ves);
+        opacity: 0.92;
+      }
+
+      /* Empty by default; the script translates it up as figures arrive. */
+      .ves-fill {
+        transform: translateY(94.1px);
+        transition: transform 0.75s var(--ease);
+      }
+
+      .ves-body {
+        flex: 1;
+        min-width: 0;
+        padding: 20px 20px 22px;
+        display: flex;
+        flex-direction: column;
+      }
+
+      .ves-when {
+        display: block;
         font-family: 'JetBrains Mono', monospace;
-        font-size: 11px;
-        letter-spacing: 0.1em;
+        font-size: 10.5px;
+        letter-spacing: 0.12em;
         text-transform: uppercase;
         color: var(--gray);
+      }
+
+      .ves-name {
+        font-size: 20px;
+        margin: 7px 0 6px;
+      }
+
+      .ves-line {
+        font-size: 13.5px;
+        line-height: 1.5;
+        color: var(--gray);
+      }
+
+      .ves-eg {
+        /* Takes up whatever slack the card has, so the money field and the
+           share sit on the same line across all three however the copy wraps. */
+        flex: 1 0 auto;
+        margin-top: 10px;
+        font-size: 12px;
+        line-height: 1.55;
+        color: var(--gray);
+      }
+
+      .ves-sep {
+        height: 1px;
+        border: 0;
+        background: var(--line);
+        margin: 18px 0 16px;
+      }
+
+      /* The money field. A cheque line: the sign fixed, the digits mono. */
+      .ves-amt label {
         display: block;
+        font-size: 11px;
+        font-weight: 600;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+        color: var(--gray);
         margin-bottom: 8px;
       }
-      .bucket-head p {
-        color: var(--gray);
-        font-size: 14.5px;
-      }
-      .bucket-body {
-        padding: 26px 28px;
-      }
-      .bucket-q {
-        background: var(--bg2);
-        border-radius: var(--r-md);
-        padding: 15px 20px;
-        font-size: 14.5px;
-        color: var(--slate);
-        margin-bottom: 24px;
-      }
-      .bucket-q b {
-        color: var(--teal);
-      }
-      .examples {
-        display: flex;
-        flex-wrap: wrap;
-        gap: 8px;
-        margin-bottom: 24px;
+
+      .ves-amt input {
+        font-family: 'JetBrains Mono', monospace;
+        font-size: 17px;
+        font-variant-numeric: tabular-nums;
+        letter-spacing: -0.02em;
+        color: var(--ink);
+        background: var(--white);
+        border: 1px solid var(--line);
+        border-radius: var(--r-sm);
+        padding: 12px 12px 12px 30px;
+        width: 100%;
+        transition: border-color var(--dur-base) var(--ease), box-shadow var(--dur-base) var(--ease);
       }
 
-      .lines {
-        display: grid;
-        grid-template-columns: 1.3fr 150px 1.3fr;
-        gap: 10px 20px;
-        align-items: end;
+      .ves-amt input:focus {
+        outline: none;
+        border-color: var(--teal);
+        /* The shared field focus ring, derived from the token rather than
+           restated as a brand colour. The literal stays as the fallback so
+           the ring never disappears — focus must not be colour alone. */
+        box-shadow: 0 0 0 4px rgba(19, 95, 105, 0.1);
+        box-shadow: 0 0 0 4px color-mix(in srgb, var(--teal) 10%, transparent);
       }
-      .lines .lbl {
-        font-size: 11.5px;
+
+      .ves-amt input::-webkit-outer-spin-button,
+      .ves-amt input::-webkit-inner-spin-button {
+        -webkit-appearance: none;
+        margin: 0;
+      }
+
+      .ves-amt input {
+        -moz-appearance: textfield;
+        appearance: textfield;
+      }
+
+      .ves-amt .affix {
+        font-size: 15px;
+        color: var(--gray);
+      }
+
+      .ves-share {
+        margin-top: 11px;
+        font-size: 12.5px;
+        color: var(--gray);
+        display: flex;
+        align-items: baseline;
+        gap: 6px;
+      }
+
+      .ves-share b {
+        font-family: 'JetBrains Mono', monospace;
+        font-size: 15px;
+        font-weight: 500;
+        color: var(--ink);
+        font-variant-numeric: tabular-nums;
+        min-width: 3.4ch;
+      }
+
+      .ves-k {
+        display: block;
+        font-size: 11px;
         font-weight: 600;
-        letter-spacing: 0.1em;
+        letter-spacing: 0.12em;
         text-transform: uppercase;
         color: var(--gray);
-      }
-      .lines input[type='number'] {
-        text-align: right;
-        font-family: 'JetBrains Mono', monospace;
-        font-variant-numeric: tabular-nums;
+        margin-bottom: 2px;
       }
 
+      /* ---- The shape panel ---- */
+
+      .shape {
+        padding: 30px;
+      }
+
+      .shape-rule {
+        height: 1px;
+        border: 0;
+        background: var(--line);
+        margin: 28px 0 22px;
+      }
+
+      .shape-note {
+        margin-top: 14px;
+        font-size: 12.5px;
+        line-height: 1.6;
+        color: var(--gray);
+      }
+
+      /* ---- The read-out ---- */
+
       .read {
-        border-radius: var(--r-lg);
-        padding: 26px 30px;
-        background: var(--bg2);
         margin-top: 22px;
+        padding: 26px 30px;
+        border-radius: var(--r-lg);
+        background: var(--bg2);
+        border-left: 3px solid var(--teal);
       }
-      .read.flag {
-        background: var(--ember-soft);
-      }
+
       .read h3 {
         font-size: 19px;
         margin-bottom: 10px;
       }
 
-      @media (max-width: 760px) {
-        .lines {
-          grid-template-columns: 1fr;
-          gap: 6px;
+      /* The single warm accent on this sheet, and the only one allowed:
+         it fires when the reader's own split is lopsided. */
+      .read--flag {
+        background: var(--ember-soft);
+        border-left-color: var(--ember);
+      }
+
+      /* ---- The three questions ---- */
+
+      .qs {
+        list-style: none;
+        margin: 0;
+        padding: 0;
+      }
+
+      .qs li {
+        display: grid;
+        grid-template-columns: 34px 1fr;
+        gap: 18px;
+        align-items: start;
+        padding: 20px 0;
+        border-bottom: 1px solid var(--line-2);
+      }
+
+      .qs li:first-child {
+        padding-top: 0;
+      }
+
+      .qs li:last-child {
+        border-bottom: 0;
+        padding-bottom: 0;
+      }
+
+      .num--deep {
+        background: var(--teal-900);
+      }
+
+      .q-text {
+        display: block;
+        font-size: 16px;
+        font-weight: 600;
+        color: var(--ink);
+        line-height: 1.45;
+        margin-bottom: 10px;
+        cursor: pointer;
+      }
+
+      label.sub-h {
+        display: block;
+      }
+
+      /* ---- Responsive ---- */
+
+      @media (max-width: 860px) {
+        .ves-body {
+          padding: 18px 16px 20px;
         }
-        .lines .lbl {
-          margin-top: 14px;
-        }
-        .bucket-head,
-        .bucket-body {
-          padding: 20px;
+        .shape {
+          padding: 24px;
         }
       }
+
+      @media (max-width: 680px) {
+        .ves-grid {
+          grid-template-columns: 1fr;
+          gap: 14px;
+        }
+        /* Stacked, the vessel moves beside the card rather than above it,
+           so three buckets still read as three at phone width. */
+        .ves-card {
+          display: grid;
+          grid-template-columns: 96px 1fr;
+          align-items: stretch;
+        }
+        .ves-fig {
+          border-top: 0;
+          border-bottom: 0;
+          border-left: 3px solid var(--ves);
+          border-right: 1px solid var(--line);
+          /* The vessel stands on the bottom edge with the backdrop open
+             above it, the way the three glasses sit in the hero frame. */
+          align-items: flex-end;
+          padding: 16px 8px 18px;
+        }
+        .ves {
+          width: 66px;
+        }
+        .ves-body {
+          padding: 18px 18px 20px;
+        }
+        .ves-sep {
+          margin: 15px 0 14px;
+        }
+      }
+
+      @media (max-width: 560px) {
+        .shape {
+          padding: 20px;
+        }
+        .read {
+          padding: 22px 22px 22px 20px;
+        }
+        .qs li {
+          grid-template-columns: 30px 1fr;
+          gap: 14px;
+        }
+      }
+
+      @media (max-width: 420px) {
+        .ves-card {
+          grid-template-columns: 80px 1fr;
+        }
+        .ves {
+          width: 50px;
+        }
+        .ves-body {
+          padding: 16px 14px 18px;
+        }
+      }
+
+      @media (prefers-reduced-motion: reduce) {
+        .ves-fill {
+          transition: none;
+        }
+      }
+
+      /* ---- Print ----
+         The vessels stay: by the time a reader prints, they hold the
+         reader's own figures, and three part-filled glasses are the
+         whole argument. Everything decorative around them goes. */
       @media print {
-        .bucket {
+        .ves-grid {
+          grid-template-columns: repeat(3, 1fr);
+          gap: 7pt;
           break-inside: avoid;
+        }
+        .ves-card {
+          border: 0.75pt solid var(--line);
+          break-inside: avoid;
+        }
+        .ves-fig {
+          background: transparent;
+          border-top: 2pt solid var(--ves);
+          border-bottom: 0.75pt solid var(--line);
+          padding: 8pt 0 5pt;
+        }
+        .ves {
+          width: 40px;
+        }
+        /* At 40px the hairline outline would vanish into the paper, and a
+           vessel you cannot see is just a floating puddle of colour. */
+        .ves-glass,
+        .ves-rim {
+          stroke-width: 2.2;
+        }
+        .ves-shadow,
+        .ves-gleam {
+          display: none;
+        }
+        .ves-fill {
+          transition: none !important;
+        }
+        .ves-body {
+          padding: 9pt 9pt 11pt;
+        }
+        .ves-name {
+          font-size: 12pt;
+        }
+        .ves-amt input {
+          border: 0;
+          border-bottom: 0.75pt solid var(--line);
+          border-radius: 0;
+          padding: 4pt 0 4pt 14pt;
+        }
+        .shape {
+          border: 0.75pt solid var(--line);
+          padding: 12pt;
+          break-inside: avoid;
+        }
+        .read {
+          background: var(--white);
+          padding: 9pt 0 9pt 12pt;
+          border-left: 2pt solid var(--teal);
+          break-inside: avoid;
+        }
+        .read--flag {
+          background: var(--white);
+          border-left-color: var(--ember);
+        }
+        .qs li {
+          break-inside: avoid;
+          padding: 9pt 0;
+        }
+        /* Browsers drop background colours on paper by default, which would
+           leave these markers as white digits on white. Outline them instead. */
+        .qs .num {
+          background: transparent;
+          color: var(--teal);
+          border: 0.75pt solid var(--line);
+        }
+        .qs .num-green {
+          color: var(--green-600);
+        }
+        .qs .num--deep {
+          color: var(--teal-900);
+        }
+        /* The access bar is the one band whose whole meaning is its fill, and
+           it is two flat segments 20px tall. Worth the ink. */
+        #access .w-breakdown-bar,
+        #access .w-breakdown-bar span {
+          -webkit-print-color-adjust: exact;
+          print-color-adjust: exact;
         }
       }
     </style>
@@ -129,172 +492,339 @@
 
     <article class="sheet">
       <div data-sheet-masthead></div>
+      <div data-sheet-hero></div>
 
       <div class="pad">
         <div class="eyebrow">Session tool 05 · Worksheet</div>
-        <h1 class="doc-title">The Three <em>Wealth Buckets</em></h1>
+        <h1 class="doc-title">Your <em>Three Buckets</em></h1>
         <p class="lede">
-          The goal is not simply to accumulate more. It is to hold the right assets for the right
-          timeframe. Map where your wealth sits today, and the question answers itself:
-          <strong>is it available when you actually want to use it?</strong>
+          Money for now, money for before 60, money for after. Map where yours actually sits.
         </p>
 
         <hr class="rule" />
 
-        <!-- ---------- Bucket 1 ---------- -->
-        <div class="bucket">
-          <div class="bucket-head">
-            <span class="num">1</span>
-            <div>
-              <span class="when">Now — 0 to 3 years</span>
-              <h3>Today · Liquidity &amp; Lifestyle</h3>
-              <p>Money designed to be available now or in the near term.</p>
-            </div>
-          </div>
-          <div class="bucket-body">
-            <div class="examples">
-              <span class="badge badge-teal">Cash</span>
-              <span class="badge badge-teal">Offset</span>
-              <span class="badge badge-teal">Emergency reserve</span>
-              <span class="badge badge-teal">Near-term goals</span>
-            </div>
-            <div class="bucket-q">
-              <b>Question to consider:</b> what must this money allow me to do over the next
-              0–3 years?
-            </div>
-            <div class="lines">
-              <div>
-                <span class="lbl">What I have here</span>
-                <input class="writeline" type="text" data-persist="b1-what" placeholder="Cash, offset balance…" />
-              </div>
-              <div>
-                <span class="lbl">Approximate value</span>
-                <input class="writeline" type="number" inputmode="numeric" data-bucket="today"
-                       data-persist="b1-val" placeholder="0" />
-              </div>
-              <div>
-                <span class="lbl">What I want it to achieve</span>
-                <input class="writeline" type="text" data-persist="b1-goal" placeholder="Cover 9 months…" />
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <!-- ---------- Bucket 2 ---------- -->
-        <div class="bucket">
-          <div class="bucket-head">
-            <span class="num">2</span>
-            <div>
-              <span class="when">Before preservation age</span>
-              <h3>Freedom · Pre-Retirement Flexibility</h3>
-              <p>Capital that may fund choices before superannuation becomes accessible.</p>
-            </div>
-          </div>
-          <div class="bucket-body">
-            <div class="examples">
-              <span class="badge badge-green">Investments outside super</span>
-              <span class="badge badge-green">Property equity</span>
-              <span class="badge badge-green">Other accessible assets</span>
-            </div>
-            <div class="bucket-q">
-              <b>Question to consider:</b> if I wanted work to become optional earlier, what would
-              fund the gap?
-            </div>
-            <div class="lines">
-              <div>
-                <span class="lbl">What I have here</span>
-                <input class="writeline" type="text" data-persist="b2-what" placeholder="Share portfolio, trust…" />
-              </div>
-              <div>
-                <span class="lbl">Approximate value</span>
-                <input class="writeline" type="number" inputmode="numeric" data-bucket="freedom"
-                       data-persist="b2-val" placeholder="0" />
-              </div>
-              <div>
-                <span class="lbl">What I want it to achieve</span>
-                <input class="writeline" type="text" data-persist="b2-goal" placeholder="Fund ages 55–60…" />
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <!-- ---------- Bucket 3 ---------- -->
-        <div class="bucket">
-          <div class="bucket-head">
-            <span class="num">3</span>
-            <div>
-              <span class="when">60 and beyond</span>
-              <h3>Retirement · Long-Term Capital</h3>
-              <p>Assets designed primarily to support life after work.</p>
-            </div>
-          </div>
-          <div class="bucket-body">
-            <div class="examples">
-              <span class="badge badge-teal">Superannuation</span>
-              <span class="badge badge-teal">Long-term retirement assets</span>
-            </div>
-            <div class="bucket-q">
-              <b>Question to consider:</b> is this pool on track for the lifestyle I want later?
-            </div>
-            <div class="lines">
-              <div>
-                <span class="lbl">What I have here</span>
-                <input class="writeline" type="text" data-persist="b3-what" placeholder="Super balance, SMSF…" />
-              </div>
-              <div>
-                <span class="lbl">Approximate value</span>
-                <input class="writeline" type="number" inputmode="numeric" data-bucket="retire"
-                       data-persist="b3-val" placeholder="0" />
-              </div>
-              <div>
-                <span class="lbl">What I want it to achieve</span>
-                <input class="writeline" type="text" data-persist="b3-goal" placeholder="Replace income from 60…" />
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <hr class="rule" />
-
-        <!-- ---------- Shape ---------- -->
+        <!-- ================= 1 · THE THREE VESSELS ================= -->
         <div class="sec-head">
-          <h2>The shape of your balance sheet</h2>
+          <h2>What you hold</h2>
           <p>
-            Not how much, but where. A strong balance sheet can still be poorly aligned to what you
-            want it to do.
+            Put a rough figure in each. Approximate is fine — the shape matters far more than the
+            decimals.
           </p>
         </div>
 
-        <div id="metrics" style="margin-bottom: 26px"></div>
-        <div id="alloc"></div>
+        <div class="ves-grid">
+          <!-- ---------- Today ---------- -->
+          <div class="ves-card ves--today">
+            <div class="ves-fig">
+              <svg class="ves" viewBox="0 0 68 106" aria-hidden="true" focusable="false">
+                <defs>
+                  <clipPath id="vclip-today">
+                    <path
+                      d="M8.7 8 L8.7 91 A6.3 6.3 0 0 0 15 97.3 L53 97.3 A6.3 6.3 0 0 0 59.3 91 L59.3 8 A25.3 3.2 0 0 0 8.7 8 Z"
+                    />
+                  </clipPath>
+                </defs>
+                <ellipse class="ves-shadow" cx="34" cy="101.4" rx="25" ry="2.6" />
+                <g clip-path="url(#vclip-today)">
+                  <g class="ves-fill" data-fill="today">
+                    <rect class="ves-liq" x="2" y="5.8" width="64" height="98" />
+                    <ellipse class="ves-top" cx="34" cy="5.8" rx="25.3" ry="2.6" />
+                  </g>
+                </g>
+                <path class="ves-glass" d="M8 8 L8 91 A7 7 0 0 0 15 98 L53 98 A7 7 0 0 0 60 91 L60 8" />
+                <ellipse class="ves-rim" cx="34" cy="8" rx="26" ry="3.2" />
+                <rect class="ves-gleam" x="13.2" y="19" width="2.2" height="48" rx="1.1" />
+              </svg>
+            </div>
 
-        <div class="read" id="read"></div>
+            <div class="ves-body">
+              <span class="ves-when">Now · 0–3 years</span>
+              <h3 class="ves-name">Today</h3>
+              <p class="ves-line">Money you can reach now, or within three years.</p>
+              <p class="ves-eg">Cash · Offset · Emergency reserve</p>
+
+              <hr class="ves-sep" />
+
+              <div class="ves-amt">
+                <label for="amt-today">Approximate value</label>
+                <div class="input-wrap">
+                  <span class="affix" aria-hidden="true">$</span>
+                  <input
+                    id="amt-today"
+                    type="number"
+                    inputmode="numeric"
+                    min="0"
+                    placeholder="0"
+                    data-bucket="today"
+                    data-persist="b1-val"
+                  />
+                </div>
+                <p class="ves-share"><b data-share="today">—</b><span>of your total</span></p>
+              </div>
+
+              <hr class="ves-sep" />
+
+              <div>
+                <label class="ves-k" for="what-today">What sits here</label>
+                <input
+                  id="what-today"
+                  class="writeline"
+                  type="text"
+                  placeholder="Cash, offset balance…"
+                  data-persist="b1-what"
+                />
+              </div>
+            </div>
+          </div>
+
+          <!-- ---------- Freedom ---------- -->
+          <div class="ves-card ves--freedom">
+            <div class="ves-fig">
+              <svg class="ves" viewBox="0 0 68 106" aria-hidden="true" focusable="false">
+                <defs>
+                  <clipPath id="vclip-freedom">
+                    <path
+                      d="M8.7 8 L8.7 91 A6.3 6.3 0 0 0 15 97.3 L53 97.3 A6.3 6.3 0 0 0 59.3 91 L59.3 8 A25.3 3.2 0 0 0 8.7 8 Z"
+                    />
+                  </clipPath>
+                </defs>
+                <ellipse class="ves-shadow" cx="34" cy="101.4" rx="25" ry="2.6" />
+                <g clip-path="url(#vclip-freedom)">
+                  <g class="ves-fill" data-fill="freedom">
+                    <rect class="ves-liq" x="2" y="5.8" width="64" height="98" />
+                    <ellipse class="ves-top" cx="34" cy="5.8" rx="25.3" ry="2.6" />
+                  </g>
+                </g>
+                <path class="ves-glass" d="M8 8 L8 91 A7 7 0 0 0 15 98 L53 98 A7 7 0 0 0 60 91 L60 8" />
+                <ellipse class="ves-rim" cx="34" cy="8" rx="26" ry="3.2" />
+                <rect class="ves-gleam" x="13.2" y="19" width="2.2" height="48" rx="1.1" />
+              </svg>
+            </div>
+
+            <div class="ves-body">
+              <span class="ves-when">Before 60</span>
+              <h3 class="ves-name">Freedom</h3>
+              <p class="ves-line">What could fund life before super becomes available.</p>
+              <p class="ves-eg">Shares · Property equity · Assets outside super</p>
+
+              <hr class="ves-sep" />
+
+              <div class="ves-amt">
+                <label for="amt-freedom">Approximate value</label>
+                <div class="input-wrap">
+                  <span class="affix" aria-hidden="true">$</span>
+                  <input
+                    id="amt-freedom"
+                    type="number"
+                    inputmode="numeric"
+                    min="0"
+                    placeholder="0"
+                    data-bucket="freedom"
+                    data-persist="b2-val"
+                  />
+                </div>
+                <p class="ves-share"><b data-share="freedom">—</b><span>of your total</span></p>
+              </div>
+
+              <hr class="ves-sep" />
+
+              <div>
+                <label class="ves-k" for="what-freedom">What sits here</label>
+                <input
+                  id="what-freedom"
+                  class="writeline"
+                  type="text"
+                  placeholder="Share portfolio, trust…"
+                  data-persist="b2-what"
+                />
+              </div>
+            </div>
+          </div>
+
+          <!-- ---------- Retirement ---------- -->
+          <div class="ves-card ves--retire">
+            <div class="ves-fig">
+              <svg class="ves" viewBox="0 0 68 106" aria-hidden="true" focusable="false">
+                <defs>
+                  <clipPath id="vclip-retire">
+                    <path
+                      d="M8.7 8 L8.7 91 A6.3 6.3 0 0 0 15 97.3 L53 97.3 A6.3 6.3 0 0 0 59.3 91 L59.3 8 A25.3 3.2 0 0 0 8.7 8 Z"
+                    />
+                  </clipPath>
+                </defs>
+                <ellipse class="ves-shadow" cx="34" cy="101.4" rx="25" ry="2.6" />
+                <g clip-path="url(#vclip-retire)">
+                  <g class="ves-fill" data-fill="retire">
+                    <rect class="ves-liq" x="2" y="5.8" width="64" height="98" />
+                    <ellipse class="ves-top" cx="34" cy="5.8" rx="25.3" ry="2.6" />
+                  </g>
+                </g>
+                <path class="ves-glass" d="M8 8 L8 91 A7 7 0 0 0 15 98 L53 98 A7 7 0 0 0 60 91 L60 8" />
+                <ellipse class="ves-rim" cx="34" cy="8" rx="26" ry="3.2" />
+                <rect class="ves-gleam" x="13.2" y="19" width="2.2" height="48" rx="1.1" />
+              </svg>
+            </div>
+
+            <div class="ves-body">
+              <span class="ves-when">60 and after</span>
+              <h3 class="ves-name">Retirement</h3>
+              <p class="ves-line">Money you have set aside for life after work.</p>
+              <p class="ves-eg">Super · Long-term retirement assets</p>
+
+              <hr class="ves-sep" />
+
+              <div class="ves-amt">
+                <label for="amt-retire">Approximate value</label>
+                <div class="input-wrap">
+                  <span class="affix" aria-hidden="true">$</span>
+                  <input
+                    id="amt-retire"
+                    type="number"
+                    inputmode="numeric"
+                    min="0"
+                    placeholder="0"
+                    data-bucket="retire"
+                    data-persist="b3-val"
+                  />
+                </div>
+                <p class="ves-share"><b data-share="retire">—</b><span>of your total</span></p>
+              </div>
+
+              <hr class="ves-sep" />
+
+              <div>
+                <label class="ves-k" for="what-retire">What sits here</label>
+                <input
+                  id="what-retire"
+                  class="writeline"
+                  type="text"
+                  placeholder="Super balance, SMSF…"
+                  data-persist="b3-what"
+                />
+              </div>
+            </div>
+          </div>
+        </div>
 
         <hr class="rule" />
 
-        <div class="card card-tint">
-          <h3 class="step-h">The gap to look for</h3>
-          <p class="muted" style="margin-top: 10px">
-            Someone may have significant wealth in their home and their super, and very little
-            accessible capital to fund an earlier exit. Nothing is wrong with those assets — they
-            are simply all pointed at the same timeframe. The purpose of the three-bucket view is
-            to expose timing and access gaps, not to prescribe a particular investment.
+        <!-- ================= 2 · THE SHAPE ================= -->
+        <div class="sec-head">
+          <h2>The shape of it</h2>
+          <p>
+            Not how much, but where. A balance sheet can be strong and still point almost entirely at
+            one timeframe.
           </p>
         </div>
 
-        <div style="margin-top: 32px">
-          <div class="sub-h">My next question</div>
-          <input class="writeline" type="text" data-persist="next-q"
-                 placeholder="The one thing I want to understand about this picture…"
-                 style="font-size: 16px; padding: 14px 2px" />
+        <div class="card shape">
+          <div id="donut"></div>
+
+          <hr class="shape-rule" />
+
+          <div class="sub-h">How much can you reach before 60?</div>
+          <div id="access"></div>
+          <p class="shape-note">
+            This is the same money, cut a second way: everything in Today and Freedom against
+            everything you have set aside for 60 and beyond.
+          </p>
+        </div>
+
+        <div class="read" id="read" aria-live="polite"></div>
+
+        <!-- ================= 3 · THE GAP ================= -->
+        <div class="lm-aside lm-aside--flip" style="--lm-aside-pos: 50% 40%">
+          <div class="lm-aside-img">
+            <img src="../assets/img/photo/senior-couple-lounge-sofa-reading-relaxed.webp" alt="" />
+          </div>
+          <div>
+            <h3 class="step-h">The gap to look for</h3>
+            <p class="muted" style="margin-top: 10px">
+              Someone can hold significant wealth in the family home and in super, and very little
+              they can actually reach in between. Nothing is wrong with either asset. They are simply
+              pointed at the same timeframe.
+            </p>
+            <p class="muted" style="margin-top: 14px">
+              This worksheet exists to make that visible. It does not prescribe what should fill the
+              gap, or whether the gap matters to you.
+            </p>
+          </div>
+        </div>
+
+        <hr class="rule" />
+
+        <!-- ================= 4 · THE QUESTIONS ================= -->
+        <div class="sec-head">
+          <h2>Three questions worth sitting with</h2>
+          <p>One for each bucket. Your answer matters more than the figure above it.</p>
+        </div>
+
+        <ol class="qs">
+          <li>
+            <span class="num" aria-hidden="true">1</span>
+            <div>
+              <label class="q-text" for="goal-today">
+                What must the Today bucket let me do over the next three years?
+              </label>
+              <input
+                id="goal-today"
+                class="writeline"
+                type="text"
+                placeholder="Cover nine months without income…"
+                data-persist="b1-goal"
+              />
+            </div>
+          </li>
+          <li>
+            <span class="num num-green" aria-hidden="true">2</span>
+            <div>
+              <label class="q-text" for="goal-freedom">
+                If work became optional earlier, what would fund the years before 60?
+              </label>
+              <input
+                id="goal-freedom"
+                class="writeline"
+                type="text"
+                placeholder="Fund ages 55 to 60…"
+                data-persist="b2-goal"
+              />
+            </div>
+          </li>
+          <li>
+            <span class="num num--deep" aria-hidden="true">3</span>
+            <div>
+              <label class="q-text" for="goal-retire">
+                Is the Retirement bucket on track for the life I want after 60?
+              </label>
+              <input
+                id="goal-retire"
+                class="writeline"
+                type="text"
+                placeholder="Replace income from 60…"
+                data-persist="b3-goal"
+              />
+            </div>
+          </li>
+        </ol>
+
+        <div style="margin-top: 36px">
+          <label class="sub-h" for="next-q">My next question</label>
+          <input
+            id="next-q"
+            class="writeline"
+            type="text"
+            placeholder="The one thing I want to understand about this picture…"
+            data-persist="next-q"
+            style="font-size: 16px; padding: 14px 2px"
+          />
         </div>
 
         <div class="disclaimer" style="margin-top: 32px">
-          <b>General information only.</b> The appropriate mix between accessible assets,
-          superannuation, debt and other structures depends on your personal circumstances, tax
-          position, goals and risk tolerance. This worksheet records your own figures to support a
-          discussion; it is not a recommendation, an asset allocation, or a review of your financial
-          position. Personal advice may be required before acting.
+          <b>General information only.</b> The right mix between accessible assets, superannuation,
+          debt and other structures depends on your personal circumstances, tax position, goals and
+          risk tolerance. This worksheet records your own figures to support a discussion. It is not
+          a recommendation, an asset allocation, or a review of your financial position. Personal
+          advice may be required before acting.
         </div>
 
         <div class="row no-print" style="margin-top: 26px">
@@ -311,86 +841,222 @@
 
     <script type="module">
       import { mountSheet, wirePrint, money, persistFields } from '../assets/sheet.js'
-      import { metricStrip, breakdownBar, TONE } from '../assets/widgets.js'
+      import { donut, breakdownBar, TONE } from '../assets/widgets.js'
 
-      mountSheet({ no: '05', kind: 'Worksheet' })
+      mountSheet({
+        no: '05',
+        kind: 'Worksheet',
+        hero: { src: 'art/05-vessels.webp', alt: '', variant: 'art', pos: '55% 62%' },
+      })
       wirePrint()
 
       const el = (id) => document.getElementById(id)
-      const val = (k) => Number(document.querySelector(`[data-bucket="${k}"]`).value) || 0
 
-      function sync() {
-        const t = val('today')
-        const f = val('freedom')
-        const r = val('retire')
-        const total = t + f + r
+      /* The three timeframes, in order. One list drives the vessels, the
+         donut and the read-out, so they can never disagree with each other. */
+      const BUCKETS = [
+        { key: 'today', colour: TONE.teal, label: 'Today — now to three years' },
+        { key: 'freedom', colour: TONE.green, label: 'Freedom — reachable before 60' },
+        { key: 'retire', colour: TONE.tealDeep, label: 'Retirement — set aside for 60 and beyond' },
+      ]
 
-        const pct = (n) => (total > 0 ? n / total : 0)
+      /* The water's full travel in SVG user units, from brim to empty.
+         It is set by the clip path and the elliptical surface above: at
+         translateY(FILL) the surface sits exactly on the clip's floor. */
+      const FILL = 94.1
 
-        metricStrip(el('metrics'), [
-          { label: 'Today · 0–3 years', value: money(t), note: 'Liquidity and lifestyle' },
-          { label: 'Freedom · before 60', value: money(f), tone: total > 0 && pct(f) < 0.2 ? 'warn' : undefined,
-            note: 'The only bucket that funds an earlier exit' },
-          { label: 'Retirement · 60+', value: money(r), note: 'Super and long-term capital' },
-          { label: 'Total mapped', value: money(total), tone: 'key', note: total > 0 ? 'Across all three timeframes' : 'Add your figures above' },
+      const amount = (k) => {
+        const f = document.querySelector(`[data-bucket="${k}"]`)
+        return Math.max(0, Number(f && f.value) || 0)
+      }
+
+      /* ----------------------------------------------------------
+         The shared widgets reveal themselves exactly once, through
+         a single IntersectionObserver that will not re-arm for a
+         container it has already played. This sheet re-renders its
+         widgets on every keystroke, so once a container has been
+         revealed, every later render would sit silently at zero —
+         an empty ring and a flat bar over real figures.
+
+         So: we watch the same two containers ourselves, and settle
+         a container to its final state the moment it has already
+         had its reveal. Before that it is left alone, and the
+         shared observer animates it in with the latest figures.
+         Local fix; the shared files are untouched.
+         ---------------------------------------------------------- */
+      const revealed = new WeakSet()
+      const watcher =
+        typeof IntersectionObserver === 'undefined'
+          ? null
+          : new IntersectionObserver(
+              (entries) => entries.forEach((e) => e.isIntersecting && revealed.add(e.target)),
+              { threshold: 0.35 }
+            )
+
+      /* Watch once, then report whether the reveal has already happened.
+         With no observer at all the shared code paints instantly, so the
+         container counts as revealed from the start. */
+      function revealedOnce(node) {
+        if (!watcher) return true
+        if (!node.__watched) {
+          node.__watched = true
+          watcher.observe(node)
+        }
+        return revealed.has(node)
+      }
+
+      function settle(root) {
+        root.querySelectorAll('.w-breakdown-bar span').forEach((s) => {
+          s.style.transition = 'none'
+          s.style.transform = 'scaleX(1)'
+        })
+        root.querySelectorAll('circle[data-len]').forEach((c) => {
+          c.style.transition = 'none'
+          c.setAttribute('stroke-dasharray', `${c.dataset.len} ${c.dataset.gap}`)
+        })
+      }
+
+      let readTimer = null
+
+      function sync(immediate) {
+        const v = {
+          today: amount('today'),
+          freedom: amount('freedom'),
+          retire: amount('retire'),
+        }
+        const total = v.today + v.freedom + v.retire
+        const share = (n) => (total > 0 ? n / total : 0)
+
+        /* --- the vessels --- */
+        BUCKETS.forEach((b) => {
+          const s = share(v[b.key])
+          const water = document.querySelector(`[data-fill="${b.key}"]`)
+          if (water) water.style.transform = `translateY(${(FILL * (1 - s)).toFixed(2)}px)`
+          const chip = document.querySelector(`[data-share="${b.key}"]`)
+          if (chip) chip.textContent = total > 0 ? `${Math.round(s * 100)}%` : '—'
+        })
+
+        /* --- composition: where the money sits --- */
+        donut(
+          el('donut'),
+          BUCKETS.map((b) => ({
+            label: b.label,
+            value: v[b.key],
+            color: b.colour,
+            display: money(v[b.key]),
+          })),
+          {
+            label: 'Total mapped',
+            value: total > 0 ? money(total) : '—',
+            size: 164,
+            thickness: 22,
+          }
+        )
+
+        /* --- access: the same money cut by whether you can reach it --- */
+        const before = v.today + v.freedom
+        breakdownBar(el('access'), [
+          { label: 'Reachable before 60', value: before, color: TONE.teal, display: money(before) },
+          {
+            label: 'Set aside for 60 and beyond',
+            value: v.retire,
+            color: TONE.tealDeep,
+            display: money(v.retire),
+          },
         ])
 
-        breakdownBar(el('alloc'), [
-          { label: 'Today — liquidity and lifestyle', value: t, color: TONE.teal, display: money(t) },
-          { label: 'Freedom — reachable before 60', value: f, color: TONE.green, display: money(f) },
-          { label: 'Retirement — after 60', value: r, color: TONE.tealDeep, display: money(r) },
-        ])
+        if (revealedOnce(el('donut'))) settle(el('donut'))
+        if (revealedOnce(el('access'))) settle(el('access'))
 
+        /* --- the read-out, held back a beat so it does not flicker
+               (or re-announce to a screen reader) on every keystroke --- */
+        clearTimeout(readTimer)
+        if (immediate) readOut(v, total, share)
+        else readTimer = setTimeout(() => readOut(v, total, share), 320)
+      }
+
+      function readOut(v, total, share) {
         const read = el('read')
-        if (total === 0) {
+
+        if (total <= 0) {
           read.className = 'read'
-          read.innerHTML = `<h3>Add your approximate values</h3>
-            <p class="muted">Enter a figure in each bucket above and the shape of your balance sheet appears here, with what it suggests.</p>`
+          read.innerHTML =
+            '<h3>Nothing mapped yet</h3>' +
+            '<p class="muted">Put a rough figure in each bucket above. The split appears here, ' +
+            'along with what it suggests.</p>'
           return
         }
 
-        const freedomShare = pct(f)
-        const retireShare = pct(r)
-        const todayShare = pct(t)
+        const todayShare = share(v.today)
+        const freedomShare = share(v.freedom)
+        const retireShare = share(v.retire)
+        const T = Math.round(todayShare * 100)
+        const F = Math.round(freedomShare * 100)
+        const R = Math.round(retireShare * 100)
 
-        let title, body
+        let title
+        let body
+        let flag = false
+
         if (freedomShare < 0.2 && retireShare > 0.5) {
-          title = 'Weighted to the far horizon'
-          body = `${(retireShare * 100).toFixed(
-            0
-          )}% of what you have mapped sits in the retirement bucket, and only ${(freedomShare * 100).toFixed(
-            0
-          )}% in the freedom bucket. That is wealth working hard for the years after 60 and contributing very little to the years before it. If an earlier exit matters to you, this is the shape that would need to change.`
-          read.className = 'read flag'
+          flag = true
+          title = 'Pointed at the far horizon'
+          body =
+            `${R}% of what you have mapped sits in Retirement, and ${F}% in Freedom. ` +
+            'That is wealth working hard for the years after 60 and contributing very little to ' +
+            'the years before it. If an earlier exit matters to you, this is the shape that would ' +
+            'have to change.'
         } else if (todayShare > 0.4) {
+          flag = true
           title = 'Weighted to the near term'
-          body = `${(todayShare * 100).toFixed(
-            0
-          )}% sits in the today bucket. A substantial reserve is a genuine strength and buys you the right to wait — but beyond what the reserve needs to be, cash loses purchasing power every year it waits. The question is how much of this is reserve, and how much is undeployed.`
-          read.className = 'read flag'
+          body =
+            `${T}% sits in Today. A deep reserve is a real strength and buys you the right to wait. ` +
+            'Past what the reserve needs to be, though, cash loses purchasing power every year it ' +
+            'sits. The question is how much of this is reserve, and how much is simply undeployed.'
         } else if (freedomShare >= 0.25 && retireShare >= 0.25 && todayShare >= 0.05) {
-          title = 'Spread across all three timeframes'
-          body = `Today ${(todayShare * 100).toFixed(0)}%, freedom ${(freedomShare * 100).toFixed(
-            0
-          )}%, retirement ${(retireShare * 100).toFixed(
-            0
-          )}%. Each timeframe has capital pointed at it, which is uncommon. The useful questions now are about sizing rather than shape: is each bucket big enough for the job you have given it?`
-          read.className = 'read'
+          title = 'Spread across all three'
+          body =
+            `Today ${T}%, Freedom ${F}%, Retirement ${R}%. Each timeframe has capital pointed at ` +
+            'it, which is uncommon. The useful questions now are about size rather than shape: is ' +
+            'each bucket big enough for the job you have given it?'
         } else {
           title = 'A shape worth examining'
-          body = `Today ${(todayShare * 100).toFixed(0)}%, freedom ${(freedomShare * 100).toFixed(
-            0
-          )}%, retirement ${(retireShare * 100).toFixed(
-            0
-          )}%. Compare that against when you actually want to use the money. Where the two disagree is where the conversation starts.`
-          read.className = 'read'
+          body =
+            `Today ${T}%, Freedom ${F}%, Retirement ${R}%. Hold that against when you actually ` +
+            'want to use the money. Where the two disagree is where the conversation starts.'
         }
+
+        read.className = flag ? 'read read--flag' : 'read'
         read.innerHTML = `<h3>${title}</h3><p class="muted">${body}</p>`
       }
 
-      document.querySelectorAll('[data-bucket]').forEach((i) => i.addEventListener('input', sync))
+      /* Restore first, then wire, then draw — so a returning reader sees
+         their own picture rather than an empty one. */
       persistFields('three-buckets')
-      sync()
+
+      document.querySelectorAll('[data-bucket]').forEach((i) => i.addEventListener('input', () => sync(false)))
+
+      /* persistFields wires [data-clear] too; it empties the fields, and this
+         redraws the picture once it has. */
+      document.querySelectorAll('[data-clear]').forEach((b) =>
+        b.addEventListener('click', () => requestAnimationFrame(() => sync(true)))
+      )
+
+      /* Paper does not scroll. The three fields sit above the fold, so a
+         reader can fill them and print without the donut ever having been
+         revealed — which would put an empty ring on the page beside the
+         right figures. The shared print rules flatten the access bar for
+         us; the donut's arcs have no such guard, so we settle both here. */
+      const settleForPrint = () => {
+        settle(el('donut'))
+        settle(el('access'))
+      }
+      window.addEventListener('beforeprint', settleForPrint)
+      window
+        .matchMedia?.('print')
+        ?.addEventListener?.('change', (e) => e.matches && settleForPrint())
+
+      sync(true)
     </script>
   </body>
 </html>

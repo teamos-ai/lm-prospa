@@ -126,7 +126,12 @@ advice" — both would be a misuse of an instrument that measures self-reported 
 
 Patterns read the **relationship between areas**, which is where the diagnostic value sits. They
 fire on area fractions (`f`), in the priority order listed; at most **two** are shown. If none
-fire, a neutral "balanced profile" message is shown instead.
+fire, the sheet shows **"No single pattern stands out"**.
+
+> Not "a balanced profile". None of the rules firing means no *relationship between areas* was
+> strong enough to read as a pattern. It does not mean the areas are level — this branch is also
+> reached by a profile carrying a zeroed area — so calling it balanced would describe the
+> reader's own position back to them inaccurately, which this instrument must never do.
 
 | Priority | Pattern | Fires when | Emphasis |
 |---:|---|---|---|

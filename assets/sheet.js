@@ -23,18 +23,18 @@ export const PROSPA = {
 
 /** The twelve magnets, in order. Single source for titles and routes. */
 export const MAGNETS = [
-  { no: '01', slug: '01-wealth-score', title: 'The Executive Wealth Score', kind: 'Scored assessment', agenda: 8 },
-  { no: '02', slug: '02-freedom-number', title: 'Your Work Optional Number', kind: 'Guided calculator', agenda: 5 },
-  { no: '03', slug: '03-gap-years', title: 'The Gap Years Map', kind: 'Calculator', agenda: 5 },
-  { no: '04', slug: '04-next-dollar', title: 'The Next Dollar Decision Map', kind: 'Decision guide', agenda: 3 },
-  { no: '05', slug: '05-three-buckets', title: 'The Three Wealth Buckets', kind: 'Worksheet', agenda: 3 },
-  { no: '06', slug: '06-bonus-playbook', title: 'The Bonus & Surplus Playbook', kind: 'Planner', agenda: 1 },
-  { no: '07', slug: '07-super-cheatsheet', title: 'The Executive Super Cheatsheet', kind: 'Cheatsheet', agenda: 2 },
-  { no: '08', slug: '08-structures', title: 'Wealth Structures, Compared', kind: 'Comparison', agenda: 4 },
-  { no: '09', slug: '09-income-protection', title: 'The Income Protection Audit', kind: 'Audit', agenda: 6 },
-  { no: '10', slug: '10-estate-checklist', title: 'The Estate & Beneficiary Checklist', kind: 'Checklist', agenda: 7 },
-  { no: '11', slug: '11-conversation-swipe-file', title: 'The Conversation Swipe File', kind: 'Swipe file', agenda: 9 },
-  { no: '12', slug: '12-freedom-guide', title: 'From High Income to Financial Independence', kind: 'Guide', agenda: 0 },
+  { no: '01', slug: '01-wealth-score', title: 'Your Wealth Score', kind: 'Scored assessment', agenda: 8 },
+  { no: '02', slug: '02-freedom-number', title: 'Your Freedom Score', kind: 'Guided calculator', agenda: 5 },
+  { no: '03', slug: '03-gap-years', title: 'The Gap Years', kind: 'Calculator', agenda: 5 },
+  { no: '04', slug: '04-next-dollar', title: 'Your Next Dollar', kind: 'Route planner', agenda: 3 },
+  { no: '05', slug: '05-three-buckets', title: 'Your Three Buckets', kind: 'Worksheet', agenda: 3 },
+  { no: '06', slug: '06-bonus-playbook', title: 'The Bonus Playbook', kind: 'Planner', agenda: 1 },
+  { no: '07', slug: '07-super-cheatsheet', title: 'The Super Cheatsheet', kind: 'Cheatsheet', agenda: 2 },
+  { no: '08', slug: '08-structures', title: 'Where Your Wealth Lives', kind: 'Comparison', agenda: 4 },
+  { no: '09', slug: '09-income-protection', title: 'Is Your Income Covered?', kind: 'Audit', agenda: 6 },
+  { no: '10', slug: '10-estate-checklist', title: 'The Estate Checklist', kind: 'Checklist', agenda: 7 },
+  { no: '11', slug: '11-conversation-swipe-file', title: 'What to Say', kind: 'Swipe file', agenda: 9 },
+  { no: '12', slug: '12-freedom-guide', title: 'From High Income to Real Wealth', kind: 'Guide', agenda: 0 },
 ]
 
 const esc = (s) =>
@@ -46,8 +46,9 @@ const esc = (s) =>
  *   no   — sheet number, e.g. '01'
  *   kind — short descriptor shown in the masthead
  *   root — relative path back to the gallery root (default '../')
+ *   hero — optional hero band, see mountHero
  */
-export function mountSheet({ no, kind, root = '../', wide = false } = {}) {
+export function mountSheet({ no, kind, root = '../', wide = false, hero } = {}) {
   const back = document.querySelector('[data-sheet-back]')
   if (back) {
     back.outerHTML = `
@@ -80,6 +81,8 @@ export function mountSheet({ no, kind, root = '../', wide = false } = {}) {
       </header>`
   }
 
+  if (hero) mountHero({ ...hero, root })
+
   const foot = document.querySelector('[data-sheet-foot]')
   if (foot) {
     foot.outerHTML = `
@@ -96,11 +99,34 @@ export function mountSheet({ no, kind, root = '../', wide = false } = {}) {
           </div>
         </div>
         <div class="afsl">
-          <b style="color:#cfe0e2">General information only.</b> ${PROSPA.generalAdvice}
+          <b style="color:var(--accent)">General information only.</b> ${PROSPA.generalAdvice}
           ${PROSPA.afsl}
         </div>
       </footer>`
   }
+}
+
+/**
+ * Mount the hero band, if the magnet declares one.
+ *
+ * The band always sits ABOVE the title, never behind it. That is the whole
+ * reason this is safe to put on twelve documents: no text is ever laid over
+ * a photograph, so contrast cannot fail — on screen, on paper, or in a
+ * high-contrast mode we never see.
+ *
+ * @param {{src:string, alt:string, variant?:'art'|'photo', pos?:string,
+ *          height?:'short'|'tall', cap?:string, root?:string}} o
+ */
+export function mountHero({ src, alt = '', variant = 'art', pos, height, cap, root = '../' } = {}) {
+  const slot = document.querySelector('[data-sheet-hero]')
+  if (!slot || !src) return
+
+  const cls = ['lm-hero', `lm-hero--${variant}`, height ? `lm-hero--${height}` : ''].filter(Boolean).join(' ')
+  slot.outerHTML = `
+    <figure class="${cls}"${pos ? ` style="--lm-hero-pos:${esc(pos)}"` : ''}>
+      <img src="${root}assets/img/${esc(src)}" alt="${esc(alt)}" loading="eager" decoding="async" />
+      ${cap ? `<figcaption class="lm-hero-cap">${esc(cap)}</figcaption>` : ''}
+    </figure>`
 }
 
 /** Print the current sheet. Wired to any [data-print] button. */
@@ -156,10 +182,21 @@ export function persistFields(key) {
   const fields = Array.from(document.querySelectorAll('[data-persist]'))
   const saved = s.read() || {}
 
+  // Captured BEFORE anything is restored, so "clear" means "back to how the
+  // sheet shipped" rather than "blank". Assigning '' to a <select> selects no
+  // option at all, and to a range input snaps it to the middle of its scale —
+  // both of which look to a reader like the control broke.
+  const isToggle = (el) => el.type === 'checkbox' || el.type === 'radio'
+  const defaults = new Map(fields.map((el) => [el, isToggle(el) ? el.checked : el.value]))
+
   fields.forEach((el) => {
     const id = el.getAttribute('data-persist')
     if (saved[id] !== undefined) {
       if (el.type === 'checkbox') el.checked = !!saved[id]
+      // A radio group shares one data-persist id and stores the chosen value.
+      // Assigning to .value here would rewrite the radio's own value attribute
+      // and quietly break the group.
+      else if (el.type === 'radio') el.checked = el.value === saved[id]
       else el.value = saved[id]
     }
     el.addEventListener('input', save)
@@ -169,7 +206,11 @@ export function persistFields(key) {
   function save() {
     const out = {}
     fields.forEach((el) => {
-      out[el.getAttribute('data-persist')] = el.type === 'checkbox' ? el.checked : el.value
+      const id = el.getAttribute('data-persist')
+      if (el.type === 'checkbox') out[id] = el.checked
+      else if (el.type === 'radio') {
+        if (el.checked) out[id] = el.value
+      } else out[id] = el.value
     })
     s.write(out)
   }
@@ -178,10 +219,12 @@ export function persistFields(key) {
     b.addEventListener('click', () => {
       s.clear()
       fields.forEach((el) => {
-        if (el.type === 'checkbox') el.checked = false
-        else el.value = ''
+        const d = defaults.get(el)
+        if (isToggle(el)) el.checked = d
+        else el.value = d
       })
       fields[0]?.dispatchEvent(new Event('input', { bubbles: true }))
+      fields[0]?.dispatchEvent(new Event('change', { bubbles: true }))
     })
   )
 

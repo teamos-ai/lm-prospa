@@ -3,10 +3,10 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Session Tools — Prospa Financial</title>
+    <title>Your Lead Magnet Library — Prospa Financial</title>
     <meta
       name="description"
-      content="Twelve tools for the Executive Financial Wellbeing Workshop, led by the Executive Wealth Score. General information only."
+      content="Twelve tools from the Executive Financial Wellbeing Workshop, led by Your Wealth Score. General information only."
     />
     <link rel="icon" type="image/svg+xml" href="assets/favicon.svg" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -189,6 +189,44 @@
         letter-spacing: 0.14em;
       }
 
+      /* ---- Card and feature artwork ----
+         The card is a link, so the art is a <span>, not a <figure>: a figure
+         inside an anchor is not phrasing content and would be invalid. */
+      .tool-art {
+        display: block;
+        margin: -30px -32px 20px;
+        aspect-ratio: 2.9 / 1;
+        overflow: hidden;
+        background: var(--bg2);
+        border-radius: var(--r-lg) var(--r-lg) 0 0;
+      }
+      .tool-art img {
+        display: block;
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        transition: transform 600ms var(--ease);
+      }
+      .tool:hover .tool-art img {
+        transform: scale(1.035);
+      }
+
+      /* The ring demo keeps its animation; the artwork sits behind it, dimmed
+         right down so the 66 stays the brightest thing in the panel. */
+      .feature-visual {
+        position: relative;
+        isolation: isolate;
+      }
+      .feature-art {
+        position: absolute;
+        inset: 0;
+        z-index: -1;
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        opacity: 0.14;
+      }
+
       /* ---- Grid ---- */
       .tools {
         display: grid;
@@ -295,6 +333,19 @@
         color: #9fbdc0;
       }
 
+      @media (prefers-reduced-motion: reduce) {
+        .tool:hover .tool-art img {
+          transform: none;
+        }
+      }
+
+      @media print {
+        .tool-art,
+        .feature-art {
+          display: none;
+        }
+      }
+
       @media (max-width: 900px) {
         .feature {
           grid-template-columns: 1fr;
@@ -325,6 +376,9 @@
         .tool {
           padding: 26px 24px;
         }
+        .tool-art {
+          margin: -26px -24px 18px;
+        }
       }
     </style>
   </head>
@@ -343,16 +397,15 @@
         </div>
 
         <div class="eyebrow">Executive Financial Wellbeing Workshop</div>
-        <h1>Your session <em>tools</em></h1>
+        <h1>Your lead magnet <em>library</em></h1>
         <p class="lede">
-          Twelve instruments built for the workshop — one per agenda item, so each lands at the
-          moment it is useful. They are yours to keep, and everything you type stays in your own
-          browser.
+          Twelve tools from the workshop. Each one does a single job, they are yours to keep, and
+          everything you type stays in your own browser.
         </p>
 
         <div class="hero-meta">
           <div class="m"><b>12</b><span>Tools</span></div>
-          <div class="m"><b>9</b><span>Interactive</span></div>
+          <div class="m"><b>11</b><span>Interactive</span></div>
           <div class="m"><b>0</b><span>Data collected</span></div>
           <div class="m"><b>2026–27</b><span>Figures current</span></div>
         </div>
@@ -364,11 +417,11 @@
       <a class="feature" href="magnets/01-wealth-score.html">
         <div class="feature-copy">
           <span class="tag">Start here</span>
-          <h2>The Executive Wealth Score</h2>
+          <h2>Your Wealth Score</h2>
           <p>
             Eighteen questions across the six areas that decide whether a strong income becomes
-            lasting wealth. You get a score out of 100, a weighted profile, the pattern in your
-            answers and your two widest gaps — in about three minutes.
+            lasting wealth. You get a score out of 100, your weighted profile, and the two areas
+            furthest behind — in about three minutes.
           </p>
           <div class="feature-stats">
             <div><b>18</b><span>Questions</span></div>
@@ -384,10 +437,11 @@
           </span>
         </div>
         <div class="feature-visual">
+          <img class="feature-art" src="assets/img/art/01-score-rings.webp" alt="" />
           <div class="ring-demo">
             <svg width="176" height="176" viewBox="0 0 176 176" aria-hidden="true">
               <circle cx="88" cy="88" r="72" fill="none" stroke="rgba(255,255,255,.14)" stroke-width="11" />
-              <circle class="ring-arc" cx="88" cy="88" r="72" fill="none" stroke="#5dce38"
+              <circle class="ring-arc" cx="88" cy="88" r="72" fill="none" stroke="var(--green)"
                       stroke-width="11" stroke-linecap="round" transform="rotate(-90 88 88)" />
               <text class="ring-label" x="88" y="94" text-anchor="middle">66</text>
               <text class="ring-sub" x="88" y="113" text-anchor="middle">OUT OF 100</text>
@@ -437,101 +491,123 @@
       const TOOLS = [
         {
           no: '02',
+          art: 'photo/senior-couple-coastal-hike-ocean-vista.webp',
+          pos: '50% 38%',
           slug: '02-freedom-number',
           kind: 'Guided calculator',
-          title: 'Your Work Optional Number',
+          title: 'Your Freedom Score',
           blurb:
-            'Five steps to the one number that matters: what you need outside super to stop before 60. Shows the whole plan in one chart — building, drawing down, and the moment super takes over.',
+            'What you need outside super to stop before 60, and how close you already are. One chart shows the whole plan — building, drawing down, and the moment super takes over.',
           agenda: 'Agenda 5 · Making Work Optional',
         },
         {
           no: '03',
+          art: 'art/03-gap-bridge.webp',
+          pos: '50% 58%',
           slug: '03-gap-years',
           kind: 'Calculator',
-          title: 'The Gap Years Map',
+          title: 'The Gap Years',
           blurb:
-            'The years between the age you want work to become optional and the age super unlocks. What they cost, and what you hold that could fund them.',
+            'You stop at 55, super unlocks at 60. This sizes the five years in between, and what you already hold that could fund them.',
           agenda: 'Agenda 5 · Making Work Optional',
         },
         {
           no: '04',
+          art: 'art/04-routemap.webp',
+          pos: '50% 50%',
           slug: '04-next-dollar',
-          kind: 'Decision guide',
-          title: 'The Next Dollar Decision Map',
+          kind: 'Route planner',
+          title: 'Your Next Dollar',
           blurb:
-            'Mortgage, super, or investments outside super? Six questions in the order that answers them, plus the tax gap that drives the whole decision.',
+            'Mortgage, super, or invest? Answer five questions and the map draws your route — including the two points where it has to stop.',
           agenda: 'Agenda 3 · Building Wealth Outside Super',
         },
         {
           no: '05',
+          art: 'art/05-vessels.webp',
+          pos: '55% 62%',
           slug: '05-three-buckets',
           kind: 'Worksheet',
-          title: 'The Three Wealth Buckets',
+          title: 'Your Three Buckets',
           blurb:
-            'Map your wealth across today, freedom and retirement — then see the shape of your balance sheet and whether it points where you want to go.',
+            'Money for now, money for before 60, money for after. Map yours and see the real shape of your balance sheet.',
           agenda: 'Agenda 3 · Building Wealth Outside Super',
         },
         {
           no: '06',
+          art: 'art/06-playbook.webp',
+          pos: '50% 50%',
           slug: '06-bonus-playbook',
           kind: 'Planner',
-          title: 'The Bonus & Surplus Playbook',
+          title: 'The Bonus Playbook',
           blurb:
-            'Irregular income is where the biggest decisions get made fastest. Start from the net, set the split in advance, and write the rule down.',
+            'A bonus lands and a fortnight later it is gone. Pick your play first, set the split, and print it.',
           agenda: 'Agenda 1 · The Financial Freedom Gap',
         },
         {
           no: '07',
+          art: 'art/07-vault.webp',
+          pos: '50% 56%',
           slug: '07-super-cheatsheet',
           kind: 'Cheatsheet',
-          title: 'The Executive Super Cheatsheet',
+          title: 'The Super Cheatsheet',
           blurb:
-            'The 2026–27 numbers that actually change decisions on a high income — caps, Division 293, carry-forward, bring-forward, and what arrived on 1 July 2026.',
+            'Every 2026–27 super number that changes a decision on a high income. Mark where you are taking a shortcut and see what it costs you.',
           agenda: 'Agenda 2 · Make Super Work Harder',
         },
         {
           no: '08',
+          art: 'art/08-columns.webp',
+          pos: '50% 58%',
           slug: '08-structures',
           kind: 'Comparison',
-          title: 'Wealth Structures, Compared',
+          title: 'Where Your Wealth Lives',
           blurb:
-            'Personal name, spouse, family trust, company, investment bond and super — how each behaves on income, on access and on the way out.',
+            'Super, your own name, a trust, a company. The same dollar ends up somewhere different on income, on sale and on death.',
           agenda: 'Agenda 4 · Tax-Effective Wealth Structures',
         },
         {
           no: '09',
+          art: 'art/09-dome.webp',
+          pos: '50% 62%',
           slug: '09-income-protection',
           kind: 'Audit',
-          title: 'The Income Protection Audit',
+          title: 'Is Your Income Covered?',
           blurb:
-            'Size the largest asset you own, then eleven questions to test whether the cover around it still matches the life it is insuring.',
+            'Size the biggest asset you own — the income you have not earned yet — then test whether the cover around it still fits.',
           agenda: 'Agenda 6 · Protecting What You Have Built',
         },
         {
           no: '10',
+          art: 'photo/mature-couple-home-breakfast-affection.webp',
+          pos: '50% 32%',
           slug: '10-estate-checklist',
           kind: 'Checklist',
-          title: 'The Estate & Beneficiary Checklist',
+          title: 'The Estate Checklist',
           blurb:
-            'Your will does not control your super, and may not control your house. Seventeen checks that cross themselves out as you work down them.',
+            'Your will does not control your super, and may not control your house. Seventeen checks that cross themselves off as you go.',
           agenda: 'Agenda 7 · Passing on Wealth',
         },
         {
           no: '11',
+          art: 'photo/professionals-cafe-meeting-coffee-discussion.webp',
+          pos: '50% 34%',
           slug: '11-conversation-swipe-file',
           kind: 'Swipe file',
-          title: 'The Conversation Swipe File',
+          title: 'What to Say',
           blurb:
-            'Seven ready-to-send messages for the conversations that unlock everything else — your accountant, HR, your super fund, your partner. Turn a card to see what is in it.',
+            'Seven conversations that unlock everything else here — to your accountant, your HR team, your super fund, your partner.',
           agenda: 'Agenda 9 · Live Q&A and after',
         },
         {
           no: '12',
+          art: 'photo/seniors-mountain-summit-binoculars-hiking.webp',
+          pos: '50% 40%',
           slug: '12-freedom-guide',
           kind: 'Guide',
-          title: 'From High Income to Financial Independence',
+          title: 'From High Income to Real Wealth',
           blurb:
-            'The ten-page guide behind the whole session, as a book you page through. No download, no email, nothing to hand over.',
+            'The short guide behind the workshop. Why a strong income does not become wealth on its own, and what changes when you use your peak earning years deliberately.',
           agenda: 'The session in short',
         },
       ]
@@ -539,6 +615,8 @@
       document.getElementById('tools').innerHTML = TOOLS.map(
         (t) => `
           <a class="tool" href="magnets/${t.slug}.html">
+            <span class="tool-art"><img src="assets/img/${t.art}" alt="" loading="lazy" decoding="async"
+                  style="object-position:${t.pos}" /></span>
             <div class="tool-top">
               <span class="tool-no">${t.no}</span>
               <span class="tool-kind">${t.kind}</span>

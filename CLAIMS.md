@@ -149,25 +149,50 @@ Used on: **every sheet**, from one source in `assets/sheet.js`
 | Website | prospafinancial.com.au | Same |
 | Positioning / tagline | People. Advice. Progress. / Plan. Grow. Prosper. | Same |
 
-## 8a. The Freedom Score (sheet 02)
+## 8a. Your Freedom Score (sheet 02)
 
-No new external facts. The score and every figure around it are arithmetic on the user's own
-entries, using the formulas from the Prospa workbook supplied by Audrey Li on 2026-09-29 — which the
-default scenario still reproduces to the dollar ($4,344,894 capital target, $1,417,246.55
-projection).
+No new external facts. Every figure the sheet shows is arithmetic on the reader's own entries.
+
+**This section was rewritten on 1 October 2026.** It previously documented a perpetuity model —
+`capital = desired income ÷ withdrawal rate` — which no longer exists. Prospa's *Calculator
+workings* notes replaced it with a **bridge model**: the capital needed at the target age to fund
+the years between stopping work and superannuation unlocking, and nothing beyond that. The
+withdrawal-rate input was removed with the perpetuity it served, and with it the most
+compliance-sensitive assumption on the page.
+
+The model lives in `assets/model.js`, is pure arithmetic with no DOM, and is exercised by 67
+assertions in `tools/model.test.mjs` (`node tools/model.test.mjs`).
+
+**Everything the sheet shows is in today's dollars**, at the real return
+`real = (1 + nominal) ÷ (1 + inflation) − 1`. Nothing is ever displayed inflated to a future year.
 
 | Derived figure | Basis | Status |
 |---|---|---|
-| Freedom Score | The workbook's own `progress = projected ÷ capital`, capped at 100 | Restatement of a supplied formula |
-| Funding split | `current`, `annual × years`, and the remainder as growth | Arithmetic identity — the three sum to `projected` |
-| Required annual | Solving the workbook's future-value formula for the contribution | Arithmetic; verified by feeding it back for a score of exactly 100 |
-| Freedom age | First `n` where `grow(n) ≥ lifestyle × (1+i)^n ÷ w` | Arithmetic on the same primitives |
-| Band names | Prospa Financial's educational framing of score ranges | Editorial, not a standard — stated as such |
+| Work Optional Number | Present value of the bridge years' spending, priced as an **annuity-due** — the first year is spent on day one, not twelve months later | Arithmetic; the annuity-due correction is covered by a named invariant in the harness |
+| Projected portfolio | Future value of the current balance plus level monthly contributions at the real return | Arithmetic identity |
+| Target funded % | `projected ÷ workOptionalNumber` | Ratio of two figures above |
+| Gap | `projected − workOptionalNumber` | Subtraction |
+| Required / additional monthly | Solving the future-value formula for the contribution | Arithmetic; verified by feeding it back for exactly 100% |
+| Work optional age | First age where projection ≥ requirement, with **both sides moving** — a later age accumulates more and shortens the bridge | Arithmetic on the same primitives |
+| Supported income | `projected ÷ annuity-due factor`, plus the part-time contribution over the years it runs | Arithmetic |
+| Age the money runs out | A year-by-year drawdown walk, start-of-year spending | The same walk that draws the chart, so the number and the picture cannot disagree |
+| Superannuation at access age | Future value of the balance plus contributions, client and partner projected separately | Arithmetic |
+| Portfolio longevity | Post-access drawdown of the combined pool until exhausted | Arithmetic |
+| Band names | Prospa Financial's educational framing of funded ranges | Editorial, not a standard — stated as such |
 
-The sheet repeats one registered fact: preservation age 60 from 1 July 2024 (§2), shown when the
-chosen age falls before 60. The limitations block states plainly that the freedom age and required
-annual move with the assumptions, that the withdrawal rate is a planning assumption rather than a
-recommendation, and that a real portfolio does not deliver the same return every year.
+The sheet repeats one registered fact: preservation age 60 from 1 July 2024 (§2).
+
+**Two things about this sheet are stated on the page and must stay stated.** First, the figures in
+Prospa's own notes ($720,000 required, $665,000 projected, 92% funded) are illustrative: they are
+internally consistent with each other but are not derivable from the inputs the notes give, so the
+live tool does not reproduce them and was never built to. Second, the model's most valuable output
+is one the notes do not anticipate — on their own example the portfolio **empties before super
+unlocks**. That is reported plainly rather than smoothed over.
+
+Presentation in today's dollars is also the basis **ASIC Instrument 2022/603** requires of
+superannuation calculators. Whether that instrument applies to this tool is Advice Evolution's
+determination, not ours — see `CALCULATOR-V2-PLAN.md` §7 (G1), still open.
+
 
 ## 8b. The two newest sheets
 
@@ -186,6 +211,34 @@ numbers and nothing else.
 threshold, the $250,000 Division 293 threshold and the $1,935,000 CGT cap — and add one procedural
 point: binding lapsing nominations typically expire after three years, which is registered in §7.
 Each shortcut carries an explicit trade-off line, so no shortcut reads as a recommendation.
+
+## 8c. Imagery — what it is, and what it must never be taken for
+
+Every sheet carries artwork. None of it depicts a Prospa Financial client, adviser, office or
+outcome, and nothing on any sheet may be captioned or positioned so that a reader could think it
+does.
+
+| Source | What it is | Where it is used |
+|---|---|---|
+| `assets/img/art/*.webp` | **Generated imagery** (Google Nano Banana Pro, 1 October 2026). Abstract line art, architectural forms and still life in the brand palette. No people appear in any of it. | Hero bands on sheets 01, 03–09; the ten chapter plates in the guide |
+| `assets/img/photo/*.webp` | **Licensed stock photography**, carried over from the Prospa Financial design system image library (`public/library`), re-encoded to WebP | Hero bands on sheets 02, 10, 11, 12; the faded `.lm-aside` and `.lm-photoband` panels |
+
+Three rules follow, and they are enforced in the markup rather than left to good intentions:
+
+1. **The hero band never carries text.** It always sits above the title, so the title's contrast
+   cannot fail — on screen, on paper, or in a high-contrast mode we never see. One component does
+   place text on imagery, `.lm-photoband`, and it is the exception that proves the rule: the
+   photograph sits at 0.3 opacity under a near-opaque teal scrim, the white sentence measures
+   7.4:1 against the composited worst-case pixel, and in print the photograph is dropped entirely
+   and the sentence becomes a plain rule-left pull-quote. No other surface may put type on a
+   picture without being measured the same way.
+2. **Imagery is atmosphere, never evidence.** A photograph of a couple appears beside a question
+   about lifestyle, never beside a number, a result, or a claim about what Prospa achieved.
+3. **Nothing is captioned as a person.** No name, no role, no "client", no implied testimonial.
+
+The generated art contains no text by construction — every prompt forbade letters, words and
+numerals — so no sheet can display an invented figure inside an image.
+
 
 ## 9. Deliberately not claimed
 

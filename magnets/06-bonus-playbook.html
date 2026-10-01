@@ -3,10 +3,10 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>The Bonus &amp; Surplus Playbook — Prospa Financial</title>
+    <title>The Bonus Playbook — Prospa Financial</title>
     <meta
       name="description"
-      content="Irregular income is where the biggest financial decisions get made fastest. Set the rule before the money arrives."
+      content="A bonus lands. You have about two weeks before it quietly disappears. Pick your play first — a planner for setting the split before the money arrives."
     />
     <link rel="icon" type="image/svg+xml" href="../assets/favicon.svg" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -17,34 +17,182 @@
     />
     <link rel="stylesheet" href="../assets/prospa.css" />
     <style>
-      .split-row {
+      /* ==========================================================
+         06 · THE BONUS PLAYBOOK — sheet-local styles only.
+         Nothing here touches a shared file. Every colour is a
+         token; the chalk whites are plain white at an opacity,
+         which is a material, not a brand hue.
+         ========================================================== */
+
+      /* ---- The chalk filter lives here, rendered nowhere ---- */
+      .chalk-defs {
+        position: absolute;
+        width: 0;
+        height: 0;
+        overflow: hidden;
+      }
+
+      /* ---- A play ---- */
+      .plays {
         display: grid;
-        grid-template-columns: 1fr 76px 150px;
-        gap: 12px 20px;
+        gap: 18px;
+      }
+
+      .play {
+        display: grid;
+        grid-template-columns: 240px 1fr;
+        gap: 28px;
         align-items: center;
-        padding: 18px 0;
-        border-bottom: 1px solid var(--line-2);
+        background: #fff;
+        border: 1px solid var(--line);
+        border-radius: var(--r-lg);
+        padding: 22px;
       }
-      .split-row:last-of-type {
-        border-bottom: none;
+
+      .play-board {
+        position: relative;
+        border-radius: var(--r-md);
+        overflow: hidden;
+        background: var(--teal-900);
+        aspect-ratio: 200 / 130;
       }
-      .split-row b {
+
+      /* The chalk grain. Positioned on the clean, mark-free corner of
+         the source so it reads as board texture, never as a second
+         diagram competing with the one we draw. */
+      .play-board::before {
+        content: '';
+        position: absolute;
+        inset: 0;
+        background-image: url('../assets/img/art/06-playcard.webp');
+        background-size: 210% auto;
+        background-position: 92% 88%;
+        opacity: 0.42;
+      }
+
+      .play-fig {
+        position: relative;
+        z-index: 1;
         display: block;
-        font-size: 15.5px;
-        color: var(--ink);
+        width: 100%;
+        height: 100%;
+        color: rgba(255, 255, 255, 0.9);
       }
-      .split-row span.s {
-        display: block;
-        font-size: 13px;
+
+      .play-no {
+        position: absolute;
+        z-index: 2;
+        left: 13px;
+        top: 11px;
+        font-family: 'JetBrains Mono', monospace;
+        font-size: 11px;
+        letter-spacing: 0.16em;
+        /* This glyph is the one piece of type on the board, so it does not get
+           to depend on which part of the chalk grain happens to sit under it.
+           Measured against the darkest pixel of the sampled corner, composited:
+           0.66 gave 4.7:1 — passing, but four percent of headroom. 0.9 gives
+           7.4:1, which cannot fail if the texture is ever reshot. */
+        color: rgba(255, 255, 255, 0.9);
+      }
+
+      /* ---- Chalk language ---- */
+      .ck {
+        fill: none;
+        stroke-linecap: round;
+        stroke-linejoin: round;
+        filter: url(#chalk-rough);
+      }
+      .ck-line {
+        stroke: currentColor;
+        stroke-width: 2.4;
+      }
+      .ck-thin {
+        stroke: currentColor;
+        stroke-width: 1.7;
+      }
+      .ck-mid {
+        stroke: currentColor;
+        stroke-width: 2.4;
+        opacity: 0.62;
+      }
+      .ck-dim {
+        stroke: currentColor;
+        stroke-width: 2;
+        opacity: 0.42;
+      }
+      .ck-faint {
+        stroke: currentColor;
+        stroke-width: 1.6;
+        opacity: 0.24;
+      }
+      .ck-dash {
+        stroke: currentColor;
+        stroke-width: 1.8;
+        opacity: 0.4;
+        stroke-dasharray: 5 5;
+      }
+      .ck-live {
+        stroke: var(--green);
+        stroke-width: 2.8;
+      }
+
+      /* ---- The written side of a play ---- */
+      .play-top {
+        display: flex;
+        align-items: baseline;
+        gap: 12px;
+        margin-bottom: 14px;
+      }
+      .play-name {
+        font-size: 21px;
+        letter-spacing: -0.018em;
+      }
+
+      .play-facts {
+        margin: 0 0 18px;
+        display: grid;
+        gap: 10px;
+      }
+      .play-facts > div {
+        display: grid;
+        grid-template-columns: 76px 1fr;
+        gap: 12px;
+        align-items: start;
+      }
+      .play-facts dt {
+        font-size: 10.5px;
+        font-weight: 600;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
         color: var(--gray);
-        margin-top: 2px;
+        padding-top: 3px;
       }
-      .split-row .pcell {
+      .play-facts dd {
+        margin: 0;
+        font-size: 14.5px;
+        line-height: 1.5;
+        color: var(--slate);
+      }
+
+      .play-call {
         display: flex;
         align-items: center;
-        gap: 4px;
+        gap: 12px;
+        flex-wrap: wrap;
+        padding-top: 16px;
+        border-top: 1px solid var(--line-2);
       }
-      .split-row input[type='number'] {
+      .play-call label {
+        font-size: 13px;
+        font-weight: 600;
+        color: var(--ink-2);
+      }
+      .play-input {
+        position: relative;
+        width: 92px;
+        flex: none;
+      }
+      .play-input input {
         width: 100%;
         font-family: 'JetBrains Mono', monospace;
         font-size: 15px;
@@ -53,57 +201,215 @@
         background: #fff;
         border: 1px solid var(--line);
         border-radius: var(--r-sm);
-        padding: 10px 11px;
+        padding: 9px 26px 9px 10px;
         font-variant-numeric: tabular-nums;
+        /* The right-hand gutter belongs to the % sign. Chrome and Safari put
+           the number spinner in exactly that gutter on hover, so it is turned
+           off here — the same thing sheet 05 does to its amount fields. */
+        -moz-appearance: textfield;
+        appearance: textfield;
+        transition: border-color var(--dur-base) var(--ease),
+          box-shadow var(--dur-base) var(--ease);
       }
-      .split-row input:focus {
+      .play-input input::-webkit-outer-spin-button,
+      .play-input input::-webkit-inner-spin-button {
+        -webkit-appearance: none;
+        margin: 0;
+      }
+      .play-input input:focus {
         outline: none;
         border-color: var(--teal);
-        box-shadow: 0 0 0 4px rgba(19, 95, 105, 0.1);
+        box-shadow: 0 0 0 4px color-mix(in srgb, var(--teal) 10%, transparent);
       }
-      .split-row .amt {
+      .play-input .pc {
+        position: absolute;
+        right: 10px;
+        top: 50%;
+        transform: translateY(-50%);
+        font-family: 'JetBrains Mono', monospace;
+        font-size: 13px;
+        color: var(--gray);
+        pointer-events: none;
+      }
+      .play-amt {
+        margin-left: auto;
         font-family: 'JetBrains Mono', monospace;
         font-size: 17px;
-        text-align: right;
-        color: var(--teal);
-        font-weight: 500;
-        font-variant-numeric: tabular-nums;
-      }
-      .split-total {
-        display: grid;
-        grid-template-columns: 1fr 76px 150px;
-        gap: 20px;
-        align-items: center;
-        padding: 20px 0 0;
-        margin-top: 6px;
-        border-top: 2px solid var(--teal);
-      }
-      .split-total b {
-        font-size: 16.5px;
-        color: var(--ink);
-      }
-      .split-total .p,
-      .split-total .amt {
-        font-family: 'JetBrains Mono', monospace;
-        font-size: 17px;
-        text-align: right;
         font-weight: 500;
         color: var(--teal);
         font-variant-numeric: tabular-nums;
-      }
-      .split-total.over .p,
-      .split-total.over .amt {
-        color: var(--ember-strong);
       }
 
+      .play-meter {
+        height: 4px;
+        border-radius: 2px;
+        background: var(--line);
+        overflow: hidden;
+        margin-top: 14px;
+      }
+      .play-meter i {
+        display: block;
+        height: 100%;
+        width: 0;
+        border-radius: 2px;
+        transition: width var(--dur-reveal) var(--ease);
+      }
+
+      .play-lead {
+        margin-bottom: 18px;
+        font-size: 14px;
+        color: var(--gray);
+      }
+      .play-lead b {
+        font-family: 'JetBrains Mono', monospace;
+        font-size: 16px;
+        font-weight: 500;
+        color: var(--teal);
+        font-variant-numeric: tabular-nums;
+      }
+
+      /* ---- Reconciliation ----
+         The one place on this sheet allowed to use the warm accent. */
+      .rec {
+        margin-top: 22px;
+        background: var(--bg2);
+        border-radius: var(--r-lg);
+        padding: 22px 24px;
+      }
+      .rec-top {
+        display: flex;
+        justify-content: space-between;
+        align-items: baseline;
+        gap: 16px;
+        flex-wrap: wrap;
+        margin-bottom: 12px;
+      }
+      .rec-k {
+        font-size: 11.5px;
+        font-weight: 600;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+        color: var(--gray);
+      }
+      .rec-n {
+        font-family: 'JetBrains Mono', monospace;
+        font-size: 19px;
+        font-weight: 500;
+        color: var(--ink);
+        font-variant-numeric: tabular-nums;
+      }
+      .rec-track {
+        height: 8px;
+        border-radius: 4px;
+        background: #fff;
+        border: 1px solid var(--line);
+        overflow: hidden;
+      }
+      .rec-track i {
+        display: block;
+        height: 100%;
+        width: 0;
+        background: var(--teal);
+        /* Width eases; the colour does not. A warning should not fade in. */
+        transition: width var(--dur-reveal) var(--ease);
+      }
+      .rec.is-full .rec-track i {
+        background: var(--green);
+      }
+      .rec.is-off .rec-track i {
+        background: var(--ember);
+      }
+      .rec-msg {
+        margin-top: 14px;
+        font-size: 14px;
+        line-height: 1.55;
+        color: var(--gray);
+      }
+      .rec-msg b {
+        color: var(--ink);
+      }
+      .rec.is-off .rec-msg b {
+        color: var(--ember-strong);
+      }
+      .rec-acts {
+        display: flex;
+        gap: 8px;
+        flex-wrap: wrap;
+        margin-top: 16px;
+      }
+
+      /* ---- The call sheet ---- */
+      .callsheet {
+        border: 1px solid var(--line);
+        border-radius: var(--r-lg);
+        overflow: hidden;
+      }
+      .callsheet-head {
+        background: var(--teal-900);
+        padding: 16px 24px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 14px;
+        flex-wrap: wrap;
+      }
+      .callsheet-head b {
+        font-size: 14.5px;
+        font-weight: 600;
+        color: #fff;
+      }
+      .callsheet-head span {
+        font-family: 'JetBrains Mono', monospace;
+        font-size: 10.5px;
+        letter-spacing: 0.16em;
+        text-transform: uppercase;
+        color: var(--accent);
+      }
+      .callsheet-body {
+        padding: 28px 24px;
+        display: grid;
+        gap: 24px;
+      }
+      .cs-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 24px;
+      }
+      .callsheet .field input[type='date'] {
+        font-family: 'Poppins', sans-serif;
+        font-size: 15px;
+        color: var(--ink);
+        background: #fff;
+        border: 1px solid var(--line);
+        border-radius: var(--r-sm);
+        padding: 11px 14px;
+        width: 100%;
+        transition: border-color var(--dur-base) var(--ease),
+          box-shadow var(--dur-base) var(--ease);
+      }
+      .callsheet .field input[type='date']:focus {
+        outline: none;
+        border-color: var(--teal);
+        box-shadow: 0 0 0 4px color-mix(in srgb, var(--teal) 10%, transparent);
+      }
+      .cs-note {
+        font-size: 14px;
+        line-height: 1.6;
+        color: var(--gray);
+      }
+      .cs-note b {
+        color: var(--ink);
+      }
+
+      /* ---- Traps ---- */
       .trap {
         display: grid;
-        grid-template-columns: 34px 1fr;
+        grid-template-columns: 28px 1fr;
         gap: 16px;
         padding: 20px 0;
         border-bottom: 1px solid var(--line-2);
       }
-      .trap:last-child {
+      .trap:last-of-type {
         border-bottom: none;
       }
       .trap b {
@@ -117,72 +423,295 @@
         font-size: 14.5px;
       }
       .trap .x {
-        width: 30px;
-        height: 30px;
+        width: 26px;
+        height: 26px;
         border-radius: 50%;
-        background: var(--ember-soft);
-        color: var(--ember-strong);
+        background: var(--bg2);
+        color: var(--gray);
         display: inline-flex;
         align-items: center;
         justify-content: center;
         flex: none;
+        margin-top: 3px;
       }
 
-      @media (max-width: 760px) {
-        .split-row,
-        .split-total {
-          grid-template-columns: 1fr 70px 110px;
-          gap: 10px 12px;
+      /* ---- 375px and up, uncramped ---- */
+      @media (max-width: 720px) {
+        .play {
+          grid-template-columns: 1fr;
+          gap: 20px;
+          padding: 18px;
+        }
+        .play-name {
+          font-size: 19px;
+        }
+        .play-facts > div {
+          grid-template-columns: 80px 1fr;
+          gap: 10px;
+        }
+        .cs-grid {
+          grid-template-columns: 1fr;
+        }
+        .callsheet-body {
+          padding: 22px 18px;
+        }
+        .callsheet-head {
+          padding: 14px 18px;
+        }
+        .rec {
+          padding: 18px;
+        }
+      }
+
+      /* ---- Motion: only ever an entrance, never a loop ---- */
+      @media (prefers-reduced-motion: reduce) {
+        .play-meter i,
+        .rec-track i {
+          transition: none !important;
+        }
+        .play-fig .ck-live {
+          stroke-dasharray: none !important;
+          stroke-dashoffset: 0 !important;
+        }
+      }
+
+      /* ==========================================================
+         PRINT — the coach's call sheet.
+         The boards invert: white paper, teal line art, no texture,
+         no filter. Each play is one unbreakable block carrying the
+         reader's own share. Ink-light throughout.
+         ========================================================== */
+      @media print {
+        .plays {
+          gap: 0;
+        }
+        .play {
+          grid-template-columns: 34mm 1fr;
+          gap: 7mm;
+          align-items: start;
+          background: #fff;
+          border: none;
+          border-top: 0.6pt solid var(--line);
+          border-radius: 0;
+          padding: 5mm 0 0;
+          margin-top: 5mm;
+          break-inside: avoid;
+          page-break-inside: avoid;
+        }
+        .play-board {
+          background: #fff;
+          border: 0.6pt solid var(--line);
+          border-radius: 2mm;
+        }
+        .play-board::before {
+          display: none;
+        }
+        .play-fig {
+          color: var(--teal);
+        }
+        .play-fig .ck {
+          filter: none !important;
+        }
+        .play-fig .ck-live {
+          stroke: var(--teal);
+          stroke-width: 2.2;
+          stroke-dasharray: none !important;
+          stroke-dashoffset: 0 !important;
+        }
+        .play-fig .ck-mid {
+          opacity: 0.78;
+        }
+        .play-fig .ck-dim {
+          opacity: 0.55;
+        }
+        .play-fig .ck-faint {
+          opacity: 0.42;
+        }
+        .play-fig .ck-dash {
+          opacity: 0.5;
+        }
+        .play-no {
+          color: var(--teal);
+          left: 2mm;
+          top: 1.5mm;
+          font-size: 7pt;
+        }
+        .play-name {
+          font-size: 13pt;
+        }
+        .play-facts dd {
+          font-size: 9.5pt;
+        }
+        .play-meter {
+          display: none;
+        }
+        .play-call {
+          border-top: 0.6pt solid var(--line);
+          padding-top: 3mm;
+        }
+        .play-input {
+          width: auto;
+        }
+        .play-input input {
+          border: none;
+          border-radius: 0;
+          padding: 0;
+          width: 8mm;
+          min-width: 0;
+          text-align: left;
+          font-size: 11pt;
+        }
+        .play-input .pc {
+          position: static;
+          transform: none;
+          margin-left: 1px;
+        }
+        .play-amt {
+          color: var(--teal);
+        }
+
+        .rec {
+          background: #fff;
+          border: 0.6pt solid var(--line);
+          break-inside: avoid;
+        }
+        .rec-acts {
+          display: none;
+        }
+        .rec.is-off .rec-msg b {
+          color: var(--ink);
+        }
+        .rec-track i {
+          background: var(--teal) !important;
+        }
+
+        .callsheet {
+          border: none;
+          break-inside: avoid;
+        }
+        .callsheet-head {
+          background: #fff;
+          padding: 0 0 3mm;
+          border-bottom: 1pt solid var(--teal);
+        }
+        .callsheet-head b {
+          color: var(--ink);
+        }
+        .callsheet-head span {
+          color: var(--gray);
+        }
+        .callsheet-body {
+          padding: 5mm 0 0;
+          gap: 6mm;
+        }
+        /* Write-on rules, not boxes: lighter on paper and friendlier
+           to a pen if the reader prints it blank. Same weight and tint
+           the shared .writeline prints at, so two Prospa worksheets put
+           in front of someone carry the same rule. --accent at 0.6pt was
+           too pale to survive a printer. */
+        .callsheet .field input {
+          border: none;
+          border-bottom: 1px solid #c8d4d4;
+          border-radius: 0;
+          padding: 2mm 0 1mm;
+        }
+        /* The native date picker's glyph is screen furniture. */
+        .callsheet .field input[type='date']::-webkit-calendar-picker-indicator {
+          display: none;
+        }
+        .play-lead {
+          color: var(--slate);
+        }
+        .chalk-defs {
+          display: none;
         }
       }
     </style>
   </head>
   <body>
+    <!-- The chalk edge. Rendered nowhere; referenced by every board. -->
+    <svg class="chalk-defs" aria-hidden="true" focusable="false" width="0" height="0">
+      <defs>
+        <filter id="chalk-rough" x="-12%" y="-12%" width="124%" height="124%">
+          <feTurbulence type="fractalNoise" baseFrequency="0.9" numOctaves="2" seed="7" result="grain" />
+          <feDisplacementMap
+            in="SourceGraphic"
+            in2="grain"
+            scale="1.3"
+            xChannelSelector="R"
+            yChannelSelector="G"
+          />
+        </filter>
+      </defs>
+    </svg>
+
     <div data-sheet-back></div>
 
     <article class="sheet">
       <div data-sheet-masthead></div>
+      <div data-sheet-hero></div>
 
       <div class="pad">
         <div class="eyebrow">Session tool 06 · Planner</div>
-        <h1 class="doc-title">The Bonus &amp; <em>Surplus</em> Playbook</h1>
+        <h1 class="doc-title">The <em>Bonus</em> Playbook</h1>
         <p class="lede">
-          Irregular income is where the largest single decisions get made fastest and with the least
-          thought. A bonus, a vesting parcel, a distribution, the month a loan finally clears.
-          <strong>Decide the rule before the money arrives</strong> — because the decision made in
-          the moment is almost never the one you would have chosen in advance.
+          A bonus lands. You have about two weeks before it quietly disappears. Pick your play
+          first.
         </p>
 
-        <div class="card card-tint" style="margin: 32px 0 0">
-          <p class="small">
-            <b style="color: var(--ink)">Why a rule beats a decision.</b> A bonus arrives alongside a
-            reason to celebrate, a renovation quote and a car that is three years old. Every one of
-            those is reasonable. A rule set in a calm month is not competing with any of them.
-          </p>
+        <div class="lm-aside" style="--lm-aside-ar: 1 / 1; --lm-aside-pos: 50% 42%">
+          <div class="lm-aside-img">
+            <img
+              src="../assets/img/photo/mature-couple-cafe-conversation-iced-drinks.webp"
+              alt=""
+              loading="lazy"
+              decoding="async"
+            />
+          </div>
+          <div>
+            <div class="sub-h">Why a rule beats a decision</div>
+            <p style="color: var(--slate)">
+              A bonus arrives alongside a reason to celebrate, a renovation quote and a car that is
+              three years old. Every one of those is reasonable. A rule set in a calm month is not
+              competing with any of them.
+            </p>
+            <p style="color: var(--gray); margin-top: 14px; font-size: 15px">
+              The same goes for a vesting parcel, a distribution, or the month a loan finally
+              clears. Irregular income is where the largest single decisions get made fastest, and
+              with the least thought.
+            </p>
+          </div>
         </div>
 
         <hr class="rule" />
 
-        <!-- ---------- Step 1 ---------- -->
+        <!-- ================= 1 · The tax reality ================= -->
         <div class="sec-head">
-          <h2>Step one · Start from the net, never the gross</h2>
+          <h2>What actually lands</h2>
           <p>
-            A bonus is announced in gross and spent in net. At a 47% marginal rate including the
-            Medicare levy, roughly half of the headline figure was never yours to allocate.
+            A bonus is announced in gross and spent in net. Start from the smaller number — it is
+            the only one you can place.
           </p>
         </div>
 
-        <div class="grid g2" style="margin-bottom: 24px">
+        <div class="grid g2" style="margin-bottom: 26px">
           <div class="field">
-            <label for="i-gross">Gross amount</label>
+            <label for="i-gross">The amount you have been told</label>
             <div class="input-wrap">
               <span class="affix">$</span>
-              <input type="number" id="i-gross" inputmode="numeric" value="50000"
-                     data-persist="bonus-gross" />
+              <input
+                type="number"
+                id="i-gross"
+                inputmode="numeric"
+                min="0"
+                step="1000"
+                value="50000"
+                data-persist="bonus-gross"
+              />
             </div>
           </div>
           <div class="field">
-            <label for="i-rate">Your marginal rate, including Medicare levy</label>
+            <label for="i-rate">Your marginal rate, including the Medicare levy</label>
             <select id="i-rate" data-persist="bonus-rate">
               <option value="0.32">32% — taxable income $45,001 to $135,000</option>
               <option value="0.39">39% — taxable income $135,001 to $190,000</option>
@@ -191,147 +720,521 @@
           </div>
         </div>
 
-        <div id="metrics"></div>
+        <div class="card">
+          <div id="tax-compare"></div>
+        </div>
+
         <p class="small muted" style="margin-top: 14px">
-          A simplification: it applies one marginal rate to the whole amount and ignores any
-          pre-tax arrangement, offsets, HELP repayments or the possibility that the bonus pushes you
-          into a higher bracket. It is here to make the gap between gross and net visible, not to
-          calculate your tax.
+          A simplification: it applies one marginal rate to the whole amount and ignores any pre-tax
+          arrangement, offsets, HELP repayments or the possibility that the bonus pushes you into a
+          higher bracket. It is here to make the gap between gross and net visible, not to calculate
+          your tax.
         </p>
 
         <hr class="rule" />
 
-        <!-- ---------- Step 2 ---------- -->
+        <!-- ================= 2 · The plays ================= -->
         <div class="sec-head">
-          <h2>Step two · Set the split in advance</h2>
+          <h2>The five plays</h2>
           <p>
-            Adjust the percentages to a rule you would be willing to apply automatically, every
-            time, without re-deciding. The illustrative split below is a starting point to argue
-            with, not a recommendation.
+            Each play sends the money somewhere different, and each one costs you something. Give
+            every play a share of the net until the five of them add to 100%. The shares already
+            filled in are an illustrative split — a starting point to argue with, not a
+            recommendation.
           </p>
         </div>
 
-        <div id="split">
-          <div class="split-row">
-            <div>
-              <b>Enjoy it</b>
-              <span class="s">The part that makes the rule survivable. A rule with no joy in it gets abandoned.</span>
-            </div>
-            <div class="pcell">
-              <input type="number" data-split="enjoy" data-persist="sp-enjoy" value="10" min="0" max="100" />
-              <span class="muted">%</span>
-            </div>
-            <div class="amt" data-amt="enjoy">—</div>
-          </div>
+        <p class="play-lead">Net to place: <b id="net-echo">—</b></p>
 
-          <div class="split-row">
+        <div class="plays">
+          <!-- ---- Play 01 ---- -->
+          <article class="play">
+            <div class="play-board">
+              <span class="play-no" aria-hidden="true">01</span>
+              <svg
+                class="play-fig"
+                viewBox="0 0 200 130"
+                role="img"
+                aria-label="A short route breaking away early to a nearby marker, while the longer route carries on past it."
+              >
+                <g class="ck">
+                  <path class="ck-faint" d="M12 112H188" />
+                  <path class="ck-faint" d="M56 107v10M100 107v10M144 107v10" />
+                  <circle class="ck-line" cx="28" cy="99" r="7" />
+                  <path class="ck-dim" d="M37 94C78 90 122 76 172 42" />
+                  <path class="ck-dim" d="M162.1 43.6 172 42 166.9 50.6" />
+                  <path class="ck-live" d="M28 90C24 76 30 62 44 54" />
+                  <path class="ck-live" d="M34.5 54.8 44 54 38.5 61.8" />
+                  <circle class="ck-live" cx="51" cy="47" r="6.5" />
+                </g>
+              </svg>
+            </div>
             <div>
-              <b>Top up the reserve</b>
-              <span class="s">Until it reaches the number you decided it should be — then this drops to zero.</span>
+              <div class="play-top">
+                <h3 class="play-name"><span class="sr-only">Play one: </span>Take a slice</h3>
+              </div>
+              <dl class="play-facts">
+                <div>
+                  <dt>Good for</dt>
+                  <dd>
+                    Making the rule survivable. A rule with no joy in it gets abandoned, usually in
+                    its second year.
+                  </dd>
+                </div>
+                <div>
+                  <dt>The catch</dt>
+                  <dd>
+                    It is the one share that grows on its own if you leave the other four
+                    undecided.
+                  </dd>
+                </div>
+              </dl>
+              <div class="play-call">
+                <label for="p-enjoy"
+                  >Share of the net<span class="sr-only"> for Take a slice</span></label
+                >
+                <div class="play-input">
+                  <input
+                    type="number"
+                    id="p-enjoy"
+                    data-split="enjoy"
+                    data-persist="sp-enjoy"
+                    value="10"
+                    min="0"
+                    max="100"
+                    step="1"
+                    inputmode="numeric"
+                  />
+                  <span class="pc">%</span>
+                </div>
+                <span class="play-amt" data-amt="enjoy">—</span>
+              </div>
+              <div class="play-meter" aria-hidden="true"><i data-meter="enjoy"></i></div>
             </div>
-            <div class="pcell">
-              <input type="number" data-split="reserve" data-persist="sp-reserve" value="15" min="0" max="100" />
-              <span class="muted">%</span>
-            </div>
-            <div class="amt" data-amt="reserve">—</div>
-          </div>
+          </article>
 
-          <div class="split-row">
+          <!-- ---- Play 02 ---- -->
+          <article class="play">
+            <div class="play-board">
+              <span class="play-no" aria-hidden="true">02</span>
+              <svg
+                class="play-fig"
+                viewBox="0 0 200 130"
+                role="img"
+                aria-label="A route curving back behind the line into a marked holding area, filling it towards a set level."
+              >
+                <g class="ck">
+                  <path class="ck-faint" d="M12 112H188" />
+                  <rect class="ck-dash" x="22" y="34" width="78" height="66" rx="10" />
+                  <path class="ck-line" d="M30 56H92" />
+                  <path class="ck-dim" d="M30 52v8M92 52v8" />
+                  <circle class="ck-dim" cx="47" cy="82" r="7" />
+                  <circle class="ck-dim" cx="72" cy="82" r="7" />
+                  <circle class="ck-line" cx="176" cy="100" r="6.5" />
+                  <path class="ck-live" d="M170 96C146 92 112 88 96 62" />
+                  <path class="ck-live" d="M97.2 71.9 96 62 104.4 67.5" />
+                </g>
+              </svg>
+            </div>
             <div>
-              <b>Non-deductible debt</b>
-              <span class="s">The home loan. A certain, tax-free return equal to the loan rate.</span>
+              <div class="play-top">
+                <h3 class="play-name"><span class="sr-only">Play two: </span>Top up the reserve</h3>
+              </div>
+              <dl class="play-facts">
+                <div>
+                  <dt>Good for</dt>
+                  <dd>
+                    Months of cover you never have to borrow back, at a moment when topping it up
+                    costs you nothing you were counting on.
+                  </dd>
+                </div>
+                <div>
+                  <dt>The catch</dt>
+                  <dd>
+                    Once it reaches the number you decided it should be, this play drops to zero.
+                    Past that it is just idle cash.
+                  </dd>
+                </div>
+              </dl>
+              <div class="play-call">
+                <label for="p-reserve"
+                  >Share of the net<span class="sr-only"> for Top up the reserve</span></label
+                >
+                <div class="play-input">
+                  <input
+                    type="number"
+                    id="p-reserve"
+                    data-split="reserve"
+                    data-persist="sp-reserve"
+                    value="15"
+                    min="0"
+                    max="100"
+                    step="1"
+                    inputmode="numeric"
+                  />
+                  <span class="pc">%</span>
+                </div>
+                <span class="play-amt" data-amt="reserve">—</span>
+              </div>
+              <div class="play-meter" aria-hidden="true"><i data-meter="reserve"></i></div>
             </div>
-            <div class="pcell">
-              <input type="number" data-split="debt" data-persist="sp-debt" value="25" min="0" max="100" />
-              <span class="muted">%</span>
-            </div>
-            <div class="amt" data-amt="debt">—</div>
-          </div>
+          </article>
 
-          <div class="split-row">
+          <!-- ---- Play 03 ---- -->
+          <article class="play">
+            <div class="play-board">
+              <span class="play-no" aria-hidden="true">03</span>
+              <svg
+                class="play-fig"
+                viewBox="0 0 200 130"
+                role="img"
+                aria-label="A straight route driving through a stacked wall and breaking the middle bar."
+              >
+                <g class="ck">
+                  <path class="ck-faint" d="M12 112H188" />
+                  <circle class="ck-line" cx="24" cy="100" r="7" />
+                  <path class="ck-mid" d="M112 38h30M112 84h30" />
+                  <path class="ck-mid" d="M112 61h9M133 61h9" />
+                  <path class="ck-faint" d="M121 56l4-5M133 66l-4 5" />
+                  <path class="ck-live" d="M32 95 172 44" />
+                  <path class="ck-live" d="M161 43 172 44 164.2 51.8" />
+                </g>
+              </svg>
+            </div>
             <div>
-              <b>Accessible investments</b>
-              <span class="s">The only bucket that can fund the years before preservation age.</span>
+              <div class="play-top">
+                <h3 class="play-name"><span class="sr-only">Play three: </span>Pay down the home loan</h3>
+              </div>
+              <dl class="play-facts">
+                <div>
+                  <dt>Good for</dt>
+                  <dd>
+                    The home loan, or any other non-deductible debt. A certain, tax-free return
+                    equal to the loan rate.
+                  </dd>
+                </div>
+                <div>
+                  <dt>The catch</dt>
+                  <dd>
+                    Getting it out again depends on a redraw facility or an offset account you
+                    actually have.
+                  </dd>
+                </div>
+              </dl>
+              <div class="play-call">
+                <label for="p-debt"
+                  >Share of the net<span class="sr-only"> for Pay down the home loan</span></label
+                >
+                <div class="play-input">
+                  <input
+                    type="number"
+                    id="p-debt"
+                    data-split="debt"
+                    data-persist="sp-debt"
+                    value="25"
+                    min="0"
+                    max="100"
+                    step="1"
+                    inputmode="numeric"
+                  />
+                  <span class="pc">%</span>
+                </div>
+                <span class="play-amt" data-amt="debt">—</span>
+              </div>
+              <div class="play-meter" aria-hidden="true"><i data-meter="debt"></i></div>
             </div>
-            <div class="pcell">
-              <input type="number" data-split="invest" data-persist="sp-invest" value="35" min="0" max="100" />
-              <span class="muted">%</span>
-            </div>
-            <div class="amt" data-amt="invest">—</div>
-          </div>
+          </article>
 
-          <div class="split-row">
+          <!-- ---- Play 04 ---- -->
+          <article class="play">
+            <div class="play-board">
+              <span class="play-no" aria-hidden="true">04</span>
+              <svg
+                class="play-fig"
+                viewBox="0 0 200 130"
+                role="img"
+                aria-label="A long arc spanning a broken line between two banks, landing on a marked circle."
+              >
+                <g class="ck">
+                  <path class="ck-faint" d="M10 112H54M146 112H190" />
+                  <path class="ck-dash" d="M54 112H146" />
+                  <path class="ck-dim" d="M54 112V72M146 112V72" />
+                  <path class="ck-dim" d="M48 72h12M140 72h12" />
+                  <path class="ck-faint" d="M75 53V112M100 45V112M124 52V112" />
+                  <circle class="ck-line" cx="24" cy="100" r="7" />
+                  <path class="ck-live" d="M31 94 52 74C80 36 120 36 146 72" />
+                  <circle class="ck-live" cx="146" cy="72" r="7" />
+                  <circle class="ck-dim" cx="146" cy="72" r="11" />
+                </g>
+              </svg>
+            </div>
             <div>
-              <b>Superannuation</b>
-              <span class="s">Subject to the annual caps, and locked until preservation age.</span>
+              <div class="play-top">
+                <h3 class="play-name"><span class="sr-only">Play four: </span>Build the bridge</h3>
+              </div>
+              <dl class="play-facts">
+                <div>
+                  <dt>Good for</dt>
+                  <dd>
+                    The only bucket that can fund the years between stopping work and preservation
+                    age.
+                  </dd>
+                </div>
+                <div>
+                  <dt>The catch</dt>
+                  <dd>
+                    Nothing locks it away, which is both why it works and why it is the easiest one
+                    to raid.
+                  </dd>
+                </div>
+              </dl>
+              <div class="play-call">
+                <label for="p-invest"
+                  >Share of the net<span class="sr-only"> for Build the bridge</span></label
+                >
+                <div class="play-input">
+                  <input
+                    type="number"
+                    id="p-invest"
+                    data-split="invest"
+                    data-persist="sp-invest"
+                    value="35"
+                    min="0"
+                    max="100"
+                    step="1"
+                    inputmode="numeric"
+                  />
+                  <span class="pc">%</span>
+                </div>
+                <span class="play-amt" data-amt="invest">—</span>
+              </div>
+              <div class="play-meter" aria-hidden="true"><i data-meter="invest"></i></div>
             </div>
-            <div class="pcell">
-              <input type="number" data-split="super" data-persist="sp-super" value="15" min="0" max="100" />
-              <span class="muted">%</span>
-            </div>
-            <div class="amt" data-amt="super">—</div>
-          </div>
+          </article>
 
-          <div class="split-total" id="split-total">
-            <b>Total</b>
-            <div class="p" id="o-pct">—</div>
-            <div class="amt" id="o-alloc">—</div>
+          <!-- ---- Play 05 ---- -->
+          <article class="play">
+            <div class="play-board">
+              <span class="play-no" aria-hidden="true">05</span>
+              <svg
+                class="play-fig"
+                viewBox="0 0 200 130"
+                role="img"
+                aria-label="A long arc travelling over a locked gate into a marked end zone."
+              >
+                <g class="ck">
+                  <path class="ck-faint" d="M12 112H188" />
+                  <rect class="ck-dash" x="150" y="24" width="40" height="88" rx="4" />
+                  <circle class="ck-line" cx="20" cy="100" r="7" />
+                  <path class="ck-live" d="M28 95C56 18 118 18 166 60" />
+                  <path class="ck-live" d="M155.4 56.9 166 60 161.6 49.9" />
+                  <circle class="ck-live" cx="172" cy="66" r="7" />
+                  <circle class="ck-dim" cx="172" cy="66" r="11" />
+                  <g class="ck-thin">
+                    <rect x="144" y="82" width="13" height="10" rx="2" />
+                    <path d="M147 82v-3a3.5 3.5 0 0 1 7 0v3" />
+                  </g>
+                </g>
+              </svg>
+            </div>
+            <div>
+              <div class="play-top">
+                <h3 class="play-name"><span class="sr-only">Play five: </span>Go long into super</h3>
+              </div>
+              <dl class="play-facts">
+                <div>
+                  <dt>Good for</dt>
+                  <dd>The longest runway of the five, and the one the tax system treats best.</dd>
+                </div>
+                <div>
+                  <dt>The catch</dt>
+                  <dd>
+                    Subject to the annual contribution caps, and locked until preservation age. This
+                    is the play to check before you make, not after.
+                  </dd>
+                </div>
+              </dl>
+              <div class="play-call">
+                <label for="p-super"
+                  >Share of the net<span class="sr-only"> for Go long into super</span></label
+                >
+                <div class="play-input">
+                  <input
+                    type="number"
+                    id="p-super"
+                    data-split="super"
+                    data-persist="sp-super"
+                    value="15"
+                    min="0"
+                    max="100"
+                    step="1"
+                    inputmode="numeric"
+                  />
+                  <span class="pc">%</span>
+                </div>
+                <span class="play-amt" data-amt="super">—</span>
+              </div>
+              <div class="play-meter" aria-hidden="true"><i data-meter="super"></i></div>
+            </div>
+          </article>
+        </div>
+
+        <hr class="rule" />
+
+        <!-- ================= 3 · The split ================= -->
+        <div class="sec-head">
+          <h2>Your split</h2>
+          <p>The five shares have to add to 100%. Nothing left over, nothing borrowed.</p>
+        </div>
+
+        <div id="split-metrics"></div>
+
+        <div class="rec" id="rec">
+          <div class="rec-top">
+            <span class="rec-k">Placed so far</span>
+            <span class="rec-n" id="rec-pct">—</span>
+          </div>
+          <div class="rec-track"><i id="rec-fill"></i></div>
+          <p class="rec-msg" id="rec-msg" aria-live="polite"></p>
+          <div class="rec-acts no-print">
+            <button class="btn btn-outline btn-sm" type="button" id="btn-balance">
+              Balance to 100%
+            </button>
+            <button class="btn btn-ghost btn-sm" type="button" id="btn-example">
+              Start from the example split
+            </button>
           </div>
         </div>
 
-        <p class="small" id="split-note" style="margin-top: 14px"></p>
-
         <div class="card" style="margin-top: 24px">
-          <div class="sub-h" style="margin-bottom: 20px">Your rule, as a picture</div>
+          <div class="sub-h">Where the net goes</div>
           <div id="split-donut"></div>
         </div>
 
         <hr class="rule" />
 
-        <!-- ---------- Step 3 ---------- -->
+        <!-- ================= 4 · Reachable or locked ================= -->
         <div class="sec-head">
-          <h2>Step three · Write the rule down</h2>
-          <p>A rule you cannot state in one sentence is not a rule.</p>
+          <h2>Reachable, or locked</h2>
+          <p>
+            The same split read a different way: how much of it you could actually get to if you
+            needed it.
+          </p>
         </div>
 
-        <div class="card card-green">
-          <p style="font-size: 16px; color: var(--ink); margin-bottom: 18px">
-            <b>My rule:</b> whenever irregular income arrives, I will…
+        <div class="card">
+          <div id="reach-bar"></div>
+        </div>
+
+        <p class="small muted" style="margin-top: 14px">
+          Money in the home loan is reachable only through a redraw facility or an offset account
+          you actually have. Money in super is subject to the annual contribution caps and locked
+          until preservation age.
+        </p>
+
+        <div class="lm-photoband">
+          <img
+            src="../assets/img/photo/professionals-laughing-meeting-candid.webp"
+            alt=""
+            loading="lazy"
+            decoding="async"
+          />
+          <p>
+            The decision made in the moment is <em>almost never</em> the one you would have chosen
+            in advance.
           </p>
-          <input class="writeline" type="text" data-persist="rule"
-                 placeholder="e.g. take 10% for something enjoyable within a week, then split the rest 25/35/15…"
-                 style="font-size: 16px; padding: 14px 2px; background: transparent" />
-          <div class="grid g2" style="margin-top: 24px">
-            <div>
-              <div class="sub-h" style="margin-bottom: 10px">The rule applies to</div>
-              <input class="writeline" type="text" data-persist="applies"
-                     placeholder="Annual bonus, vested equity, distributions…" />
+          <span class="lm-band-k">Which is why the play gets called first</span>
+        </div>
+
+        <!-- ================= 5 · The call sheet ================= -->
+        <section class="page-break">
+          <div class="sec-head">
+            <h2>Your call sheet</h2>
+            <p>
+              Write the rule down and date it. A rule you cannot state in one sentence is not a
+              rule.
+            </p>
+          </div>
+
+          <div class="callsheet">
+            <div class="callsheet-head">
+              <b>The rule, in my own words</b>
+              <span>Playbook 06 · Decided in advance</span>
             </div>
-            <div>
-              <div class="sub-h" style="margin-bottom: 10px">I will act within</div>
-              <input class="writeline" type="text" data-persist="window"
-                     placeholder="14 days of it landing" />
+            <div class="callsheet-body">
+              <div class="field">
+                <label for="f-rule">Whenever irregular income arrives, I will…</label>
+                <input
+                  type="text"
+                  id="f-rule"
+                  data-persist="rule"
+                  placeholder="e.g. take 10% within a week, then split the rest 15 / 25 / 35 / 15"
+                  style="font-size: 16px"
+                />
+              </div>
+
+              <div class="cs-grid">
+                <div class="field">
+                  <label for="f-lands">The money lands on</label>
+                  <input type="date" id="f-lands" data-persist="lands-on" />
+                </div>
+                <div class="field">
+                  <label for="f-act">I will have acted by</label>
+                  <input type="date" id="f-act" data-persist="act-by" />
+                </div>
+              </div>
+
+              <p class="cs-note" id="f-window"></p>
+
+              <div class="cs-grid">
+                <div class="field">
+                  <label for="f-applies">This rule applies to</label>
+                  <input
+                    type="text"
+                    id="f-applies"
+                    data-persist="applies"
+                    placeholder="Annual bonus, vested equity, distributions…"
+                  />
+                </div>
+                <div class="field">
+                  <label for="f-told">Who I will tell</label>
+                  <input
+                    type="text"
+                    id="f-told"
+                    data-persist="told"
+                    placeholder="My partner, before anything moves"
+                  />
+                </div>
+              </div>
             </div>
           </div>
-        </div>
+        </section>
 
         <hr class="rule" />
 
-        <!-- ---------- Traps ---------- -->
+        <!-- ================= 6 · Traps ================= -->
         <div class="sec-head">
-          <h2>Four ways this goes wrong</h2>
+          <h2>Four ways this comes apart</h2>
           <p>Every one of these is something sensible people do.</p>
         </div>
 
         <div class="trap">
           <span class="x">
-            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                 stroke-width="2.6" stroke-linecap="round" aria-hidden="true">
+            <svg
+              width="13"
+              height="13"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2.6"
+              stroke-linecap="round"
+              aria-hidden="true"
+            >
               <path d="M18 6 6 18M6 6l12 12" />
             </svg>
           </span>
           <div>
-            <b>Letting it sit "until I decide"</b>
+            <b>Letting it sit until you decide</b>
             <p>
               Money parked in a transaction account pending a decision is money being spent in
               instalments. The decision is usually made by attrition rather than by choice.
@@ -341,13 +1244,21 @@
 
         <div class="trap">
           <span class="x">
-            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                 stroke-width="2.6" stroke-linecap="round" aria-hidden="true">
+            <svg
+              width="13"
+              height="13"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2.6"
+              stroke-linecap="round"
+              aria-hidden="true"
+            >
               <path d="M18 6 6 18M6 6l12 12" />
             </svg>
           </span>
           <div>
-            <b>Treating the gross figure as the budget</b>
+            <b>Treating the headline figure as the budget</b>
             <p>
               Commitments get made against the announced number, and the net arrives months later
               roughly half the size. The shortfall is then funded by the surplus that was supposed
@@ -358,13 +1269,21 @@
 
         <div class="trap">
           <span class="x">
-            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                 stroke-width="2.6" stroke-linecap="round" aria-hidden="true">
+            <svg
+              width="13"
+              height="13"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2.6"
+              stroke-linecap="round"
+              aria-hidden="true"
+            >
               <path d="M18 6 6 18M6 6l12 12" />
             </svg>
           </span>
           <div>
-            <b>Contributing to super without checking the cap</b>
+            <b>Topping up super without checking the cap</b>
             <p>
               Concessional contributions include what your employer already pays. Exceeding the cap
               has tax consequences, and the carry-forward rules that might have helped depend on
@@ -375,13 +1294,21 @@
 
         <div class="trap">
           <span class="x">
-            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                 stroke-width="2.6" stroke-linecap="round" aria-hidden="true">
+            <svg
+              width="13"
+              height="13"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2.6"
+              stroke-linecap="round"
+              aria-hidden="true"
+            >
               <path d="M18 6 6 18M6 6l12 12" />
             </svg>
           </span>
           <div>
-            <b>Allocating 100% to the sensible option</b>
+            <b>Giving every dollar to the sensible plays</b>
             <p>
               A rule with no enjoyment in it does not survive its second year. A deliberate small
               share for something you actually want is what makes the other 90% automatic.
@@ -390,13 +1317,18 @@
         </div>
 
         <div class="disclaimer" style="margin-top: 32px">
-          <b>General information only.</b> The tax figure is a simplified illustration using a single
-          marginal rate and is not a tax calculation. The split is an example to discuss, not a
-          recommendation; the right allocation depends on your objectives, financial situation and
-          needs, including your contribution caps, debt position and timeframes. Confirm current
-          rates, thresholds and caps at
-          <a href="https://www.ato.gov.au" target="_blank" rel="noopener noreferrer"
-             style="color: var(--teal); font-weight: 600">ato.gov.au</a>
+          <b>General information only.</b> The tax figure is a simplified illustration using a
+          single marginal rate and is not a tax calculation. The five plays and the example split
+          are a starting point to discuss, not a recommendation; the right allocation depends on
+          your objectives, financial situation and needs, including your contribution caps, debt
+          position and timeframes. Confirm current rates, thresholds and caps at
+          <a
+            href="https://www.ato.gov.au"
+            target="_blank"
+            rel="noopener noreferrer"
+            style="color: var(--teal); font-weight: 600"
+            >ato.gov.au</a
+          >
           and seek personal tax and financial advice before acting.
         </div>
 
@@ -410,84 +1342,393 @@
     </article>
 
     <script type="module">
-      import { mountSheet, wirePrint, money, persistFields } from '../assets/sheet.js'
-      import { metricStrip, donut, TONE } from '../assets/widgets.js'
+      import { mountSheet, wirePrint, money, signedMoney, persistFields } from '../assets/sheet.js'
+      import { comparison, metricStrip, donut, breakdownBar, TONE } from '../assets/widgets.js'
 
-      mountSheet({ no: '06', kind: 'Planner' })
+      mountSheet({
+        no: '06',
+        kind: 'Planner',
+        hero: { src: 'art/06-playbook.webp', alt: '', variant: 'art', pos: '50% 50%' },
+      })
       wirePrint()
 
       const el = (id) => document.getElementById(id)
 
+      /* ---------- The five plays ---------- */
+      const PLAYS = [
+        { key: 'enjoy', name: 'Take a slice', color: TONE.amber },
+        { key: 'reserve', name: 'Top up the reserve', color: TONE.tealSoft },
+        { key: 'debt', name: 'Pay down the home loan', color: TONE.tealDeep },
+        { key: 'invest', name: 'Build the bridge', color: TONE.green },
+        { key: 'super', name: 'Go long into super', color: TONE.teal },
+      ]
+      const EXAMPLE = { enjoy: 10, reserve: 15, debt: 25, invest: 35, super: 15 }
+
+      const input = (k) => document.querySelector('[data-split="' + k + '"]')
+      const amtCell = (k) => document.querySelector('[data-amt="' + k + '"]')
+      const meterCell = (k) => document.querySelector('[data-meter="' + k + '"]')
+
+      const num = (v) => {
+        const n = Number(v)
+        return Number.isFinite(n) && n > 0 ? n : 0
+      }
+
+      /* ---------- A local note on the shared widgets ----------
+         donut() and breakdownBar() reveal themselves through one
+         module-level IntersectionObserver that retires an element
+         after its first reveal. Re-rendering into the same node a
+         second time would therefore leave it blank. So each repaint
+         gets a fresh child node, and after the first paint we settle
+         it straight to its final state rather than re-animating on
+         every keystroke. Nothing shared is touched. */
+      let firstPaint = true
+
+      function fresh(hostId) {
+        const host = el(hostId)
+        host.textContent = ''
+        const node = document.createElement('div')
+        host.appendChild(node)
+        return node
+      }
+
+      function settleDonut(node) {
+        node.querySelectorAll('circle[data-len]').forEach((c) => {
+          c.style.transition = 'none'
+          c.setAttribute('stroke-dasharray', c.dataset.len + ' ' + c.dataset.gap)
+        })
+      }
+
+      function settleBars(node) {
+        node.querySelectorAll('.w-breakdown-bar span').forEach((s) => {
+          s.style.transition = 'none'
+          s.style.transform = 'scaleX(1)'
+        })
+      }
+
+      /* ---------- The whole sheet, recomputed ---------- */
       function sync() {
-        const gross = Number(el('i-gross').value) || 0
+        const gross = num(el('i-gross').value)
         const rate = Number(el('i-rate').value) || 0
+        const ratePc = Math.round(rate * 100)
         const tax = gross * rate
         const net = gross - tax
 
-        metricStrip(el('metrics'), [
-          { label: 'Gross', value: money(gross), note: 'The number that gets announced' },
-          { label: 'Approximate tax', value: money(tax), tone: 'warn', note: `At ${(rate * 100).toFixed(0)}% including the Medicare levy` },
-          { label: 'Net', value: money(net), tone: 'key', note: 'The only figure you can actually allocate' },
-          { label: 'Share that survives', value: gross > 0 ? Math.round((net / gross) * 100) + '%' : '—', note: 'Of the headline number' },
+        /* 1 · What actually lands */
+        comparison(el('tax-compare'), {
+          a: money(net),
+          aLabel: 'Yours to allocate',
+          b: money(gross),
+          bLabel: 'The headline figure',
+          note:
+            gross > 0
+              ? 'About <b>' +
+                money(tax) +
+                '</b> never reaches you. Roughly ' +
+                Math.round((net / gross) * 100) +
+                '% of the headline figure survives, at a marginal rate of ' +
+                ratePc +
+                '% including the Medicare levy.'
+              : 'Enter the amount you have been told, above.',
+        })
+
+        el('net-echo').textContent = money(net)
+
+        /* 2 · The plays */
+        let pct = 0
+        const amount = {}
+        PLAYS.forEach((p) => {
+          const share = num(input(p.key).value)
+          pct += share
+          amount[p.key] = (net * share) / 100
+          amtCell(p.key).textContent = money(amount[p.key])
+          const m = meterCell(p.key)
+          m.style.width = Math.max(0, Math.min(share, 100)) + '%'
+          m.style.background = p.color
+        })
+
+        const placed = (net * pct) / 100
+        const left = net - placed
+        const whole = Math.round(pct)
+        const work = PLAYS.filter((p) => p.key !== 'enjoy').reduce(
+          (a, p) => a + num(input(p.key).value),
+          0
+        )
+
+        /* 3 · Your split */
+        metricStrip(el('split-metrics'), [
+          {
+            label: 'Net to allocate',
+            value: money(net),
+            tone: 'key',
+            note: 'What is left once the tax is out',
+          },
+          { label: 'Placed', value: whole + '%', note: money(placed) },
+          {
+            label: 'Left to place',
+            value: (whole > 100 ? '−' + (whole - 100) : 100 - whole) + '%',
+            note: signedMoney(left),
+          },
+          {
+            label: 'Put to work',
+            value: Math.round(work) + '%',
+            tone: 'good',
+            note: 'Reserve, home loan, bridge and super',
+          },
         ])
 
-        let pct = 0
-        const slices = []
-        const COLOURS = {
-          enjoy: TONE.ember,
-          reserve: TONE.tealSoft,
-          debt: TONE.tealDeep,
-          invest: TONE.green,
-          super: TONE.teal,
-        }
-        const LABELS = {
-          enjoy: 'Enjoy it',
-          reserve: 'Top up the reserve',
-          debt: 'Non-deductible debt',
-          invest: 'Accessible investments',
-          super: 'Superannuation',
-        }
-        document.querySelectorAll('[data-split]').forEach((i) => {
-          const k = i.dataset.split
-          const p = Number(i.value) || 0
-          pct += p
-          const amt = (net * p) / 100
-          document.querySelector(`[data-amt="${k}"]`).textContent = money(amt)
-          if (p > 0) slices.push({ label: LABELS[k], value: amt, color: COLOURS[k], display: money(amt) })
-        })
+        const rec = el('rec')
+        el('rec-pct').textContent = whole + '% of 100%'
+        el('rec-fill').style.width = Math.max(0, Math.min(pct, 100)) + '%'
+        rec.classList.toggle('is-full', whole === 100)
+        rec.classList.toggle('is-off', whole !== 100)
+        el('btn-balance').disabled = whole === 100
 
-        donut(el('split-donut'), slices.length ? slices : [{ label: 'Unallocated', value: 1, color: TONE.track, display: money(0) }], {
-          label: 'Net',
-          value: money(net),
-        })
-
-        el('o-pct').textContent = pct.toFixed(0) + '%'
-        el('o-alloc').textContent = money((net * pct) / 100)
-        el('split-total').classList.toggle('over', Math.round(pct) !== 100)
-
-        const note = el('split-note')
-        if (Math.round(pct) === 100) {
-          note.innerHTML = `<span class="muted">The split accounts for all of the net amount.</span>`
-        } else if (pct > 100) {
-          note.innerHTML = `<b style="color: var(--ember-strong)">That is ${(pct - 100).toFixed(
-            0
-          )}% more than you have.</b> <span class="muted">Reduce a line before the rule leaves the page.</span>`
+        const msg = el('rec-msg')
+        if (whole === 100) {
+          msg.innerHTML =
+            '<b>Balanced.</b> Every dollar of the net has a play against it. This is the sheet to print.'
+        } else if (whole > 100) {
+          msg.innerHTML =
+            '<b>That is ' +
+            (whole - 100) +
+            '% more than you have — ' +
+            money(placed - net) +
+            ' over.</b> Take it off a line before the rule leaves the page.'
         } else {
-          note.innerHTML = `<b style="color: var(--ember-strong)">${(100 - pct).toFixed(
-            0
-          )}% is unallocated — ${money(
-            (net * (100 - pct)) / 100
-          )}.</b> <span class="muted">Unallocated is the category that quietly becomes "enjoy it".</span>`
+          msg.innerHTML =
+            '<b>' +
+            (100 - whole) +
+            '% is still to place — ' +
+            money(left) +
+            '.</b> Unplaced is the category that quietly becomes "take a slice".'
         }
+
+        const slices = PLAYS.filter((p) => num(input(p.key).value) > 0).map((p) => ({
+          label: p.name,
+          value: amount[p.key],
+          color: p.color,
+          display: money(amount[p.key]),
+        }))
+        const donutNode = fresh('split-donut')
+        donut(
+          donutNode,
+          slices.length
+            ? slices
+            : [{ label: 'Nothing placed yet', value: 1, color: TONE.track, display: money(0) }],
+          { label: 'Net', value: money(net) }
+        )
+        if (!firstPaint) settleDonut(donutNode)
+
+        /* 4 · Reachable, or locked */
+        const barsNode = fresh('reach-bar')
+        breakdownBar(barsNode, [
+          { label: 'Spent on purpose', value: amount.enjoy, color: TONE.amber },
+          {
+            label: 'Reachable if you need it',
+            value: amount.reserve + amount.invest,
+            color: TONE.teal,
+          },
+          { label: 'Sitting in the home loan', value: amount.debt, color: TONE.tealSoft },
+          { label: 'Locked until preservation age', value: amount.super, color: TONE.slate },
+        ])
+        if (!firstPaint) settleBars(barsNode)
+
+        firstPaint = false
       }
 
+      /* ---------- Making an off-balance sheet easy to fix ---------- */
+      function applyShares(next) {
+        PLAYS.forEach((p, i) => {
+          input(p.key).value = String(next[i])
+        })
+        /* One bubbling event is enough: persistFields() re-reads every
+           field on any of them, and sync() re-reads the lot anyway. */
+        input(PLAYS[0].key).dispatchEvent(new Event('input', { bubbles: true }))
+      }
+
+      function balance() {
+        const vals = PLAYS.map((p) => num(input(p.key).value))
+        const total = vals.reduce((a, b) => a + b, 0)
+        if (total <= 0) return applyShares([20, 20, 20, 20, 20])
+
+        const scaled = vals.map((v) => (v * 100) / total)
+        const next = scaled.map((v) => Math.floor(v))
+        let spare = 100 - next.reduce((a, b) => a + b, 0)
+        const order = scaled
+          .map((v, i) => ({ i, frac: v - Math.floor(v) }))
+          .sort((x, y) => y.frac - x.frac)
+        for (let k = 0; k < spare; k++) next[order[k % order.length].i] += 1
+        applyShares(next)
+      }
+
+      el('btn-balance').addEventListener('click', balance)
+      el('btn-example').addEventListener('click', () =>
+        applyShares(PLAYS.map((p) => EXAMPLE[p.key]))
+      )
+
+      /* ---------- The fortnight ---------- */
+      const pad2 = (v) => String(v).padStart(2, '0')
+
+      function parseISO(s) {
+        const m = /^(\d{4})-(\d{2})-(\d{2})$/.exec(s || '')
+        return m ? { y: +m[1], m: +m[2], d: +m[3] } : null
+      }
+
+      function addDays(iso, n) {
+        const p = parseISO(iso)
+        if (!p) return ''
+        const dt = new Date(p.y, p.m - 1, p.d + n)
+        return dt.getFullYear() + '-' + pad2(dt.getMonth() + 1) + '-' + pad2(dt.getDate())
+      }
+
+      function daysBetween(a, b) {
+        const x = parseISO(a)
+        const y = parseISO(b)
+        if (!x || !y) return null
+        return Math.round(
+          (Date.UTC(y.y, y.m - 1, y.d) - Date.UTC(x.y, x.m - 1, x.d)) / 86400000
+        )
+      }
+
+      function longDate(iso) {
+        const p = parseISO(iso)
+        if (!p) return ''
+        return new Date(p.y, p.m - 1, p.d).toLocaleDateString('en-AU', {
+          day: 'numeric',
+          month: 'long',
+          year: 'numeric',
+        })
+      }
+
+      function syncWindow() {
+        const out = el('f-window')
+        const a = el('f-lands').value
+        const b = el('f-act').value
+        const n = daysBetween(a, b)
+        if (n === null) {
+          out.innerHTML = 'Put both dates in and this line will state your window.'
+          return
+        }
+        if (n < 0) {
+          out.innerHTML = '<b>The date you act cannot come before the money lands.</b>'
+          return
+        }
+        out.innerHTML =
+          '<b>' +
+          n +
+          ' day' +
+          (n === 1 ? '' : 's') +
+          '</b> — from ' +
+          longDate(a) +
+          ' to ' +
+          longDate(b) +
+          '. After that it is simply part of the account balance.'
+      }
+
+      el('f-lands').addEventListener('change', () => {
+        const lands = el('f-lands').value
+        const act = el('f-act')
+        /* Offer the fortnight, never overwrite a date they chose. */
+        if (lands && !act.value) {
+          act.value = addDays(lands, 14)
+          act.dispatchEvent(new Event('input', { bubbles: true }))
+        }
+        syncWindow()
+      })
+      el('f-act').addEventListener('change', syncWindow)
+      el('f-lands').addEventListener('input', syncWindow)
+      el('f-act').addEventListener('input', syncWindow)
+
+      /* ---------- Wiring ---------- */
       ;['i-gross', 'i-rate'].forEach((id) => {
         el(id).addEventListener('input', sync)
         el(id).addEventListener('change', sync)
       })
-      document.querySelectorAll('[data-split]').forEach((i) => i.addEventListener('input', sync))
+      PLAYS.forEach((p) => {
+        input(p.key).addEventListener('input', sync)
+        input(p.key).addEventListener('change', sync)
+      })
+
+      /* The rate the markup ships with, read before anything can overwrite it. */
+      const RATE_DEFAULT =
+        el('i-rate').querySelector('option[selected]')?.value || el('i-rate').options[0].value
+
       persistFields('bonus-playbook')
       sync()
+      syncWindow()
+
+      /* ---------- Clearing, for the one field that is a <select> ----------
+         The shared clear helper empties every [data-persist] field, which on
+         an input is right and on a select means selectedIndex -1 — a control
+         showing nothing at all, with no hint it ever had a value. This is the
+         only sheet with a persisted select, so it puts its own default back.
+         Registered after persistFields(), so it runs after the shared handler
+         and the re-dispatched event writes the restored rate to storage. */
+      document.querySelectorAll('[data-clear]').forEach((b) =>
+        b.addEventListener('click', () => {
+          const rate = el('i-rate')
+          if (rate.selectedIndex >= 0) return
+          rate.value = RATE_DEFAULT
+          rate.dispatchEvent(new Event('input', { bubbles: true }))
+        })
+      )
+
+      /* ---------- Printing what has not been scrolled to ----------
+         breakdownBar() has a print rule in the shared stylesheet that forces
+         its segments to full width. donut() has no equivalent: its arcs are
+         sized by script on first reveal, so a sheet printed straight from the
+         top — before section 3 has ever been on screen — would export the ring
+         empty next to a full legend. Settle both before the page is painted
+         for paper. */
+      function settleForPrint() {
+        settleDonut(el('split-donut'))
+        settleBars(el('reach-bar'))
+      }
+      window.addEventListener('beforeprint', settleForPrint)
+      if (typeof window.matchMedia === 'function') {
+        const printQuery = window.matchMedia('print')
+        const onPrintQuery = (e) => e.matches && settleForPrint()
+        if (printQuery.addEventListener) printQuery.addEventListener('change', onPrintQuery)
+        else if (printQuery.addListener) printQuery.addListener(onPrintQuery)
+      }
+
+      /* ---------- The routes draw themselves in, once ----------
+         Progressive enhancement only: the diagrams are fully drawn
+         in the markup, and we only hide-then-draw them when motion
+         is welcome. Print overrides this in CSS, so a sheet saved
+         without scrolling still carries every route. */
+      const motionOK = !window.matchMedia('(prefers-reduced-motion: reduce)').matches
+      if (motionOK && typeof IntersectionObserver !== 'undefined') {
+        const boards = Array.from(document.querySelectorAll('.play-fig'))
+        boards.forEach((fig) => {
+          fig.querySelectorAll('.ck-live').forEach((p) => {
+            try {
+              const L = p.getTotalLength()
+              if (!L) return
+              p.style.strokeDasharray = String(L)
+              p.style.strokeDashoffset = String(L)
+            } catch (err) {
+              /* no geometry available: the route simply stays drawn */
+            }
+          })
+        })
+
+        const draw = new IntersectionObserver(
+          (entries) => {
+            entries.forEach((e) => {
+              if (!e.isIntersecting) return
+              e.target.querySelectorAll('.ck-live').forEach((p, i) => {
+                p.style.transition =
+                  'stroke-dashoffset .9s cubic-bezier(.22,.61,.36,1) ' + i * 0.18 + 's'
+                p.style.strokeDashoffset = '0'
+              })
+              draw.unobserve(e.target)
+            })
+          },
+          { threshold: 0.3 }
+        )
+        boards.forEach((fig) => draw.observe(fig))
+      }
     </script>
   </body>
 </html>

@@ -3,10 +3,10 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>The Executive Wealth Score — Prospa Financial</title>
+    <title>Your Wealth Score — Prospa Financial</title>
     <meta
       name="description"
-      content="A three-minute, self-scored review of how deliberately your financial strategy is working across six areas. General information only."
+      content="Eighteen questions, about three minutes. A scored assessment of how deliberately your money is organised across six areas. General information only."
     />
     <link rel="icon" type="image/svg+xml" href="../assets/favicon.svg" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -17,13 +17,77 @@
     />
     <link rel="stylesheet" href="../assets/prospa.css" />
     <style>
-      /* ---- Quiz shell ---- */
+      /* ============================================================
+         01 · YOUR WEALTH SCORE — sheet-local styles only.
+         Everything here is scoped to this document. Tokens only;
+         no brand hex. The warm accent var(--ember) is deliberately
+         not used on this sheet: the scored areas must not read as a
+         verdict, so warmth arrives only through the shared
+         --ember-soft tints on .pattern-flag and the strip's
+         "warn" tone.
+         ============================================================ */
+
+      /* ---- 1 · Progress rail ------------------------------------ */
+
       .quiz-top {
-        padding: 44px 64px 0;
+        padding: 40px 64px 0;
       }
-      .progress {
-        margin: 28px 0 0;
+
+      /* The stepper widget, re-laid as a seven-chip rail: mark above
+         label, so each label gets the full column width and can wrap
+         instead of overflowing. Same specificity as .w-stepper, but
+         this sheet's stylesheet loads after prospa.css, so it wins. */
+      .qnav-rail {
+        display: grid;
+        grid-template-columns: repeat(7, 1fr);
+        gap: 6px;
+        margin: 0 0 16px;
       }
+      .qnav-rail .w-step {
+        min-width: 0;
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+        gap: 7px;
+        padding: 12px 6px 11px;
+      }
+      .qnav-rail .w-step-mark {
+        width: 21px;
+        height: 21px;
+        font-size: 11px;
+      }
+      .qnav-rail .w-step-mark svg {
+        width: 11px;
+        height: 11px;
+      }
+      .qnav-rail .w-step-label {
+        font-size: 11px;
+        line-height: 1.25;
+      }
+
+      .qnav-foot {
+        display: flex;
+        justify-content: space-between;
+        align-items: baseline;
+        gap: 14px;
+        margin-bottom: 10px;
+      }
+      .qnav-k {
+        font-family: 'JetBrains Mono', monospace;
+        font-size: 11.5px;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        color: var(--gray);
+      }
+      .qnav-k b {
+        color: var(--teal);
+        font-weight: 500;
+      }
+      .qnav-right {
+        text-align: right;
+        flex: none;
+      }
+
       .progress-track {
         height: 5px;
         border-radius: 3px;
@@ -38,24 +102,9 @@
         transform: scaleX(0);
         transition: transform var(--dur-reveal) var(--ease);
       }
-      .progress-meta {
-        display: flex;
-        justify-content: space-between;
-        align-items: baseline;
-        gap: 14px;
-        margin-bottom: 10px;
-        font-family: 'JetBrains Mono', monospace;
-        font-size: 11.5px;
-        letter-spacing: 0.08em;
-        text-transform: uppercase;
-        color: var(--gray);
-      }
-      .progress-meta b {
-        color: var(--teal);
-        font-weight: 500;
-      }
 
-      /* ---- Steps ---- */
+      /* ---- 2 · Steps ------------------------------------------- */
+
       .step {
         display: none;
         animation: rise var(--dur-reveal) var(--ease) both;
@@ -73,6 +122,30 @@
           transform: none;
         }
       }
+
+      /* Each step moves focus to its own heading, so a keyboard or
+         screen-reader user is not left at the top of the document. */
+      [data-focus]:focus {
+        outline: none;
+      }
+      [data-focus]:focus-visible {
+        outline: 2px solid var(--teal);
+        outline-offset: 5px;
+        border-radius: 4px;
+      }
+
+      .step-title {
+        font-size: 30px;
+        letter-spacing: -0.025em;
+        margin-bottom: 14px;
+      }
+      .aside-h {
+        font-size: 23px;
+        letter-spacing: -0.02em;
+        margin-bottom: 10px;
+      }
+
+      /* ---- 3 · Questions --------------------------------------- */
 
       .q {
         padding: 30px 0;
@@ -94,8 +167,15 @@
         line-height: 1.45;
         padding-top: 4px;
       }
+      .q-head .num {
+        transition: background var(--dur-base) var(--ease);
+      }
+      /* Answered: the marker turns, so the page keeps moving under
+         the reader's hand without anything shifting position. */
+      .q.done .q-head .num {
+        background: var(--green);
+      }
 
-      /* ---- Option cards ---- */
       .opts {
         display: grid;
         gap: 10px;
@@ -116,7 +196,7 @@
         font-family: 'Poppins', sans-serif;
         line-height: 1.45;
         transition: border-color var(--dur-snap) var(--ease),
-          background var(--dur-snap) var(--ease), transform var(--dur-snap) var(--ease);
+          background var(--dur-snap) var(--ease), color var(--dur-snap) var(--ease);
       }
       .opt:hover {
         border-color: var(--accent);
@@ -131,30 +211,18 @@
         transition: background var(--dur-snap) var(--ease),
           border-color var(--dur-snap) var(--ease), box-shadow var(--dur-snap) var(--ease);
       }
+      /* All three answers select identically. Colour-coding them
+         would make the sheet grade the reader mid-question, and this
+         assessment explicitly has no good or bad answer. */
       .opt[aria-pressed='true'] {
         border-color: var(--teal);
         background: var(--bg2);
+        color: var(--ink);
       }
       .opt[aria-pressed='true'] .mark {
         border-color: var(--teal);
         background: var(--teal);
         box-shadow: 0 0 0 3px rgba(19, 95, 105, 0.15);
-      }
-      .opt[data-v='1'][aria-pressed='true'] {
-        border-color: var(--green-600);
-      }
-      .opt[data-v='1'][aria-pressed='true'] .mark {
-        border-color: var(--green-600);
-        background: var(--green-600);
-        box-shadow: 0 0 0 3px rgba(93, 206, 56, 0.2);
-      }
-      .opt[data-v='0'][aria-pressed='true'] {
-        border-color: var(--ember);
-      }
-      .opt[data-v='0'][aria-pressed='true'] .mark {
-        border-color: var(--ember);
-        background: var(--ember);
-        box-shadow: 0 0 0 3px rgba(198, 90, 30, 0.18);
       }
       .opt:focus-visible {
         outline: 2px solid var(--teal);
@@ -175,7 +243,8 @@
         color: var(--gray);
       }
 
-      /* ---- Horizon step ---- */
+      /* ---- 4 · Horizon step ------------------------------------ */
+
       .horizon {
         display: grid;
         grid-template-columns: repeat(2, 1fr);
@@ -190,49 +259,34 @@
         font-variant-numeric: tabular-nums;
       }
 
-      /* ---- Result ---- */
-      .score-hero {
+      /* ---- 5 · Result ----------------------------------------- */
+
+      /* The band leads the result page, so it needs less air above
+         it than it does mid-document. Screen only: in print the
+         shared stylesheet turns it into a rule-left pull-quote and
+         owns its margins. */
+      @media screen {
+        .band-lead {
+          margin-top: -10px;
+        }
+
+        /* The shared .lm-band-k colour (#9fc3c7) measures 3.40:1 against
+           the lightest part of THIS band's photograph — under AA for
+           11px text. The headline is fine at 7.01:1; it is only the chip
+           that is short. Lifting it to the same tone the panel below
+           already uses takes it to 4.74:1 and keeps it quieter than the
+           white headline. The shared rule in prospa.css is the real fix,
+           since every sheet with a photo band inherits it. */
+        .band-lead .lm-band-k {
+          color: #cfe0e2;
+        }
+      }
+
+      .res-hero {
         display: grid;
-        grid-template-columns: 220px 1fr;
+        grid-template-columns: 260px 1fr;
         gap: 44px;
         align-items: center;
-      }
-      .dial {
-        position: relative;
-        width: 220px;
-        height: 220px;
-      }
-      .dial svg {
-        transform: rotate(-90deg);
-        display: block;
-      }
-      .dial-ring {
-        transition: stroke-dashoffset 1.1s var(--ease);
-      }
-      .dial-face {
-        position: absolute;
-        inset: 0;
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        justify-content: center;
-        gap: 2px;
-      }
-      .dial-num {
-        font-family: 'JetBrains Mono', monospace;
-        font-size: 56px;
-        font-weight: 500;
-        color: var(--ink);
-        letter-spacing: -0.04em;
-        line-height: 1;
-        font-variant-numeric: tabular-nums;
-      }
-      .dial-of {
-        font-family: 'JetBrains Mono', monospace;
-        font-size: 11px;
-        letter-spacing: 0.14em;
-        text-transform: uppercase;
-        color: var(--gray);
       }
       .band-name {
         font-size: 34px;
@@ -243,59 +297,24 @@
         color: var(--gray);
         font-size: 16.5px;
       }
-
-      /* ---- Pillar bars ---- */
-      .pillar {
-        display: grid;
-        grid-template-columns: 1fr 64px;
-        gap: 10px 16px;
-        align-items: center;
-        padding: 15px 0;
-        border-bottom: 1px solid var(--line-2);
-      }
-      .pillar:last-child {
-        border-bottom: none;
-      }
-      .pillar-name {
-        font-size: 15.5px;
-        font-weight: 600;
-        color: var(--ink);
-      }
-      .pillar-name span {
-        display: block;
-        font-size: 12px;
-        font-weight: 400;
-        color: var(--gray);
-        margin-top: 2px;
-      }
-      .pillar-pts {
-        font-family: 'JetBrains Mono', monospace;
-        font-size: 14px;
-        color: var(--teal);
-        text-align: right;
-        font-variant-numeric: tabular-nums;
-      }
-      .pillar-track {
-        grid-column: 1 / -1;
-        height: 7px;
-        border-radius: 4px;
-        background: var(--line);
-        overflow: hidden;
-      }
-      .pillar-fill {
-        height: 100%;
-        border-radius: 4px;
-        transform-origin: left center;
-        transform: scaleX(0);
-        transition: transform 0.9s var(--ease);
+      .res-poles {
+        margin-bottom: 22px;
       }
 
-      /* ---- Pattern callout ---- */
+      /* Print forces every .w-row-track fill to scaleX(1) so a sheet
+         printed before the bars animate is not blank. On this page
+         that would erase the measurement, so each fill carries its
+         own scale and this rule hands it back. */
+      #pillars .w-row {
+        break-inside: avoid;
+      }
+
+      /* ---- 6 · Narrative blocks -------------------------------- */
+
       .pattern {
         border-radius: var(--r-lg);
         padding: 30px 32px;
         background: var(--bg2);
-        border-left: none;
       }
       .pattern-flag {
         background: var(--ember-soft);
@@ -350,18 +369,28 @@
         font-size: 16px;
         max-width: 56ch;
       }
+      /* .cta-panel p outweighs .tiny, so the footnote under the buttons
+         was rendering at body size in body tone — no step at all. And its
+         #9fbdc0 measured 3.58:1 on this panel, under AA for 12px. This
+         restores the step and takes the line to 5.40:1. */
+      .cta-panel .tiny {
+        font-size: 12.5px;
+        color: #cfe0e2;
+      }
+
+      /* ---- 7 · Responsive ------------------------------------- */
 
       @media (max-width: 760px) {
-        .quiz-top {
-          padding: 28px 24px 0;
-        }
         .opts {
           margin-left: 0;
         }
         .q-head p {
           font-size: 16px;
         }
-        .score-hero {
+        .step-title {
+          font-size: 24px;
+        }
+        .res-hero {
           grid-template-columns: 1fr;
           gap: 26px;
           justify-items: center;
@@ -378,6 +407,53 @@
         }
       }
 
+      /* Below 720px the rail drops its labels and becomes seven
+         numbered pips. The step's full name is in the line beneath
+         it, so nothing is lost; the labels stay in the accessibility
+         tree rather than being removed from it. */
+      @media (max-width: 720px) {
+        /* Shares .pad's breakpoint, not a nearby one: the rail and the
+           questions beneath it have to start on the same gutter. */
+        .quiz-top {
+          padding: 28px 24px 0;
+        }
+        .qnav-rail {
+          gap: 5px;
+        }
+        .qnav-rail .w-step {
+          flex-direction: row;
+          justify-content: center;
+          gap: 0;
+          padding: 9px 0;
+          /* The containing block for the hidden label below, so its box
+             is pinned inside its own chip rather than to the page. */
+          position: relative;
+        }
+        .qnav-rail .w-step-label {
+          position: absolute;
+          width: 1px;
+          height: 1px;
+          padding: 0;
+          margin: -1px;
+          overflow: hidden;
+          clip: rect(0 0 0 0);
+          white-space: nowrap;
+          border: 0;
+        }
+        .qnav-foot {
+          flex-wrap: wrap;
+          gap: 4px 14px;
+        }
+      }
+
+      @media (max-width: 420px) {
+        .qnav-right {
+          display: none;
+        }
+      }
+
+      /* ---- 8 · Print ------------------------------------------ */
+
       @media print {
         .quiz-top {
           padding: 0;
@@ -388,14 +464,20 @@
         .step.on {
           display: block !important;
         }
-        .score-hero {
-          grid-template-columns: 180px 1fr;
-          gap: 30px;
+        .res-hero {
+          grid-template-columns: 210px 1fr;
+          gap: 28px;
+          text-align: left;
         }
-        .dial,
-        .dial svg {
-          width: 180px;
-          height: 180px;
+        /* Hand the bars their real lengths back — see the note above. */
+        #pillars .w-row-track i {
+          transform: scaleX(var(--row-s, 1)) !important;
+        }
+        .pattern,
+        .gap-item,
+        .cta-panel,
+        .res-hero {
+          break-inside: avoid;
         }
         .cta-panel {
           background: var(--bg2);
@@ -407,10 +489,6 @@
         .cta-panel p {
           color: var(--gray);
         }
-        .pillar-fill,
-        .dial-ring {
-          transition: none;
-        }
       }
     </style>
   </head>
@@ -419,25 +497,27 @@
 
     <article class="sheet">
       <div data-sheet-masthead></div>
+      <div data-sheet-hero></div>
 
       <!-- ============ INTRO ============ -->
       <section class="step on" id="step-intro">
         <div class="pad">
-          <div class="eyebrow">Session tool 01 · Self-assessment</div>
-          <h1 class="doc-title">The Executive <em>Wealth Score</em></h1>
+          <div class="eyebrow">Session tool 01 · Scored assessment</div>
+          <h1 class="doc-title" tabindex="-1" data-focus>Your <em>Wealth Score</em></h1>
           <p class="lede">
-            Eighteen questions. About three minutes. It does not measure how much you have —
-            it measures how <strong>deliberately</strong> what you have is working, across the six
-            areas that decide whether a strong income becomes lasting wealth.
+            Eighteen questions, about three minutes. It scores how deliberately your money is
+            organised — not how much of it you have.
           </p>
 
-          <div class="grid g3" style="margin: 38px 0 34px">
+          <div class="card card-green" id="resume" hidden style="margin-top: 32px"></div>
+
+          <div class="grid g3" style="margin: 36px 0 0">
             <div class="card card-tint">
               <div class="stat">
                 <span class="k">Takes</span><span class="figure fig-lg">3 min</span>
               </div>
               <p class="small muted" style="margin-top: 10px">
-                18 questions across 6 areas, plus two about your horizon.
+                Eighteen questions across six areas, plus two about your horizon.
               </p>
             </div>
             <div class="card card-tint">
@@ -458,28 +538,42 @@
             </div>
           </div>
 
-          <div class="card" style="margin-bottom: 30px">
-            <h3 class="step-h">How it is scored</h3>
-            <p class="small muted" style="margin-bottom: 18px">
-              Each question has three answers worth 1, ½ or 0. Each area carries a weight, because
-              they do not matter equally when you are in your peak earning years. The weights add to 100.
-            </p>
-            <div class="row" id="weights-preview"></div>
+          <!-- How it is scored, with the weights as a single bar -->
+          <div class="lm-aside" style="--lm-aside-pos: 50% 42%">
+            <div class="lm-aside-img">
+              <img
+                src="../assets/img/photo/women-financial-planning-documents-home.webp"
+                alt=""
+                loading="lazy"
+                decoding="async"
+              />
+            </div>
+            <div>
+              <h2 class="aside-h">How it is scored</h2>
+              <p class="small muted">
+                Each question has three answers, worth 1, ½ or 0. An area's score is the average of
+                its three answers, multiplied by that area's weight. The six weights add to 100 —
+                they are not equal, because these areas do not matter equally during peak earning
+                years.
+              </p>
+              <div id="weights-bar" style="margin-top: 22px"></div>
+            </div>
           </div>
 
           <div class="disclaimer" style="margin-bottom: 32px">
-            <b>What this is and is not.</b> This is an educational self-assessment. It records
-            your own view of your arrangements — not a review of your finances, not a measure of
-            financial health, and not personal advice. It does not consider your objectives,
-            financial situation or needs, and no answer leads to a product recommendation.
-            There is no good or bad score. The score exists to show you which questions deserve
-            a closer look.
+            <b>What this is and is not.</b> This is an educational self-assessment. It records your
+            own view of your arrangements — not a review of your finances, not a measure of financial
+            health, and not personal advice. It does not consider your objectives, financial
+            situation or needs, and no answer leads to a product recommendation. There is no good or
+            bad score. The score exists to show you which questions deserve a closer look.
           </div>
 
           <button class="btn btn-primary" data-go="0">
-            Start the assessment
-            <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                 stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <span data-start-label>Start the assessment</span>
+            <svg
+              width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+              stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"
+            >
               <path d="M5 12h14M12 5l7 7-7 7" />
             </svg>
           </button>
@@ -492,28 +586,27 @@
       <!-- ============ RESULT ============ -->
       <section class="step" id="step-result">
         <div class="pad">
+          <div class="lm-photoband band-lead">
+            <img
+              src="../assets/img/photo/diverse-professionals-seminar-listening.webp"
+              alt=""
+              loading="lazy"
+              decoding="async"
+            />
+            <p>
+              Written for a room of senior leaders — and built to be answered
+              <em>honestly</em>, not impressively.
+            </p>
+            <span class="lm-band-k">Executive financial wellbeing session · General information only</span>
+          </div>
+
           <div class="eyebrow">Your result</div>
 
-          <div class="score-hero">
-            <div class="dial">
-              <svg width="220" height="220" viewBox="0 0 220 220" aria-hidden="true">
-                <circle cx="110" cy="110" r="96" fill="none" stroke="#e6ecec" stroke-width="14" />
-                <circle
-                  id="dial-ring"
-                  class="dial-ring"
-                  cx="110" cy="110" r="96"
-                  fill="none" stroke="#135f69" stroke-width="14" stroke-linecap="round"
-                  stroke-dasharray="603.2" stroke-dashoffset="603.2"
-                />
-              </svg>
-              <div class="dial-face">
-                <span class="dial-num" id="dial-num">0</span>
-                <span class="dial-of">out of 100</span>
-              </div>
-            </div>
+          <div class="res-hero">
+            <div id="gauge"></div>
             <div>
-              <span class="badge badge-teal" id="band-tag"><i class="d"></i><span></span></span>
-              <h2 class="band-name" id="band-name">—</h2>
+              <span class="badge badge-teal" id="band-tag"><i class="d"></i><span id="band-tag-t"></span></span>
+              <h2 class="band-name" id="band-name" tabindex="-1" data-focus>—</h2>
               <p class="band-copy" id="band-copy"></p>
             </div>
           </div>
@@ -523,10 +616,13 @@
           <div class="sec-head">
             <h2>Where the score came from</h2>
             <p>
-              Six areas, weighted. The shape of this profile matters more than the total — a high
-              score in one area rarely compensates for a low one in another.
+              Weakest area first. Each track is as long as that area's weight, and the fill is the
+              share of that weight your answers earned — so the coloured length is the points the
+              area contributed. The shape matters more than the total: a strong area rarely
+              compensates for a weak one.
             </p>
           </div>
+          <div class="row res-poles" id="poles"></div>
           <div id="pillars"></div>
 
           <hr class="rule" />
@@ -553,24 +649,32 @@
             <h3>The one question worth taking further</h3>
             <p id="one-question" style="margin-bottom: 24px"></p>
             <div class="row no-print">
-              <a class="btn btn-primary" href="https://www.prospafinancial.com.au" target="_blank" rel="noopener noreferrer">
+              <a
+                class="btn btn-primary"
+                href="https://www.prospafinancial.com.au"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
                 Book a complimentary consultation
               </a>
               <button class="btn btn-ghost" style="color: #fff" data-print>
                 Print or save as PDF
               </button>
             </div>
-            <p class="tiny" style="margin-top: 18px; color: #9fbdc0">
-              A confidential, no-obligation conversation. Bring this page — the gaps above are the agenda.
+            <p class="tiny" style="margin-top: 18px">
+              A confidential, no-obligation conversation. Bring this page — the gaps above are the
+              agenda.
             </p>
           </div>
 
           <div class="row no-print" style="margin-top: 28px">
             <button class="btn btn-outline btn-sm" data-restart>Start again</button>
             <a class="btn btn-ghost btn-sm" href="02-freedom-number.html">
-              Next: calculate your Financial Freedom Number
-              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                   stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              Next: your Freedom Score
+              <svg
+                width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"
+              >
                 <path d="M5 12h14M12 5l7 7-7 7" />
               </svg>
             </a>
@@ -591,26 +695,34 @@
 
     <script type="module">
       import { mountSheet, wirePrint, store } from '../assets/sheet.js'
+      import { scoreGauge, progressRows, breakdownBar, metricStrip, stepper, TONE } from '../assets/widgets.js'
 
-      mountSheet({ no: '01', kind: 'Scored assessment' })
+      mountSheet({
+        no: '01',
+        kind: 'Scored assessment',
+        hero: { src: 'art/01-score-rings.webp', alt: '', variant: 'art', pos: '22% 45%' },
+      })
 
       /* ==========================================================
          THE MODEL
          Six areas. Weights total 100. Three questions each,
          answered 1 / 0.5 / 0. Area points = mean(answers) × weight.
-         The full specification lives in SCORING.md.
+         The full specification lives in SCORING.md. Neither the
+         weights nor the band thresholds below may change without
+         updating that document.
          ========================================================== */
 
       const PILLARS = [
         {
           id: 'cashflow',
           name: 'Cash Flow & Surplus',
+          short: 'Cash flow',
           blurb: 'What your income actually leaves behind',
           weight: 18,
           why: 'Surplus is the raw material. Without it, every other area is theoretical.',
           questions: [
             {
-              q: 'Do you know how much surplus cash flow you create each year, after tax, lifestyle and debt commitments?',
+              q: 'Do you know how much surplus you create each year, after tax, lifestyle and debt?',
               opts: [
                 ['I know the number and I track it.', 1],
                 ['Roughly — I could estimate it within reason.', 0.5],
@@ -628,7 +740,7 @@
               gap: 'Lifestyle expands to meet income unless something structural stops it. Automation is the difference between intending to invest and investing.',
             },
             {
-              q: 'Do you have a deliberate plan for bonuses, incentives or other irregular income?',
+              q: 'Do you have a deliberate plan for bonuses, incentives and other irregular income?',
               opts: [
                 ['Yes — it is decided before the money arrives.', 1],
                 ['I decide at the time, case by case.', 0.5],
@@ -641,12 +753,13 @@
         {
           id: 'super',
           name: 'Superannuation',
+          short: 'Super',
           blurb: 'The most tax-effective structure you already own',
           weight: 15,
           why: 'For most high earners this is the largest asset outside the home — and the least examined.',
           questions: [
             {
-              q: 'Is your current contribution strategy making effective use of the opportunities available to you?',
+              q: 'Is your contribution strategy making effective use of the opportunities available to you?',
               opts: [
                 ['Yes — I have reviewed caps, salary sacrifice and carry-forward.', 1],
                 ['I contribute above the minimum, but have not reviewed it recently.', 0.5],
@@ -655,7 +768,7 @@
               gap: 'Concessional caps are use-it-or-lose-it, with a limited carry-forward window. Unused capacity quietly expires each year.',
             },
             {
-              q: 'Do you know what your super is invested in, the level of risk you are taking and the fees you pay?',
+              q: 'Do you know what your super is invested in, the risk you are taking and the fees you pay?',
               opts: [
                 ['Yes — option, underlying asset mix and fees.', 1],
                 ['I know my option name, not the detail behind it.', 0.5],
@@ -677,12 +790,13 @@
         {
           id: 'structure',
           name: 'Investments & Structure',
+          short: 'Structure',
           blurb: 'Not what you own — where it is held, and why',
           weight: 20,
           why: 'At high marginal rates, the ownership structure can matter as much as the investment itself.',
           questions: [
             {
-              q: 'Are your investments held in structures chosen deliberately for your goals, tax position, access needs and family circumstances?',
+              q: 'Are your investments held in structures chosen deliberately for your goals, tax position, access needs and family?',
               opts: [
                 ['Yes — each holding sits where it does for a reason.', 1],
                 ['Partly. Some were deliberate; some simply happened.', 0.5],
@@ -713,6 +827,7 @@
         {
           id: 'freedom',
           name: 'Financial Independence',
+          short: 'Freedom',
           blurb: 'The number, the date, and the years in between',
           weight: 20,
           why: 'Without a destination, there is no way to know whether the strategy is working.',
@@ -727,7 +842,7 @@
               gap: 'Everything else is arithmetic once this number exists. Without it, "enough" stays permanently undefined — and therefore never reached.',
             },
             {
-              q: 'Do you know approximately how much investable capital that lifestyle would require?',
+              q: 'Do you know roughly how much investable capital that lifestyle would require?',
               opts: [
                 ['Yes — I know my target capital figure.', 1],
                 ['I have seen rules of thumb, but have not run my own.', 0.5],
@@ -736,7 +851,7 @@
               gap: 'The capital figure is usually larger than people expect, and the earlier it is known the more options remain for closing the distance.',
             },
             {
-              q: 'Do you have a plan for the years between your preferred work-optional age and the age you can access super?',
+              q: 'Do you have a plan for the years between your work-optional age and the age you can access super?',
               opts: [
                 ['Yes — I know what funds that period.', 1],
                 ['I have thought about it, but not planned it.', 0.5],
@@ -749,6 +864,7 @@
         {
           id: 'protection',
           name: 'Protection & Resilience',
+          short: 'Protection',
           blurb: 'What happens if the income stops',
           weight: 15,
           why: 'For a high earner still accumulating, future income is the largest asset on the balance sheet.',
@@ -763,7 +879,7 @@
               gap: 'The gap between income stopping and a benefit starting is funded from somewhere. If it is not planned, it is funded by selling something at the worst possible time.',
             },
             {
-              q: 'Have you reviewed life, TPD, trauma and income protection against your current income, debt and family responsibilities?',
+              q: 'Have you reviewed life, TPD, trauma and income protection against your current income, debt and family?',
               opts: [
                 ['Yes — reviewed within the last two years.', 1],
                 ['I have cover, but it has been years since I checked it.', 0.5],
@@ -785,12 +901,13 @@
         {
           id: 'estate',
           name: 'Estate & Legacy',
+          short: 'Estate',
           blurb: 'Where it all actually lands',
           weight: 12,
           why: 'The least urgent area, and the one where mistakes are discovered by someone else.',
           questions: [
             {
-              q: 'Are your will, powers of attorney and super beneficiary nominations current and aligned with each other?',
+              q: 'Are your will, powers of attorney and super beneficiary nominations current and aligned?',
               opts: [
                 ['Yes — all three, reviewed recently.', 1],
                 ['A will exists, but the rest is unclear or out of date.', 0.5],
@@ -808,7 +925,7 @@
               gap: 'Superannuation is not automatically an estate asset, and jointly held property can pass outside a will entirely. A will alone often does not control the largest assets.',
             },
             {
-              q: 'Have you considered how you want wealth to support the next generation, rather than simply what they may inherit?',
+              q: 'Have you considered how you want wealth to support the next generation, not simply what they inherit?',
               opts: [
                 ['Yes — the intent is clear and documented.', 1],
                 ['I have views, but nothing is set up.', 0.5],
@@ -939,24 +1056,60 @@
       const FLAT = PILLARS.flatMap((p) =>
         p.questions.map((q, qi) => ({ ...q, pid: p.id, pname: p.name, qi, w: p.weight }))
       )
+      const TOTAL_Q = FLAT.length
       const saved = store('wealth-score')
       const state = { answers: {}, currentAge: 45, targetAge: 58 }
 
+      const el = (id) => document.getElementById(id)
+
+      /* Replace a widget's mount point with an empty node carrying the
+         same id, and return it.
+
+         The shared widgets animate once, when an IntersectionObserver
+         first sees the element they were handed, and widgets.js keeps a
+         module-level WeakSet of the elements it has already played. A
+         second render into the same node is therefore silently dropped:
+         the widget rewrites its markup, re-registers, and the observer
+         refuses to fire again. On this page that means a reader who
+         reaches the result, goes Back, then returns — which the Back
+         buttons and the resume card both invite — would see a gauge
+         reading 0 beside a badge reading their real score, and six
+         empty bars. Handing each render a node the module has never
+         seen keeps every measurement honest on every visit. */
+      function freshMount(id) {
+        const old = el(id)
+        const next = document.createElement(old.tagName)
+        next.id = id
+        old.replaceWith(next)
+        return next
+      }
+
+      /* A single teal-to-green ramp for the six weights. These are the
+         widget vocabulary's own tones, not new brand colours, and the
+         legend carries every name and figure so colour is never the
+         only channel. */
+      const RAMP = [TONE.tealDeep, TONE.teal, TONE.tealSoft, TONE.greenDeep, TONE.green, 'var(--accent)']
+
+      /* The rail's labels. Short, because seven chips share one row. */
+      const STEPS = ['Horizon', ...PILLARS.map((p) => p.short)]
+
+      /* Independence carries the horizon tile on the result page. */
+      const FREEDOM_W = PILLARS.find((p) => p.id === 'freedom').weight
+
       /* ===================== BUILD THE QUIZ ==================== */
 
-      const quiz = document.getElementById('quiz')
+      const quiz = el('quiz')
       const totalSteps = PILLARS.length + 1
 
-      const progressHTML = (label, n) => `
+      const qnavHTML = (i, label) => `
         <div class="quiz-top no-print">
-          <div class="progress">
-            <div class="progress-meta">
-              <span>${label}</span>
-              <span>Step <b>${n}</b> of ${totalSteps}</span>
-            </div>
-            <div class="progress-track">
-              <div class="progress-fill" style="transform: scaleX(${n / totalSteps})"></div>
-            </div>
+          <ol class="w-stepper qnav-rail" id="qnav-${i}" aria-label="Assessment progress"></ol>
+          <div class="qnav-foot">
+            <span class="qnav-k">Step <b>${i + 1}</b> of ${totalSteps} · ${label}</span>
+            <span class="qnav-k qnav-right"><b data-answered>0</b> of ${TOTAL_Q} answered</span>
+          </div>
+          <div class="progress-track">
+            <div class="progress-fill" data-fill></div>
           </div>
         </div>`
 
@@ -965,16 +1118,24 @@
       horizon.className = 'step'
       horizon.id = 'step-0'
       horizon.innerHTML = `
-        ${progressHTML('Your horizon', 1)}
+        ${qnavHTML(0, 'Your horizon')}
         <div class="pad">
           <div class="eyebrow">First, two about timing</div>
-          <h2 class="sec-head" style="font-size: 30px; letter-spacing: -0.025em; margin-bottom: 14px">
-            When would you like work to become a choice?
-          </h2>
-          <p class="lede" style="margin-bottom: 36px">
-            These two answers are not scored. They set the context for the rest, because the
-            distance between these ages decides which questions matter most.
-          </p>
+          <div class="lm-aside lm-aside--flip" style="--lm-aside-ar: 5 / 4; --lm-aside-pos: 50% 40%">
+            <div class="lm-aside-img">
+              <img src="../assets/img/photo/senior-couple-coastal-hike-ocean-vista.webp"
+                   alt="" loading="lazy" decoding="async" />
+            </div>
+            <div>
+              <h2 class="step-title" tabindex="-1" data-focus>
+                When would you like work to become a choice?
+              </h2>
+              <p class="lede">
+                These two answers are not scored. They set the context for everything after them:
+                the distance between these ages decides which questions matter most.
+              </p>
+            </div>
+          </div>
           <div class="horizon">
             <div class="field">
               <label for="age-now">Your age today</label>
@@ -988,7 +1149,7 @@
             </div>
           </div>
           <div class="card card-tint" style="margin-top: 26px">
-            <p class="small" id="horizon-live"></p>
+            <p class="small" id="horizon-live" aria-live="polite"></p>
           </div>
           <div class="nav-row">
             <button class="btn btn-ghost btn-sm" data-go="-1">Back</button>
@@ -1014,7 +1175,7 @@
             const opts = q.opts
               .map(
                 ([label, v]) => `
-                  <button type="button" class="opt" role="button" aria-pressed="false"
+                  <button type="button" class="opt" aria-pressed="false"
                           data-q="${p.id}:${qi}" data-v="${v}">
                     <span class="mark" aria-hidden="true"></span>
                     <span>${label}</span>
@@ -1022,7 +1183,7 @@
               )
               .join('')
             return `
-              <div class="q">
+              <div class="q" data-qk="${p.id}:${qi}">
                 <div class="q-head">
                   <span class="num">${String(n).padStart(2, '0')}</span>
                   <p>${q.q}</p>
@@ -1033,18 +1194,16 @@
           .join('')
 
         sec.innerHTML = `
-          ${progressHTML(p.name, pi + 2)}
+          ${qnavHTML(pi + 1, p.name)}
           <div class="pad">
             <div class="eyebrow">Area ${pi + 1} of 6 · Weighted ${p.weight} of 100</div>
-            <h2 class="sec-head" style="font-size: 30px; letter-spacing: -0.025em; margin-bottom: 12px">
-              ${p.name}
-            </h2>
+            <h2 class="step-title" tabindex="-1" data-focus>${p.name}</h2>
             <p class="lede">${p.why}</p>
             ${qs}
             <div class="nav-row">
               <button class="btn btn-ghost btn-sm" data-go="${pi}">Back</button>
               <div class="row">
-                <span class="nav-note" data-remaining="${p.id}"></span>
+                <span class="nav-note" data-remaining="${p.id}" aria-live="polite"></span>
                 <button class="btn btn-primary" data-go="${pi + 2}" data-next="${p.id}" disabled>
                   ${pi === PILLARS.length - 1 ? 'See my score' : 'Continue'}
                   <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor"
@@ -1058,18 +1217,28 @@
         quiz.appendChild(sec)
       })
 
-      /* ===================== INTERACTION ====================== */
+      /* ================= INTRO: THE WEIGHTS =================== */
 
-      // Weight chips on the intro
-      document.getElementById('weights-preview').innerHTML = PILLARS.map(
-        (p) => `<span class="badge badge-teal"><i class="d"></i>${p.name} · ${p.weight}</span>`
-      ).join('')
+      breakdownBar(
+        el('weights-bar'),
+        PILLARS.map((p, i) => ({ label: p.name, value: p.weight, color: RAMP[i] })),
+        { showValue: false }
+      )
+
+      /* ===================== NAVIGATION ====================== */
 
       const steps = () => Array.from(document.querySelectorAll('.step'))
 
-      function show(n) {
+      /* `focus` is held back for the result step: its heading is still the
+         "—" placeholder until render() writes the band name, and focusing
+         a heading that says nothing announces nothing. The caller focuses
+         it once it has words. */
+      function show(n, focus = true) {
         const id = n === -1 ? 'step-intro' : n === totalSteps ? 'step-result' : 'step-' + n
         steps().forEach((s) => s.classList.toggle('on', s.id === id))
+        // Paint the rail for the step we have just entered.
+        if (n >= 0 && n < totalSteps) stepper(el('qnav-' + n), STEPS, n)
+        if (focus) document.querySelector('#' + id + ' [data-focus]')?.focus({ preventScroll: true })
         window.scrollTo({ top: 0, behavior: 'smooth' })
       }
 
@@ -1077,8 +1246,14 @@
         const go = e.target.closest('[data-go]')
         if (go) {
           const n = Number(go.dataset.go)
-          if (n === totalSteps) render()
-          show(n)
+          const isResult = n === totalSteps
+          show(n, !isResult)
+          // Render after the section is visible, so the widgets'
+          // intersection observers have something to measure.
+          if (isResult) {
+            render()
+            el('band-name').focus({ preventScroll: true })
+          }
           return
         }
         const opt = e.target.closest('.opt')
@@ -1089,6 +1264,8 @@
           opt.setAttribute('aria-pressed', 'true')
           save()
           refreshGate(pid)
+          syncProgress()
+          return
         }
         if (e.target.closest('[data-restart]')) {
           saved.clear()
@@ -1103,20 +1280,36 @@
         const btn = document.querySelector(`[data-next="${pid}"]`)
         const note = document.querySelector(`[data-remaining="${pid}"]`)
         if (btn) btn.disabled = left > 0
-        if (note) note.textContent = left > 0 ? `${left} to go` : ''
+        if (note) note.textContent = left > 0 ? `${left} to go` : 'All three answered'
+        p.questions.forEach((_, i) => {
+          const row = document.querySelector(`.q[data-qk="${pid}:${i}"]`)
+          if (row) row.classList.toggle('done', state.answers[`${pid}:${i}`] !== undefined)
+        })
       }
 
-      // Horizon sliders
-      const ageNow = document.getElementById('age-now')
-      const ageTarget = document.getElementById('age-target')
+      /* The bar measures answers, not screens: it moves under the
+         reader's finger on every tap rather than once per page. */
+      function syncProgress() {
+        const n = Object.keys(state.answers).length
+        document.querySelectorAll('[data-answered]').forEach((e) => (e.textContent = String(n)))
+        document
+          .querySelectorAll('[data-fill]')
+          .forEach((e) => (e.style.transform = `scaleX(${(n / TOTAL_Q).toFixed(4)})`))
+      }
+
+      /* ===================== HORIZON ========================= */
+
+      const ageNow = el('age-now')
+      const ageTarget = el('age-target')
+
       function syncHorizon() {
         state.currentAge = Number(ageNow.value)
         state.targetAge = Number(ageTarget.value)
-        document.getElementById('age-now-val').textContent = state.currentAge
-        document.getElementById('age-target-val').textContent = state.targetAge
+        el('age-now-val').textContent = state.currentAge
+        el('age-target-val').textContent = state.targetAge
         const years = Math.max(state.targetAge - state.currentAge, 0)
         const gap = Math.max(60 - state.targetAge, 0)
-        document.getElementById('horizon-live').innerHTML =
+        el('horizon-live').innerHTML =
           years === 0
             ? 'You are at or past the age you nominated. The questions that follow are about whether the arrangements support that choice today.'
             : `That gives you <b>${years} ${years === 1 ? 'year' : 'years'}</b> of deliberate decisions before your target date.` +
@@ -1132,7 +1325,8 @@
         saved.write({ answers: state.answers, currentAge: state.currentAge, targetAge: state.targetAge })
       }
 
-      // Restore a part-finished assessment
+      /* ================ RESTORE AND RESUME =================== */
+
       const prev = saved.read()
       if (prev && prev.answers) {
         Object.assign(state.answers, prev.answers)
@@ -1141,13 +1335,41 @@
         ageNow.value = state.currentAge
         ageTarget.value = state.targetAge
         Object.entries(state.answers).forEach(([k, v]) => {
-          const el = document.querySelector(`.opt[data-q="${k}"][data-v="${v}"]`)
-          if (el) el.setAttribute('aria-pressed', 'true')
+          const node = document.querySelector(`.opt[data-q="${k}"][data-v="${v}"]`)
+          if (node) node.setAttribute('aria-pressed', 'true')
         })
-        PILLARS.forEach((p) => refreshGate(p.id))
       }
       syncHorizon()
       PILLARS.forEach((p) => refreshGate(p.id))
+      syncProgress()
+      stepper(el('qnav-0'), STEPS, 0)
+
+      // A part-finished sheet offers to pick up where it stopped,
+      // rather than making the reader walk back through six screens.
+      const answeredCount = Object.keys(state.answers).length
+      if (answeredCount > 0) {
+        const firstGap = PILLARS.findIndex((p) =>
+          p.questions.some((_, i) => state.answers[`${p.id}:${i}`] === undefined)
+        )
+        const complete = firstGap === -1
+        const target = complete ? totalSteps : firstGap + 1
+        const resume = el('resume')
+        resume.hidden = false
+        resume.innerHTML = `
+          <h3 class="step-h">This sheet is part-finished</h3>
+          <p class="small muted" style="margin: 8px 0 20px">
+            ${answeredCount} of ${TOTAL_Q} answered, saved in this browser only.
+            ${complete ? 'Every question has an answer.' : `Pick up at ${PILLARS[firstGap].name}.`}
+          </p>
+          <div class="row">
+            <button class="btn btn-primary btn-sm" data-go="${target}">
+              ${complete ? 'See my score' : 'Resume where I left off'}
+            </button>
+            <button class="btn btn-outline btn-sm" data-restart>Clear and start over</button>
+          </div>`
+        const label = document.querySelector('[data-start-label]')
+        if (label) label.textContent = 'Start from the beginning'
+      }
 
       /* ======================= SCORING ======================== */
 
@@ -1164,83 +1386,122 @@
         return { fractions, score: Math.round(total), overall }
       }
 
+      /* The share of an area's weight the answers earned. A deliberately
+         cool ramp: the sheet says there is no good or bad score, so the
+         lowest step is amber, not alarm. */
       function barColour(f) {
         if (f >= 0.75) return 'var(--green)'
         if (f >= 0.5) return 'var(--teal)'
-        if (f >= 0.25) return 'var(--amber)'
-        return 'var(--ember)'
+        if (f >= 0.25) return TONE.tealSoft
+        return 'var(--amber)'
       }
+
+      const GAUGE_R = 84 // the scoreGauge arc's radius, for the print fallback
+      let lastScore = 0
 
       function render() {
         const { fractions, score, overall } = compute()
         const ctx = { overall, targetAge: state.targetAge, currentAge: state.currentAge }
         const band = BANDS.find((b) => score >= b.min && score <= b.max) || BANDS[0]
+        lastScore = score
 
-        // Dial
-        const C = 2 * Math.PI * 96
-        const ring = document.getElementById('dial-ring')
-        ring.setAttribute('stroke-dasharray', C.toFixed(1))
-        ring.setAttribute('stroke-dashoffset', C.toFixed(1))
-        ring.setAttribute('stroke', barColour(overall))
-        requestAnimationFrame(() =>
-          setTimeout(() => ring.setAttribute('stroke-dashoffset', (C * (1 - score / 100)).toFixed(1)), 60)
-        )
+        /* ---- Headline: the house gauge ---- */
+        const gaugeEl = freshMount('gauge')
+        scoreGauge(gaugeEl, {
+          value: score,
+          max: 100,
+          unit: 'out of 100',
+          caption: 'Six weighted areas. The shape of the profile says more than the total.',
+        })
+        /* The widget builds its own label as "<value> of <max> <unit>",
+           which with this unit reads "51 of 100 out of 100". Say it once. */
+        gaugeEl
+          .querySelector('svg')
+          ?.setAttribute('aria-label', `Wealth Score: ${score} out of 100`)
 
-        // Count the number up
-        const num = document.getElementById('dial-num')
-        const t0 = performance.now()
-        const tick = (t) => {
-          const k = Math.min((t - t0) / 1100, 1)
-          num.textContent = Math.round(score * (1 - Math.pow(1 - k, 3)))
-          if (k < 1) requestAnimationFrame(tick)
-        }
-        requestAnimationFrame(tick)
+        el('band-tag-t').textContent = `${score} of 100`
+        el('band-name').textContent = band.name
+        el('band-copy').textContent = band.copy
 
-        document.getElementById('band-name').textContent = band.name
-        document.getElementById('band-copy').textContent = band.copy
-        const tag = document.getElementById('band-tag')
-        tag.querySelector('span').textContent = `${score} of 100`
+        /* ---- The six areas, weakest first ----
+           progressRows scales every bar against the largest row, which
+           would draw an 83%-complete area as full. So each track is cut
+           to its own weight and each fill is driven by that area's
+           completeness instead: the track is the ceiling, the fill is
+           the answer, and the coloured length is still the points
+           contributed — all three readings agree.
 
-        // Pillars, weakest first so the eye lands on the gap. Equal fractions —
-        // including an all-green or all-red sheet — resolve to the heavier area,
-        // so a tie never surfaces an arbitrary one.
+           data-s is read inside the widget's own requestAnimationFrame,
+           so rewriting it here lands before the bar is ever drawn and
+           the reveal animation is left intact. */
         const ordered = [...PILLARS].sort(
           (a, b) => fractions[a.id] - fractions[b.id] || b.weight - a.weight
         )
-        document.getElementById('pillars').innerHTML = ordered
-          .map((p) => {
+        const maxWeight = Math.max(...PILLARS.map((p) => p.weight))
+        const pillarsEl = freshMount('pillars')
+        progressRows(
+          pillarsEl,
+          ordered.map((p) => {
             const f = fractions[p.id]
             const pts = (f * p.weight).toFixed(1).replace(/\.0$/, '')
-            return `
-              <div class="pillar">
-                <div class="pillar-name">${p.name}<span>${p.blurb}</span></div>
-                <div class="pillar-pts">${pts} / ${p.weight}</div>
-                <div class="pillar-track">
-                  <div class="pillar-fill" style="background:${barColour(f)}"
-                       data-scale="${f.toFixed(3)}"></div>
-                </div>
-              </div>`
+            return {
+              label: p.name,
+              value: f * p.weight,
+              display: `${pts} / ${p.weight}`,
+              color: barColour(f),
+              /* Not "% complete": every question in every area has been
+                 answered by the time this page exists — the gate enforces
+                 it. This figure is the share of the area's weight the
+                 answers earned, which is what the bar draws. */
+              note: `${Math.round(f * 100)}% of this area · ${p.blurb}`,
+            }
           })
-          .join('')
-        requestAnimationFrame(() =>
-          setTimeout(() => {
-            document.querySelectorAll('.pillar-fill').forEach((el) => {
-              el.style.transform = `scaleX(${el.dataset.scale})`
-            })
-          }, 80)
         )
+        pillarsEl.querySelectorAll('.w-row').forEach((row, idx) => {
+          const f = fractions[ordered[idx].id].toFixed(3)
+          const track = row.querySelector('.w-row-track')
+          const fill = row.querySelector('.w-row-track i')
+          if (track) track.style.width = ((ordered[idx].weight / maxWeight) * 100).toFixed(2) + '%'
+          if (fill) {
+            fill.dataset.s = f
+            // Print forces every fill to full width; this hands each one
+            // its real scale back, so a saved PDF still tells the truth.
+            fill.style.setProperty('--row-s', f)
+          }
+          // The widget paints the figure in the bar's colour. A bar may be
+          // green or amber; 14px text may not be. Drop the inline colour so
+          // the figure falls back to the stylesheet's readable teal — the
+          // bar and the note beneath it already carry the signal.
+          const figure = row.querySelector('.w-row-top b')
+          if (figure) figure.removeAttribute('style')
+        })
 
-        // Patterns — at most two
+        /* ---- Strongest and furthest behind, named ---- */
+        const high = ordered[ordered.length - 1]
+        const low = ordered[0]
+        el('poles').innerHTML =
+          fractions[low.id] === fractions[high.id]
+            ? `<span class="badge badge-teal"><i class="d"></i>Every area scored the same</span>`
+            : `<span class="badge badge-green"><i class="d"></i>Strongest · ${high.name}</span>
+               <span class="badge badge-teal"><i class="d"></i>Furthest behind · ${low.name}</span>`
+
+        /* ---- Patterns — at most two ---- */
         const fired = PATTERNS.filter((p) => p.test(fractions, ctx)).slice(0, 2)
-        document.getElementById('patterns').innerHTML = (fired.length
+        el('patterns').innerHTML = (fired.length
           ? fired
           : [
               {
                 flag: false,
-                title: 'A balanced profile',
+                /* Not "A balanced profile". None of the rules firing means
+                   no relationship between areas stood out — it does not
+                   mean the areas are level, and this message is reached by
+                   profiles carrying a zeroed area. Saying "balanced" there
+                   would describe the reader's position back to them
+                   inaccurately, which this sheet must never do. */
+                title: 'No single pattern stands out',
                 body: [
-                  'No single relationship between your areas stands out as a pattern.',
-                  'That usually means the most useful next step is the lowest-scoring area below, taken on its own.',
+                  'No one relationship between your areas is strong enough to read as a pattern.',
+                  'That usually means the most useful next step is the lowest-scoring area above, taken on its own.',
                 ],
               },
             ]
@@ -1254,16 +1515,17 @@
           )
           .join('')
 
-        // Two widest gaps — lowest-scoring individual questions, ties broken by
-        // area weight. The second gap prefers a different area than the first:
-        // two gaps from one area read as the same note twice.
+        /* ---- Two widest gaps ----
+           Lowest-scoring individual questions, ties broken by area
+           weight. The second gap prefers a different area than the
+           first: two gaps from one area read as the same note twice. */
         const ranked = FLAT.map((q, i) => ({ ...q, v: state.answers[`${q.pid}:${q.qi}`] ?? 0, i })).sort(
           (a, b) => a.v - b.v || b.w - a.w || a.i - b.i
         )
         const widest = [ranked[0]]
         widest.push(ranked.slice(1).find((q) => q.pid !== ranked[0].pid) || ranked[1])
 
-        const gapsEl = document.getElementById('gaps')
+        const gapsEl = el('gaps')
         const gapsHead = gapsEl.previousElementSibling // the "Your two widest gaps" sec-head
         if (ranked[0].v === 1) {
           // Nothing was answered below "I know this is covered" — there are no gaps
@@ -1295,49 +1557,102 @@
             .join('')
         }
 
-        // Horizon note
+        /* ---- Horizon, as four figures ---- */
         const years = Math.max(state.targetAge - state.currentAge, 0)
         const gapYears = Math.max(60 - state.targetAge, 0)
-        const note = document.getElementById('horizon-note')
+        const certain = Object.values(state.answers).filter((v) => v === 1).length
+        const note = el('horizon-note')
         note.hidden = false
         note.innerHTML = `
           <h3 class="step-h">Your horizon, in numbers</h3>
-          <div class="grid g3" style="margin-top:18px">
-            <div class="stat"><span class="k">Years to your target</span><span class="figure fig-lg">${years}</span></div>
-            <div class="stat"><span class="k">Years before super unlocks</span><span class="figure fig-lg">${gapYears}</span></div>
-            <div class="stat"><span class="k">Independence score</span><span class="figure fig-lg">${(fractions.freedom * 20).toFixed(1).replace(/\.0$/, '')} / 20</span></div>
-          </div>
-          <p class="small muted" style="margin-top:18px">
+          <p class="small muted" style="margin: 8px 0 22px">
             ${
               gapYears > 0
                 ? `You would like work to become optional at ${state.targetAge}. Preservation age is 60 for everyone reaching it from 1 July 2024, so ${gapYears} ${gapYears === 1 ? 'year' : 'years'} of that period would need to be funded by capital held outside superannuation. That is the arithmetic behind the Gap Years Map.`
                 : `Your target sits at or after preservation age, so superannuation can form part of your income from the start. The question becomes how long it needs to last and how it is drawn.`
             }
-          </p>`
+          </p>
+          <div id="horizon-metrics"></div>`
 
-        // The one question — the weakest question inside the weakest area, so the
-        // sentence names one area and a question that actually belongs to it.
-        const lowest = ordered[0]
-        const lowestQ = FLAT.filter((q) => q.pid === lowest.id)
+        metricStrip(el('horizon-metrics'), [
+          {
+            label: 'Years to your target',
+            value: String(years),
+            note: `Age ${state.currentAge} to ${state.targetAge}`,
+          },
+          {
+            label: 'Years super cannot fund',
+            value: String(gapYears),
+            tone: gapYears > 0 ? 'warn' : 'good',
+            note: gapYears > 0 ? 'Funded from outside super' : 'Target at or after 60',
+          },
+          {
+            label: 'Independence area',
+            // Read from the model, not typed: a weight change in PILLARS
+            // (and SCORING.md) must not leave this tile quietly wrong.
+            value: `${(fractions.freedom * FREEDOM_W).toFixed(1).replace(/\.0$/, '')} / ${FREEDOM_W}`,
+            note: 'The area that prices this horizon',
+          },
+          {
+            label: 'Answers you were sure of',
+            value: `${certain} / ${TOTAL_Q}`,
+            tone: 'key',
+            note: 'The rest are the questions to ask',
+          },
+        ])
+
+        /* ---- The one question ----
+           The weakest question inside the weakest area, so the
+           sentence names one area and a question that belongs to it. */
+        const lowestQ = FLAT.filter((q) => q.pid === low.id)
           .map((q) => ({ ...q, v: state.answers[`${q.pid}:${q.qi}`] ?? 0 }))
           .sort((a, b) => a.v - b.v || a.qi - b.qi)[0]
-        document.getElementById('one-question').textContent =
+        el('one-question').textContent =
           ranked[0].v === 1
             ? `Nothing on this sheet is uncertain, so the question is not what to fix. It is this: “${lowestQ.q.replace(
                 /\?$/,
                 ''
               )}” — and whether that answer would still hold under conditions you have not yet faced.`
-            : `Your lowest-scoring area is ${lowest.name}. The question to take into a conversation is: “${lowestQ.q.replace(
+            : `Your lowest-scoring area is ${low.name}. The question to take into a conversation is: “${lowestQ.q.replace(
                 /\?$/,
                 ''
               )}” — and what it would take to answer that with certainty.`
 
-        document.getElementById('result-date').textContent = new Date().toLocaleDateString('en-AU', {
+        el('result-date').textContent = new Date().toLocaleDateString('en-AU', {
           day: 'numeric',
           month: 'long',
           year: 'numeric',
         })
       }
+
+      /* The gauge only animates once it is scrolled into view. If the
+         reader prints before that happens — or part-way through the
+         count — settle it to its final value so the PDF carries the
+         score rather than an empty arc or a number still on its way up.
+
+         Nothing here calls the widget's own __play: that would start the
+         1.4s arc sweep and the count at the moment we need both of them
+         finished. Both are written directly instead. */
+      window.addEventListener('beforeprint', () => {
+        const gauge = el('gauge')
+        if (!gauge) return
+        const arc = gauge.querySelector('.w-gauge-arc')
+        if (arc) {
+          const len = Math.PI * GAUGE_R
+          arc.style.transition = 'none'
+          arc.setAttribute('stroke-dashoffset', (len * (1 - Math.min(1, lastScore / 100))).toFixed(1))
+        }
+        const n = gauge.querySelector('.w-gauge-n')
+        if (n) {
+          /* A count started on scroll may still have frames queued, and
+             they would overwrite whatever we put here. Swap in a fresh
+             node so those frames land on the old, detached one and the
+             figure on paper is the score. */
+          const settled = n.cloneNode(false)
+          settled.textContent = String(lastScore)
+          n.replaceWith(settled)
+        }
+      })
 
       wirePrint()
     </script>

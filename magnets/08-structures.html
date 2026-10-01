@@ -3,10 +3,10 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Wealth Structures, Compared — Prospa Financial</title>
+    <title>Where Your Wealth Lives — Prospa Financial</title>
     <meta
       name="description"
-      content="Personal name, spouse, family trust, company, investment bond or super — how each behaves on income, on access, on sale and on death."
+      content="Super, your own name, a trust, a company — how each one treats the same investment on income, on access, on sale and on death."
     />
     <link rel="icon" type="image/svg+xml" href="../assets/favicon.svg" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -17,118 +17,621 @@
     />
     <link rel="stylesheet" href="../assets/prospa.css" />
     <style>
-      .matrix-scroll {
-        overflow-x: auto;
-        margin: 0 -4px;
-        padding: 0 4px 4px;
+      /* ==========================================================
+         08 · WHERE YOUR WEALTH LIVES — sheet-local styles only.
+         Nothing here is shared; every colour is a token.
+         ========================================================== */
+
+      /* ---------- 1 · One dollar, four homes ---------- */
+
+      .jwrap {
+        margin-top: 4px;
       }
-      .matrix {
-        width: 100%;
-        min-width: 820px;
-        border-collapse: collapse;
-        font-size: 13.5px;
+
+      .jfan-head {
+        display: flex;
+        justify-content: center;
       }
-      .matrix th {
-        text-align: left;
+
+      .jfan-chip {
+        display: inline-flex;
+        align-items: center;
+        gap: 9px;
+        padding: 9px 18px;
+        border-radius: var(--r-pill);
+        background: var(--bg1);
+        color: var(--green-600);
         font-size: 11px;
         font-weight: 600;
-        letter-spacing: 0.1em;
+        letter-spacing: 0.15em;
+        text-transform: uppercase;
+      }
+
+      .jfan-chip::before {
+        content: '';
+        width: 7px;
+        height: 7px;
+        border-radius: 50%;
+        background: var(--green);
+        flex: none;
+      }
+
+      /* The fan only earns its space when all four columns sit side
+         by side. Below that the columns stack and a fan would lie. */
+      .jfan {
+        display: none;
+        width: 100%;
+        height: auto;
+        margin-top: 4px;
+      }
+
+      .jfan path {
+        fill: none;
+        stroke: var(--teal);
+        stroke-width: 1.4;
+        stroke-linecap: round;
+        opacity: 0.45;
+        animation: jfan-draw 1s var(--ease) forwards;
+      }
+
+      .jfan path:nth-of-type(1),
+      .jfan path:nth-of-type(4) {
+        stroke-dasharray: 470;
+        stroke-dashoffset: 470;
+      }
+
+      .jfan path:nth-of-type(2),
+      .jfan path:nth-of-type(3) {
+        stroke-dasharray: 200;
+        stroke-dashoffset: 200;
+      }
+
+      .jfan path:nth-of-type(2) {
+        animation-delay: 0.08s;
+      }
+      .jfan path:nth-of-type(3) {
+        animation-delay: 0.16s;
+      }
+      .jfan path:nth-of-type(4) {
+        animation-delay: 0.24s;
+      }
+
+      .jfan circle {
+        fill: var(--teal);
+        opacity: 0;
+        animation: jfan-dot 0.4s var(--ease) 0.95s forwards;
+      }
+
+      @keyframes jfan-draw {
+        to {
+          stroke-dashoffset: 0;
+        }
+      }
+
+      @keyframes jfan-dot {
+        to {
+          opacity: 0.6;
+        }
+      }
+
+      @media (prefers-reduced-motion: reduce) {
+        .jfan path {
+          stroke-dashoffset: 0;
+          animation: none;
+        }
+        .jfan circle {
+          opacity: 0.6;
+          animation: none;
+        }
+      }
+
+      /* The moment filter */
+      .seg {
+        display: inline-flex;
+        flex-wrap: wrap;
+        gap: 4px;
+        margin: 0;
+        padding: 5px;
+        min-width: 0;
+        border: 1px solid var(--line);
+        border-radius: var(--r-pill);
+        background: var(--white);
+      }
+
+      .seg label {
+        display: inline-flex;
+        align-items: center;
+        padding: 8px 16px;
+        border-radius: var(--r-pill);
+        font-size: 12.5px;
+        font-weight: 600;
+        color: var(--gray);
+        white-space: nowrap;
+        cursor: pointer;
+        transition: background var(--dur-snap) var(--ease), color var(--dur-snap) var(--ease);
+      }
+
+      .seg label:hover {
+        color: var(--teal);
+      }
+
+      .seg input:checked + label {
+        background: var(--teal);
+        color: var(--white);
+      }
+
+      .seg input:focus-visible + label {
+        outline: 2px solid var(--teal);
+        outline-offset: 2px;
+      }
+
+      /* A pill that has wrapped onto two lines is no longer a pill.
+         On a phone it becomes an honest 2 × 2 block instead. */
+      @media screen and (max-width: 620px) {
+        .seg {
+          display: grid;
+          grid-template-columns: 1fr 1fr;
+          gap: 4px;
+          width: 100%;
+          border-radius: var(--r-md);
+        }
+        .seg label {
+          justify-content: center;
+          border-radius: var(--r-sm);
+        }
+      }
+
+      /* The two figures are a pair. Left as drawn, the longer phrase
+         on the right shouts over the number on the left. */
+      #cost-of-default .w-compare-v {
+        font-size: 24px;
+      }
+
+      #cost-of-default .w-compare-muted {
+        font-size: 19px;
+      }
+
+      @media screen and (max-width: 560px) {
+        #cost-of-default .w-compare-v {
+          font-size: 19px;
+        }
+        #cost-of-default .w-compare-muted {
+          font-size: 16px;
+        }
+      }
+
+      /* The four columns */
+      .jrn {
+        display: grid;
+        grid-template-columns: 1fr;
+        margin-top: 20px;
+        border-top: 1px solid var(--line);
+      }
+
+      .jcard {
+        display: flex;
+        flex-direction: column;
+        padding: 24px 0 26px;
+        border-bottom: 1px solid var(--line);
+      }
+
+      .jcard h3 {
+        font-size: 18px;
+        letter-spacing: -0.015em;
+      }
+
+      .jsub {
+        display: block;
+        margin-top: 6px;
+        font-family: 'JetBrains Mono', monospace;
+        font-size: 10.5px;
+        letter-spacing: 0.12em;
         text-transform: uppercase;
         color: var(--gray);
-        padding: 0 14px 12px 0;
+      }
+
+      .mo {
+        padding-top: 16px;
+        margin-top: 16px;
+        border-top: 1px solid var(--line-2);
+        transition: opacity var(--dur-base) var(--ease);
+      }
+
+      .mo-k {
+        display: flex;
+        align-items: center;
+        gap: 7px;
+        font-size: 10.5px;
+        font-weight: 600;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+        color: var(--teal);
+        margin-bottom: 8px;
+      }
+
+      .mo-k svg {
+        width: 15px;
+        height: 15px;
+        flex: none;
+      }
+
+      .mo p {
+        font-size: 14px;
+        line-height: 1.52;
+        color: var(--slate);
+      }
+
+      /* Focusing one moment quietens the other two. The default is
+         "all three", so nothing is dimmed until the reader asks. */
+      body:has(#mo-income:checked) .mo:not(.mo-income),
+      body:has(#mo-sale:checked) .mo:not(.mo-sale),
+      body:has(#mo-death:checked) .mo:not(.mo-death) {
+        opacity: 0.32;
+      }
+
+      .jnote {
+        margin-top: 20px;
+        font-size: 13px;
+        line-height: 1.6;
+        color: var(--gray);
+        max-width: 76ch;
+      }
+
+      .jnote a {
+        color: var(--teal);
+        font-weight: 600;
+        text-decoration: underline;
+        text-underline-offset: 2px;
+      }
+
+      @media screen and (min-width: 620px) {
+        .jrn {
+          grid-template-columns: 1fr 1fr;
+          column-gap: 32px;
+        }
+      }
+
+      @media screen and (min-width: 920px) {
+        .jfan {
+          display: block;
+        }
+        .jrn {
+          grid-template-columns: repeat(4, 1fr);
+          grid-template-rows: auto auto auto auto;
+          column-gap: 0;
+        }
+        /* Subgrid keeps "on income" level across all four columns,
+           so the sheet can be read across as well as down. Without
+           subgrid the rows simply sit at their own heights. */
+        .jcard {
+          display: grid;
+          grid-row: span 4;
+          grid-template-rows: subgrid;
+          padding: 26px 22px 28px;
+          border-bottom: 0;
+          border-left: 1px solid var(--line);
+        }
+        .jcard:first-child {
+          border-left: 0;
+          padding-left: 0;
+        }
+        .jcard:last-child {
+          padding-right: 0;
+        }
+        .mo {
+          margin-top: 0;
+          padding-top: 15px;
+          padding-bottom: 15px;
+        }
+      }
+
+      /* ---------- 2 · The aside's one warning ---------- */
+
+      .aside-h {
+        font-size: 26px;
+        letter-spacing: -0.02em;
+        margin-bottom: 12px;
+      }
+
+      /* The single warm accent on this sheet. */
+      .warn {
+        margin-top: 22px;
+        padding: 15px 19px;
+        border-left: 3px solid var(--ember);
+        border-radius: 0 var(--r-sm) var(--r-sm) 0;
+        background: var(--ember-soft);
+      }
+
+      .warn b {
+        display: block;
+        font-size: 10.5px;
+        font-weight: 600;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+        color: var(--ember-strong);
+        margin-bottom: 6px;
+      }
+
+      .warn p {
+        font-size: 14.5px;
+        line-height: 1.5;
+        color: var(--slate);
+      }
+
+      /* ---------- 3 · All six, side by side ---------- */
+
+      .cmp {
+        width: 100%;
+        border-collapse: collapse;
+        font-size: 14px;
+      }
+
+      .cmp th {
+        text-align: left;
+        font-size: 10.5px;
+        font-weight: 600;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+        color: var(--gray);
+        padding: 0 22px 13px 0;
         border-bottom: 1.5px solid var(--teal);
         vertical-align: bottom;
       }
-      .matrix th:first-child {
-        width: 150px;
+
+      .cmp th:first-child {
+        width: 21%;
       }
-      .matrix td {
-        padding: 16px 14px 16px 0;
+
+      .cmp th:last-child,
+      .cmp td:last-child {
+        padding-right: 0;
+      }
+
+      .cmp td {
+        padding: 19px 22px 19px 0;
         border-bottom: 1px solid var(--line-2);
         vertical-align: top;
         color: var(--slate);
-        line-height: 1.5;
+        line-height: 1.55;
       }
-      .matrix tr:last-child td {
+
+      .cmp tr:last-child td {
         border-bottom: none;
       }
-      .matrix .name {
+
+      .cmp .name {
         color: var(--ink);
         font-weight: 700;
-        font-size: 15px;
+        font-size: 15.5px;
+        line-height: 1.3;
       }
-      .matrix .name span {
+
+      .cmp .name span {
         display: block;
+        margin-top: 6px;
+        font-family: 'JetBrains Mono', monospace;
         font-weight: 400;
-        font-size: 12.5px;
+        font-size: 10.5px;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
         color: var(--gray);
-        margin-top: 4px;
       }
-      .scroll-hint {
-        font-size: 12px;
-        color: var(--gray);
-        margin-top: 10px;
+
+      /* The row label is real text, not generated content, so a
+         screen reader announces it in card mode. */
+      .cell-k {
+        display: none;
       }
+
+      /* Below 900px the table stops being a table and becomes one
+         card per structure. Scoped to `screen` on purpose: on paper
+         the page is narrower than 900px and must stay a table. */
+      @media screen and (max-width: 899px) {
+        .cmp,
+        .cmp tbody,
+        .cmp tr,
+        .cmp td {
+          display: block;
+          width: 100%;
+        }
+        .cmp thead {
+          display: none;
+        }
+        .cmp tr {
+          border: 1px solid var(--line);
+          border-radius: var(--r-lg);
+          padding: 24px;
+          margin-bottom: 14px;
+        }
+        .cmp tr:last-child {
+          margin-bottom: 0;
+        }
+        .cmp td,
+        .cmp tr:last-child td {
+          padding: 0;
+          border-bottom: 0;
+        }
+        .cmp td + td {
+          margin-top: 16px;
+          padding-top: 16px;
+          border-top: 1px solid var(--line-2);
+        }
+        .cmp .name {
+          font-size: 17px;
+        }
+        .cell-k {
+          display: block;
+          margin-bottom: 7px;
+          font-size: 10.5px;
+          font-weight: 600;
+          letter-spacing: 0.12em;
+          text-transform: uppercase;
+          color: var(--teal);
+        }
+      }
+
+      /* ---------- 4 · The trade-off in each ---------- */
 
       .struct {
         border: 1px solid var(--line);
         border-radius: var(--r-lg);
-        padding: 28px;
+        padding: 30px;
+        background: var(--white);
       }
+
       .struct h3 {
         font-size: 19px;
-        margin-bottom: 6px;
+        margin-bottom: 7px;
       }
+
       .struct .sub {
+        display: block;
+        margin-bottom: 18px;
         font-family: 'JetBrains Mono', monospace;
-        font-size: 11px;
-        letter-spacing: 0.1em;
+        font-size: 10.5px;
+        letter-spacing: 0.11em;
         text-transform: uppercase;
         color: var(--gray);
-        display: block;
-        margin-bottom: 16px;
       }
+
+      .struct .when {
+        margin-bottom: 20px;
+        padding: 13px 16px;
+        border-radius: var(--r-sm);
+        background: var(--bg2);
+        font-size: 13.5px;
+        line-height: 1.5;
+        color: var(--slate);
+      }
+
+      .struct .when b {
+        color: var(--teal);
+        font-weight: 600;
+      }
+
       .struct dl {
         margin: 0;
       }
+
       .struct dt {
-        font-size: 11px;
+        font-size: 10.5px;
         font-weight: 600;
-        letter-spacing: 0.1em;
+        letter-spacing: 0.12em;
         text-transform: uppercase;
         color: var(--teal);
-        margin-top: 16px;
+        margin-top: 18px;
       }
+
       .struct dt:first-child {
         margin-top: 0;
       }
-      .struct dd {
-        margin: 5px 0 0;
-        font-size: 14.5px;
-        color: var(--slate);
-      }
-      .struct dt.watch {
-        color: var(--ember-strong);
+
+      .struct dt.cost {
+        color: var(--gray);
       }
 
-      @media (max-width: 760px) {
+      .struct dd {
+        margin: 6px 0 0;
+        font-size: 14.5px;
+        line-height: 1.55;
+        color: var(--slate);
+      }
+
+      .struct dd.q {
+        color: var(--ink-2);
+        font-weight: 500;
+      }
+
+      @media screen and (max-width: 760px) {
         .struct {
-          padding: 22px;
+          padding: 24px;
         }
       }
+
+      /* ---------- 5 · Print ---------- */
+
       @media print {
-        .matrix-scroll {
-          overflow: visible;
+        .jfan,
+        .seg {
+          display: none !important;
         }
-        .matrix {
-          min-width: 0;
-          font-size: 8.5pt;
-        }
-        .scroll-hint {
+        .jfan-head {
           display: none;
         }
-        .struct {
+        .jrn {
+          display: grid;
+          grid-template-columns: 1fr 1fr;
+          column-gap: 16pt;
+          border-top: 1pt solid var(--line);
+        }
+        .jcard {
+          display: block;
+          padding: 9pt 0 10pt;
+          border-left: 0;
+          border-bottom: 1px solid var(--line);
           break-inside: avoid;
+        }
+        .jcard h3 {
+          font-size: 11pt;
+        }
+        .mo {
+          opacity: 1 !important;
+          margin-top: 7pt;
+          padding-top: 7pt;
+        }
+        .mo p {
+          font-size: 8.8pt;
+        }
+        .jnote {
+          font-size: 8pt;
+        }
+        .jnote a {
+          text-decoration: none;
+        }
+        /* Fixed layout so the name column cannot eat the page and
+           the three answers share what is left, evenly. */
+        .cmp {
+          font-size: 8.4pt;
+          table-layout: fixed;
+        }
+        .cmp th {
+          padding: 0 8pt 7pt 0;
+        }
+        .cmp th:first-child {
+          width: 17%;
+        }
+        .cmp td {
+          padding: 6pt 8pt 6pt 0;
+        }
+        .cmp .name {
+          font-size: 9.5pt;
+        }
+        .cmp .name span {
+          font-size: 6.6pt;
+        }
+        .cmp tr {
+          break-inside: avoid;
+        }
+        .struct .when {
+          margin-bottom: 10pt;
+          padding: 0 0 0 10pt;
+          border-left: 1px solid var(--line);
+          background: none;
+          border-radius: 0;
+        }
+        .struct {
+          padding: 10pt 0;
+          border: 0;
+          border-top: 1px solid var(--line);
+          border-radius: 0;
+          break-inside: avoid;
+        }
+        .warn {
+          background: none;
+          border-left: 2pt solid var(--line);
+        }
+        .warn b {
+          color: var(--slate);
         }
       }
     </style>
@@ -138,95 +641,362 @@
 
     <article class="sheet sheet-wide">
       <div data-sheet-masthead></div>
+      <div data-sheet-hero></div>
 
       <div class="pad">
         <div class="eyebrow">Session tool 08 · Comparison</div>
-        <h1 class="doc-title">Wealth Structures, <em>Compared</em></h1>
+        <h1 class="doc-title">Where Your <em>Wealth Lives</em></h1>
         <p class="lede">
-          Where an asset is held changes what it earns you after tax, when you can reach it, what
-          happens when you sell it and where it goes when you die. Structure is decided once and
-          lived with for decades — <strong>and unwinding it later can trigger the very tax it was
-          meant to manage</strong>.
+          Super, your own name, a trust, a company. The same investment, very different
+          outcomes.
         </p>
 
         <div class="card card-tint" style="margin: 32px 0 0">
           <p class="small">
             <b style="color: var(--ink)">How to read this.</b> No structure wins. Each one is good at
             something and costs you something else. The question is never "which is best" — it is
-            "which trade-off suits my marginal rate, my timeframe, my family and my tolerance for
-            complexity". This page is a map of the trade-offs, not a recommendation of any of them.
+            "which trade-off suits me". This page is a map of the trade-offs. It is not a
+            recommendation of any of them.
           </p>
         </div>
 
         <hr class="rule" />
 
-        <!-- ---------- Matrix ---------- -->
-        <div class="sec-head">
-          <h2>The six at a glance</h2>
+        <!-- ============ One dollar, four homes ============ -->
+        <div class="between" style="margin-bottom: 24px; align-items: flex-end">
+          <div class="sec-head" style="margin-bottom: 0">
+            <h2>One dollar, four homes</h2>
+            <p>The same investment, held four different ways. Follow it down each column.</p>
+          </div>
+
+          <fieldset class="seg no-print">
+            <legend class="sr-only">Focus on one moment</legend>
+            <input class="sr-only" type="radio" name="moment" id="mo-all" checked />
+            <label for="mo-all">All three</label>
+            <input class="sr-only" type="radio" name="moment" id="mo-income" />
+            <label for="mo-income">On income</label>
+            <input class="sr-only" type="radio" name="moment" id="mo-sale" />
+            <label for="mo-sale">On sale</label>
+            <input class="sr-only" type="radio" name="moment" id="mo-death" />
+            <label for="mo-death">On death</label>
+          </fieldset>
         </div>
 
-        <div class="matrix-scroll">
-          <table class="matrix">
-            <thead>
-              <tr>
-                <th>Structure</th>
-                <th>How income is taxed</th>
-                <th>When you can reach it</th>
-                <th>Commonly considered when</th>
-                <th>The usual catch</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td class="name">Personal name<span>The default</span></td>
-                <td>At your marginal rate, so up to 47% with the Medicare levy.</td>
-                <td>Any time.</td>
-                <td>Simplicity matters, amounts are modest, or the asset produces little income.</td>
-                <td>The most expensive place for income to land if you are a high earner.</td>
-              </tr>
-              <tr>
-                <td class="name">Spouse or joint<span>Splitting the rate</span></td>
-                <td>At each owner's marginal rate, on their share.</td>
-                <td>Any time.</td>
-                <td>There is a genuine and durable difference between two marginal rates.</td>
-                <td>Rates converge over time. Transferring later can trigger capital gains tax and duty.</td>
-              </tr>
-              <tr>
-                <td class="name">Family trust<span>Discretionary</span></td>
-                <td>Distributed each year to beneficiaries, who are taxed at their own rates.</td>
-                <td>Any time, subject to the deed and the trustee.</td>
-                <td>Income can usefully be directed among adult family members, and asset protection matters.</td>
-                <td>Setup and annual costs, strict distribution rules, and losses are trapped inside the trust.</td>
-              </tr>
-              <tr>
-                <td class="name">Company<span>A flat rate</span></td>
-                <td>At the company tax rate, with franking credits attaching to dividends paid out.</td>
-                <td>Any time, but getting money out personally is a taxable event.</td>
-                <td>Retaining and reinvesting profits, often alongside a business.</td>
-                <td>No capital gains tax discount for companies. Getting funds out is where the tax arrives.</td>
-              </tr>
-              <tr>
-                <td class="name">Investment bond<span>Tax paid inside</span></td>
-                <td>Inside the bond at the company tax rate. No annual return obligation for you.</td>
-                <td>Any time, though the tax treatment improves once held for ten years.</td>
-                <td>A long horizon, a high marginal rate, and a preference for simplicity over flexibility.</td>
-                <td>Contribution rules apply year to year, and withdrawing early changes the outcome.</td>
-              </tr>
-              <tr>
-                <td class="name">Superannuation<span>The concession</span></td>
-                <td>Concessionally inside the fund, and generally tax-free on withdrawal after 60.</td>
-                <td>Preservation age — 60 for everyone reaching it from 1 July 2024.</td>
-                <td>The timeframe is genuinely beyond 60 and the gap to your marginal rate is wide.</td>
-                <td>Locked. Annual caps. And from 1 July 2026, an extra tax on earnings above $3 million.</td>
-              </tr>
-            </tbody>
-          </table>
+        <div class="jwrap">
+          <div class="jfan-head"><span class="jfan-chip">One dollar, invested</span></div>
+
+          <svg class="jfan" viewBox="0 0 1000 86" aria-hidden="true" focusable="false">
+            <path d="M500 2 C500 44 125 40 125 82" />
+            <path d="M500 2 C500 46 375 42 375 82" />
+            <path d="M500 2 C500 46 625 42 625 82" />
+            <path d="M500 2 C500 44 875 40 875 82" />
+            <circle cx="125" cy="82" r="3.4" />
+            <circle cx="375" cy="82" r="3.4" />
+            <circle cx="625" cy="82" r="3.4" />
+            <circle cx="875" cy="82" r="3.4" />
+          </svg>
+
+          <div class="jrn">
+            <article class="jcard">
+              <header>
+                <h3>Your own name</h3>
+                <span class="jsub">The default</span>
+              </header>
+              <div class="mo mo-income">
+                <span class="mo-k">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"
+                       stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                    <path d="M12 3v12" /><path d="m8 11 4 4 4-4" /><path d="M4 20h16" />
+                  </svg>
+                  On income
+                </span>
+                <p>Taxed at your marginal rate, so up to 47% with the Medicare levy.</p>
+              </div>
+              <div class="mo mo-sale">
+                <span class="mo-k">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"
+                       stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                    <path d="m3 17 5-5 4 3 6-7" /><path d="M15 8h5v5" />
+                  </svg>
+                  On sale
+                </span>
+                <p>A capital gain in your hands, with the 50% capital gains tax discount on assets held over twelve months.</p>
+              </div>
+              <div class="mo mo-death">
+                <span class="mo-k">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"
+                       stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                    <path d="M12 21s7-4.2 7-9.5V5.6L12 3 5 5.6v5.9C5 16.8 12 21 12 21z" />
+                  </svg>
+                  On death
+                </span>
+                <p>Generally an estate asset: it passes under your will.</p>
+              </div>
+            </article>
+
+            <article class="jcard">
+              <header>
+                <h3>A family trust</h3>
+                <span class="jsub">Discretionary</span>
+              </header>
+              <div class="mo mo-income">
+                <span class="mo-k">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"
+                       stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                    <path d="M12 3v12" /><path d="m8 11 4 4 4-4" /><path d="M4 20h16" />
+                  </svg>
+                  On income
+                </span>
+                <p>Distributed each year to beneficiaries, who are taxed at their own rates.</p>
+              </div>
+              <div class="mo mo-sale">
+                <span class="mo-k">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"
+                       stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                    <path d="m3 17 5-5 4 3 6-7" /><path d="M15 8h5v5" />
+                  </svg>
+                  On sale
+                </span>
+                <p>A capital gain in the trust, and the capital gains tax discount can flow through to individuals.</p>
+              </div>
+              <div class="mo mo-death">
+                <span class="mo-k">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"
+                       stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                    <path d="M12 21s7-4.2 7-9.5V5.6L12 3 5 5.6v5.9C5 16.8 12 21 12 21z" />
+                  </svg>
+                  On death
+                </span>
+                <p>Generally the deed and the trustee decide what happens next, rather than your will.</p>
+              </div>
+            </article>
+
+            <article class="jcard">
+              <header>
+                <h3>A company</h3>
+                <span class="jsub">A flat rate</span>
+              </header>
+              <div class="mo mo-income">
+                <span class="mo-k">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"
+                       stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                    <path d="M12 3v12" /><path d="m8 11 4 4 4-4" /><path d="M4 20h16" />
+                  </svg>
+                  On income
+                </span>
+                <p>Taxed at the company tax rate, with franking credits attaching to dividends paid out.</p>
+              </div>
+              <div class="mo mo-sale">
+                <span class="mo-k">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"
+                       stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                    <path d="m3 17 5-5 4 3 6-7" /><path d="M15 8h5v5" />
+                  </svg>
+                  On sale
+                </span>
+                <p>A capital gain with no capital gains tax discount at the company level.</p>
+              </div>
+              <div class="mo mo-death">
+                <span class="mo-k">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"
+                       stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                    <path d="M12 21s7-4.2 7-9.5V5.6L12 3 5 5.6v5.9C5 16.8 12 21 12 21z" />
+                  </svg>
+                  On death
+                </span>
+                <p>Generally your shares are the estate asset, not the assets the company holds.</p>
+              </div>
+            </article>
+
+            <article class="jcard">
+              <header>
+                <h3>Superannuation</h3>
+                <span class="jsub">The concession</span>
+              </header>
+              <div class="mo mo-income">
+                <span class="mo-k">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"
+                       stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                    <path d="M12 3v12" /><path d="m8 11 4 4 4-4" /><path d="M4 20h16" />
+                  </svg>
+                  On income
+                </span>
+                <p>Taxed concessionally inside the fund — and you cannot reach it before 60.</p>
+              </div>
+              <div class="mo mo-sale">
+                <span class="mo-k">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"
+                       stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                    <path d="m3 17 5-5 4 3 6-7" /><path d="M15 8h5v5" />
+                  </svg>
+                  On sale
+                </span>
+                <p>A gain realised inside the fund, under the fund's own concessional treatment — not on your return.</p>
+              </div>
+              <div class="mo mo-death">
+                <span class="mo-k">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"
+                       stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                    <path d="M12 21s7-4.2 7-9.5V5.6L12 3 5 5.6v5.9C5 16.8 12 21 12 21z" />
+                  </svg>
+                  On death
+                </span>
+                <p>Held in trust, and not automatically an estate asset. Usually your nomination
+                  decides it, or the trustee if there is no valid one.</p>
+              </div>
+            </article>
+          </div>
+
+          <p class="jnote">
+            Schematic, and general. No figures are attached to the ends of these columns because they
+            depend on your rate, your timeframe and your own documents. What happens on death is the
+            subject of <a href="10-estate-checklist.html">the Estate Checklist</a>.
+          </p>
         </div>
-        <p class="scroll-hint no-print">Scroll the table sideways to see every column.</p>
+
+        <div class="card" style="margin-top: 34px">
+          <h3 class="step-h">What the default costs</h3>
+          <p class="sub-h" style="margin-top: 10px">Held in your own name, at the top marginal rate</p>
+          <div id="cost-of-default"></div>
+        </div>
 
         <hr class="rule" />
 
-        <!-- ---------- Detail cards ---------- -->
+        <!-- ============ Decided once ============ -->
+        <div class="lm-aside" style="--lm-aside-pos: 50% 40%">
+          <div class="lm-aside-img">
+            <img
+              src="../assets/img/photo/women-financial-planning-documents-home.webp"
+              alt=""
+              loading="lazy"
+              decoding="async"
+            />
+          </div>
+          <div>
+            <p class="sub-h">Decided once</p>
+            <h2 class="aside-h">Structure is a long decision</h2>
+            <p class="muted">
+              Where an asset is held changes what it earns you after tax, when you can reach it, what
+              happens when you sell it, and where it goes when you die. It is decided once and lived
+              with for decades.
+            </p>
+            <div class="warn">
+              <b>Before you move anything</b>
+              <p>Unwinding a structure later can trigger the very tax it was meant to manage.</p>
+            </div>
+          </div>
+        </div>
+
+        <hr class="rule" />
+
+        <!-- ============ All six, side by side ============ -->
+        <div class="sec-head">
+          <h2>All six, side by side</h2>
+          <p>Three questions, asked of every structure.</p>
+        </div>
+
+        <table class="cmp">
+          <thead>
+            <tr>
+              <th scope="col">Structure</th>
+              <th scope="col">How income is taxed</th>
+              <th scope="col">When you can reach it</th>
+              <th scope="col">The usual catch</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td class="name">Personal name<span>The default</span></td>
+              <td>
+                <span class="cell-k">How income is taxed</span>
+                At your marginal rate, so up to 47% with the Medicare levy.
+              </td>
+              <td><span class="cell-k">When you can reach it</span>Any time.</td>
+              <td>
+                <span class="cell-k">The usual catch</span>
+                The most expensive place for income to land if you are a high earner.
+              </td>
+            </tr>
+            <tr>
+              <td class="name">Spouse or joint<span>Splitting the rate</span></td>
+              <td>
+                <span class="cell-k">How income is taxed</span>
+                At each owner's marginal rate, on their share.
+              </td>
+              <td><span class="cell-k">When you can reach it</span>Any time.</td>
+              <td>
+                <span class="cell-k">The usual catch</span>
+                Rates converge over time. Transferring later can trigger capital gains tax and duty.
+              </td>
+            </tr>
+            <tr>
+              <td class="name">Family trust<span>Discretionary</span></td>
+              <td>
+                <span class="cell-k">How income is taxed</span>
+                Distributed each year to beneficiaries, who are taxed at their own rates.
+              </td>
+              <td>
+                <span class="cell-k">When you can reach it</span>
+                Any time, subject to the deed and the trustee.
+              </td>
+              <td>
+                <span class="cell-k">The usual catch</span>
+                Setup and annual costs, strict distribution rules, and losses are trapped inside the
+                trust.
+              </td>
+            </tr>
+            <tr>
+              <td class="name">Company<span>A flat rate</span></td>
+              <td>
+                <span class="cell-k">How income is taxed</span>
+                At the company tax rate, with franking credits attaching to dividends paid out.
+              </td>
+              <td>
+                <span class="cell-k">When you can reach it</span>
+                Any time, but getting money out personally is a taxable event.
+              </td>
+              <td>
+                <span class="cell-k">The usual catch</span>
+                No capital gains tax discount for companies. Getting funds out is where the tax
+                arrives.
+              </td>
+            </tr>
+            <tr>
+              <td class="name">Investment bond<span>Tax paid inside</span></td>
+              <td>
+                <span class="cell-k">How income is taxed</span>
+                Inside the bond at the company tax rate. No annual return obligation for you.
+              </td>
+              <td>
+                <span class="cell-k">When you can reach it</span>
+                Any time, though the tax treatment improves once held for ten years.
+              </td>
+              <td>
+                <span class="cell-k">The usual catch</span>
+                Contribution rules apply year to year, and withdrawing early changes the outcome.
+              </td>
+            </tr>
+            <tr>
+              <td class="name">Superannuation<span>The concession</span></td>
+              <td>
+                <span class="cell-k">How income is taxed</span>
+                Concessionally inside the fund, and generally tax-free on withdrawal after 60.
+              </td>
+              <td>
+                <span class="cell-k">When you can reach it</span>
+                Preservation age — 60 for everyone reaching it from 1 July 2024.
+              </td>
+              <td>
+                <span class="cell-k">The usual catch</span>
+                Locked. Annual caps. And from 1 July 2026, an extra tax on earnings above $3 million.
+              </td>
+            </tr>
+          </tbody>
+        </table>
+
+        <hr class="rule" />
+
+        <!-- ============ The trade-off in each ============ -->
         <div class="sec-head">
           <h2>The trade-off in each</h2>
           <p>What you gain, what it costs, and the question that decides it.</p>
@@ -236,91 +1006,182 @@
           <div class="struct">
             <h3>Personal name</h3>
             <span class="sub">Simplest · Least efficient at high rates</span>
+            <p class="when">
+              <b>Commonly considered when</b> simplicity matters, amounts are modest, or the asset
+              produces little income.
+            </p>
             <dl>
               <dt>Gains you</dt>
-              <dd>No setup cost, no annual compliance, complete control, and the 50% capital gains tax discount on assets held over twelve months.</dd>
-              <dt class="watch">Costs you</dt>
-              <dd>Every dollar of income is taxed at your rate. At 47%, an investment yielding 4% delivers barely over 2% after tax.</dd>
+              <dd>
+                No setup cost, no annual compliance, complete control, and the 50% capital gains tax
+                discount on assets held over twelve months.
+              </dd>
+              <dt class="cost">Costs you</dt>
+              <dd>
+                Every dollar of income is taxed at your rate. At 47%, an investment yielding 4%
+                delivers barely over 2% after tax.
+              </dd>
               <dt>The deciding question</dt>
-              <dd>Is the income meaningful enough to justify the cost and complexity of holding it elsewhere?</dd>
+              <dd class="q">
+                Is the income meaningful enough to justify the cost and complexity of holding it
+                elsewhere?
+              </dd>
             </dl>
           </div>
 
           <div class="struct">
             <h3>Spouse or joint ownership</h3>
             <span class="sub">Simple · Depends on a rate difference lasting</span>
+            <p class="when">
+              <b>Commonly considered when</b> there is a genuine and durable difference between two
+              marginal rates.
+            </p>
             <dl>
               <dt>Gains you</dt>
-              <dd>Income taxed where the rate is lower. No structure to establish, and nothing to administer each year.</dd>
-              <dt class="watch">Costs you</dt>
-              <dd>It stops working when the rates converge, and moving assets between names later is usually a capital gains tax event — sometimes a duty event too.</dd>
+              <dd>
+                Income taxed where the rate is lower. No structure to establish, and nothing to
+                administer each year.
+              </dd>
+              <dt class="cost">Costs you</dt>
+              <dd>
+                It stops working when the rates converge, and moving assets between names later is
+                usually a capital gains tax event — sometimes a duty event too.
+              </dd>
               <dt>The deciding question</dt>
-              <dd>Is the difference between the two marginal rates both large and likely to persist?</dd>
+              <dd class="q">
+                Is the difference between the two marginal rates both large and likely to persist?
+              </dd>
             </dl>
           </div>
 
           <div class="struct">
             <h3>Family trust</h3>
             <span class="sub">Flexible · Ongoing obligations</span>
+            <p class="when">
+              <b>Commonly considered when</b> income can usefully be directed among adult family
+              members, and asset protection matters.
+            </p>
             <dl>
               <dt>Gains you</dt>
-              <dd>Income can be directed each year among eligible beneficiaries, so the destination can change as circumstances do. A degree of asset protection, and the capital gains tax discount can flow through to individuals.</dd>
-              <dt class="watch">Costs you</dt>
-              <dd>Establishment and annual accounting costs, strict rules about valid distributions and their timing, close regulatory attention to distributions to adult children, and losses that cannot leave the trust.</dd>
+              <dd>
+                Income can be directed each year among eligible beneficiaries, so the destination can
+                change as circumstances do. A degree of asset protection, and the capital gains tax
+                discount can flow through to individuals.
+              </dd>
+              <dt class="cost">Costs you</dt>
+              <dd>
+                Establishment and annual accounting costs, strict rules about valid distributions and
+                their timing, close regulatory attention to distributions to adult children, and
+                losses that cannot leave the trust.
+              </dd>
               <dt>The deciding question</dt>
-              <dd>Are there genuinely other adults whose rates make distributions worthwhile, year after year?</dd>
+              <dd class="q">
+                Are there genuinely other adults whose rates make distributions worthwhile, year
+                after year?
+              </dd>
             </dl>
           </div>
 
           <div class="struct">
             <h3>Company</h3>
             <span class="sub">Flat rate while retained · Taxed on the way out</span>
+            <p class="when">
+              <b>Commonly considered when</b> retaining and reinvesting profits, often alongside a
+              business.
+            </p>
             <dl>
               <dt>Gains you</dt>
-              <dd>Profits retained and reinvested at the company rate rather than your marginal rate, with franking credits attaching to dividends when they are eventually paid.</dd>
-              <dt class="watch">Costs you</dt>
-              <dd>No capital gains tax discount at the company level, compliance obligations, and rules governing loans and payments to shareholders. The tax is deferred, not avoided.</dd>
+              <dd>
+                Profits retained and reinvested at the company rate rather than your marginal rate,
+                with franking credits attaching to dividends when they are eventually paid.
+              </dd>
+              <dt class="cost">Costs you</dt>
+              <dd>
+                No capital gains tax discount at the company level, compliance obligations, and rules
+                governing loans and payments to shareholders. The tax is deferred, not avoided.
+              </dd>
               <dt>The deciding question</dt>
-              <dd>Will the profits genuinely stay inside and be reinvested, or will you need them personally?</dd>
+              <dd class="q">
+                Will the profits genuinely stay inside and be reinvested, or will you need them
+                personally?
+              </dd>
             </dl>
           </div>
 
           <div class="struct">
             <h3>Investment bond</h3>
             <span class="sub">Low maintenance · Rules reward patience</span>
+            <p class="when">
+              <b>Commonly considered when</b> there is a long horizon, a high marginal rate, and a
+              preference for simplicity over flexibility.
+            </p>
             <dl>
               <dt>Gains you</dt>
-              <dd>Tax is paid inside the bond, so there is no annual income to declare. Nothing to administer, no distributions to decide, and a defined beneficiary on death.</dd>
-              <dt class="watch">Costs you</dt>
-              <dd>Flexibility. Contributions are limited year to year, and withdrawing before the ten-year mark changes the treatment. Fees and the underlying investment menu matter.</dd>
+              <dd>
+                Tax is paid inside the bond, so there is no annual income to declare. Nothing to
+                administer, no distributions to decide, and a defined beneficiary on death.
+              </dd>
+              <dt class="cost">Costs you</dt>
+              <dd>
+                Flexibility. Contributions are limited year to year, and withdrawing before the
+                ten-year mark changes the treatment. Fees and the underlying investment menu matter.
+              </dd>
               <dt>The deciding question</dt>
-              <dd>Is the horizon genuinely ten years or more, and is your rate high enough for the internal rate to be an improvement?</dd>
+              <dd class="q">
+                Is the horizon genuinely ten years or more, and is your rate high enough for the
+                internal rate to be an improvement?
+              </dd>
             </dl>
           </div>
 
           <div class="struct">
             <h3>Superannuation</h3>
             <span class="sub">Most concessional · Least accessible</span>
+            <p class="when">
+              <b>Commonly considered when</b> the timeframe is genuinely beyond 60 and the gap to
+              your marginal rate is wide.
+            </p>
             <dl>
               <dt>Gains you</dt>
-              <dd>Concessional tax on contributions and earnings, and generally tax-free withdrawals after 60. The single most favourable treatment available to most people.</dd>
-              <dt class="watch">Costs you</dt>
-              <dd>Access. Annual caps limit how fast you can use it, Division 293 narrows the benefit above $250,000 of combined income, and from 1 July 2026 an additional tax applies to earnings on balances above $3 million.</dd>
+              <dd>
+                Concessional tax on contributions and earnings, and generally tax-free withdrawals
+                after 60. The single most favourable treatment available to most people.
+              </dd>
+              <dt class="cost">Costs you</dt>
+              <dd>
+                Access. Annual caps limit how fast you can use it, Division 293 narrows the benefit
+                above $250,000 of combined income, and from 1 July 2026 an additional tax applies to
+                earnings on balances above $3 million.
+              </dd>
               <dt>The deciding question</dt>
-              <dd>Do you need any of this money before 60? If yes, the concession is irrelevant for that portion.</dd>
+              <dd class="q">
+                Do you need any of this money before 60? If yes, the concession is irrelevant for
+                that portion.
+              </dd>
             </dl>
           </div>
         </div>
 
-        <hr class="rule" />
+        <div class="lm-photoband">
+          <img
+            src="../assets/img/photo/professionals-cafe-meeting-coffee-discussion.webp"
+            alt=""
+            loading="lazy"
+            decoding="async"
+          />
+          <p>
+            In practice the answer is rarely one structure. It is a
+            <em>small number of them</em>, each holding the assets it suits.
+          </p>
+          <span class="lm-band-k">What usually decides it</span>
+        </div>
 
         <div class="card card-green">
-          <h3 class="step-h">What usually decides it</h3>
+          <h3 class="step-h">The common mistake</h3>
           <p class="muted" style="margin-top: 10px">
-            In practice the answer is rarely one structure. It is a small number of them, each
-            holding the assets it suits, sized against when you want the money. The common mistake
-            is not choosing the wrong structure — it is choosing one, and then putting everything in
-            it out of habit.
+            Each structure is sized against when you want the money. The common mistake is not
+            choosing the wrong structure — it is choosing one, and then putting everything in it out
+            of habit.
           </p>
         </div>
 
@@ -345,7 +1206,29 @@
 
     <script type="module">
       import { mountSheet, wirePrint } from '../assets/sheet.js'
-      mountSheet({ no: '08', kind: 'Comparison', wide: true })
+      import { comparison } from '../assets/widgets.js'
+
+      mountSheet({
+        no: '08',
+        kind: 'Comparison',
+        wide: true,
+        hero: { src: 'art/08-columns.webp', alt: '', variant: 'art', pos: '50% 58%' },
+      })
+
+      // The one two-way contrast the sheet already states, drawn as a figure:
+      // "At 47%, an investment yielding 4% delivers barely over 2% after tax."
+      const cost = document.getElementById('cost-of-default')
+      if (cost) {
+        comparison(cost, {
+          a: '4%',
+          aLabel: 'What it yields',
+          b: 'Barely over 2%',
+          bLabel: 'What you keep at 47%',
+          note:
+            'The marginal rate does not change the investment. It changes how much of it reaches you.',
+        })
+      }
+
       wirePrint()
     </script>
   </body>

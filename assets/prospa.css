@@ -12,6 +12,11 @@
   --teal-900: #0a363c;
   --green: #5dce38;
   --green-600: #4eb52d;
+  /* The brand green is a graphic colour: at 2.03:1 it cannot carry white text
+     and at 2.49:1 it cannot be small text on a tint. --green-text is the same
+     hue taken down until it reads — 5.08:1 on --bg1, 5.38:1 on white. Use the
+     brand green for surfaces and marks; use this one for words. */
+  --green-text: #35791d;
   --accent: #d0dfe1;
 
   /* Warm accent — one use per page, maximum */
@@ -294,10 +299,27 @@ h3.step-h {
   cursor: not-allowed;
 }
 
+/* Dark ink on the brand green, not white. White measured 2.03:1 here — the
+   main call to action on all twelve sheets. The design system already sets
+   #0a363c on green elsewhere, so this aligns with it rather than inventing a
+   treatment: 6.45:1 at rest, 4.96:1 on the --green-600 hover. */
 .btn-primary {
   background: var(--green);
-  color: #fff;
+  color: var(--teal-900);
   box-shadow: 0 6px 18px rgba(93, 206, 56, 0.32);
+}
+
+/* There was no focus style on .btn at all, so every button on every sheet fell
+   back to a UA ring that Chrome suppresses on a mouse-adjacent click. */
+.btn:focus-visible {
+  outline: 2px solid var(--teal);
+  outline-offset: 3px;
+}
+
+.btn-primary:focus-visible,
+.btn-teal:focus-visible {
+  outline-color: var(--teal-900);
+  outline-offset: 2px;
 }
 
 .btn-primary:hover:not(:disabled) {
@@ -357,7 +379,7 @@ h3.step-h {
 
 .badge-green {
   background: var(--bg1);
-  color: var(--green-600);
+  color: var(--green-text);
 }
 
 .badge-teal {
@@ -401,16 +423,19 @@ h3.step-h {
   gap: 18px;
 }
 
+/* minmax(0, 1fr), not 1fr: a grid track's default min-width is auto, so one
+   long unbreakable string pushes the track wider than its share and the whole
+   sheet scrolls sideways. */
 .g2 {
-  grid-template-columns: repeat(2, 1fr);
+  grid-template-columns: repeat(2, minmax(0, 1fr));
 }
 
 .g3 {
-  grid-template-columns: repeat(3, 1fr);
+  grid-template-columns: repeat(3, minmax(0, 1fr));
 }
 
 .g4 {
-  grid-template-columns: repeat(4, 1fr);
+  grid-template-columns: repeat(4, minmax(0, 1fr));
 }
 
 /* ---- Icon chip ---- */
@@ -448,8 +473,10 @@ h3.step-h {
   flex: none;
 }
 
+/* .num sets white; on the brand green that is 2.03:1. */
 .num-green {
   background: var(--green);
+  color: var(--teal-900);
 }
 
 /* ---- Data figures ---- */
@@ -767,7 +794,7 @@ input[type='range']::-moz-range-thumb {
   padding-top: 20px;
   border-top: 1px solid rgba(255, 255, 255, 0.14);
   font-size: 12px;
-  color: #9fbdc0;
+  color: #b8d4d7; /* was #9fbdc0 — 4.29:1, under AA at 12px. Now 5.48:1. */
 }
 
 .foot-contact {
@@ -861,7 +888,7 @@ input[type='range']::-moz-range-thumb {
 @media (max-width: 900px) {
   .g3,
   .g4 {
-    grid-template-columns: repeat(2, 1fr);
+    grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 }
 
@@ -1257,6 +1284,7 @@ input[type='range']::-moz-range-thumb {
 }
 .audit-q.struck .num {
   background: var(--green);
+  color: var(--teal-900);
 }
 .check.struck .sub {
   text-decoration: none;
@@ -2213,7 +2241,7 @@ input[type='range']::-moz-range-thumb {
   border-color: transparent;
 }
 .w-metric-good .w-metric-v {
-  color: var(--green-600);
+  color: var(--green-text);
 }
 .w-metric-warn {
   background: var(--ember-soft);
@@ -2459,7 +2487,7 @@ input[type='range']::-moz-range-thumb {
   left: 50%;
   top: 50%;
   transform: translate(-50%, -50%);
-  background: #fff;
+  background: var(--white);
   padding: 5px 2px;
   font-size: 11px;
   color: var(--gray);
@@ -2746,5 +2774,352 @@ input[type='range']::-moz-range-thumb {
     transition: none !important;
     stroke-dasharray: none !important;
     stroke-dashoffset: 0 !important;
+  }
+}
+
+/* ============================================================
+   IMAGERY — hero bands, plates, faded photo panels
+   ------------------------------------------------------------
+   One rule governs the whole system, and the print block at the
+   end of this section enforces it:
+
+       the hero band prints; every other image is screen-only.
+
+   So a saved PDF still opens on a designed page, but it never
+   turns into a brochure that drinks a cartridge of ink.
+
+   The hero band never carries text — it is always above the
+   title — so the title's contrast can never fail. .lm-photoband
+   is the single place type sits on a picture, and it does so
+   over a near-opaque scrim measured at 7.4:1, losing the
+   photograph entirely in print.
+   ============================================================ */
+
+.lm-hero {
+  position: relative;
+  display: block;
+  margin: 0;
+  /* A direct child of .sheet, so it is already clipped by the
+     sheet's radius and needs no radius of its own. */
+  background: var(--bg2);
+  overflow: hidden;
+}
+
+.lm-hero img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  /* Each magnet tunes this: the art pieces carry their subject
+     off-centre, and a blind `center` crop decapitates them. */
+  object-position: var(--lm-hero-pos, 50% 50%);
+}
+
+/* Aspect is set on the band, not the image, so the reserved space
+   is correct before the file arrives and nothing reflows. */
+.lm-hero {
+  aspect-ratio: var(--lm-hero-ar, 2.7 / 1);
+}
+
+.lm-hero--tall {
+  --lm-hero-ar: 2.1 / 1;
+}
+
+.lm-hero--short {
+  --lm-hero-ar: 3.6 / 1;
+}
+
+/* Abstract line art: pale, delicate, already on-brand. It needs a
+   hairline under it to separate it from the page, and nothing else. */
+.lm-hero--art {
+  background: #fbfcfc;
+  border-bottom: 1px solid var(--line);
+}
+
+/* Photography: pulled toward the brand with a teal wash so a stock
+   frame reads as Prospa's rather than as a stock frame. */
+.lm-hero--photo img {
+  filter: saturate(0.88) contrast(1.02);
+}
+
+.lm-hero--photo::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    180deg,
+    rgba(19, 95, 105, 0.26) 0%,
+    rgba(19, 95, 105, 0.1) 45%,
+    rgba(255, 255, 255, 0.5) 100%
+  );
+  pointer-events: none;
+}
+
+/* Optional credit / context chip, bottom-left of the band. */
+.lm-hero-cap {
+  position: absolute;
+  left: 64px;
+  bottom: 18px;
+  z-index: 2;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 7px 14px;
+  border-radius: var(--r-pill);
+  background: rgba(255, 255, 255, 0.92);
+  backdrop-filter: blur(6px);
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10.5px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--teal);
+  box-shadow: var(--sh-card);
+}
+
+.lm-hero-cap::before {
+  content: '';
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--green);
+}
+
+/* ---- Plate: an inline figure inside the document flow ---- */
+
+.lm-plate {
+  margin: 30px 0;
+}
+
+.lm-plate img {
+  display: block;
+  width: 100%;
+  height: auto;
+  border-radius: var(--r-md);
+  border: 1px solid var(--line);
+  background: #fbfcfc;
+}
+
+.lm-plate figcaption {
+  margin-top: 10px;
+  font-size: 13px;
+  line-height: 1.5;
+  color: var(--gray);
+}
+
+.lm-plate--sm img {
+  border-radius: var(--r-sm);
+}
+
+/* ---- Aside: a faded portrait beside a block of content ----
+   The "faded customer image" treatment. The photograph is set
+   back deliberately — it is atmosphere, never evidence, and it
+   must never read as a named client or a claimed outcome. */
+
+.lm-aside {
+  display: grid;
+  grid-template-columns: 0.82fr 1.18fr;
+  gap: 30px;
+  align-items: center;
+  margin: 32px 0;
+}
+
+.lm-aside--flip {
+  grid-template-columns: 1.18fr 0.82fr;
+}
+
+.lm-aside--flip .lm-aside-img {
+  order: 2;
+}
+
+.lm-aside-img {
+  position: relative;
+  border-radius: var(--r-lg);
+  overflow: hidden;
+  background: var(--bg2);
+  aspect-ratio: var(--lm-aside-ar, 4 / 5);
+}
+
+.lm-aside-img img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: var(--lm-aside-pos, 50% 35%);
+  /* Faded, as asked: present enough to warm the page, quiet
+     enough that the numbers stay the loudest thing on it. */
+  opacity: 0.74;
+  filter: saturate(0.82);
+}
+
+.lm-aside-img::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(140deg, rgba(19, 95, 105, 0.2) 0%, rgba(93, 206, 56, 0.1) 100%);
+  pointer-events: none;
+}
+
+/* ---- Photo band: a full-bleed faded strip carrying one line ---- */
+
+.lm-photoband {
+  position: relative;
+  margin: 42px -64px;
+  padding: 48px 64px;
+  overflow: hidden;
+  background: var(--teal);
+  isolation: isolate;
+}
+
+.lm-photoband img {
+  position: absolute;
+  inset: 0;
+  z-index: -2;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: var(--lm-band-pos, 50% 40%);
+  opacity: 0.3;
+  filter: saturate(0.6);
+}
+
+.lm-photoband::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background: linear-gradient(100deg, rgba(10, 54, 60, 0.82) 0%, rgba(19, 95, 105, 0.56) 100%);
+}
+
+.lm-photoband p {
+  margin: 0;
+  max-width: 34ch;
+  color: #fff;
+  font-size: 25px;
+  font-weight: 600;
+  line-height: 1.32;
+  letter-spacing: -0.02em;
+}
+
+.lm-photoband p em {
+  font-style: normal;
+  color: #a8e88f;
+}
+
+.lm-photoband .lm-band-k {
+  display: block;
+  margin-top: 16px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  font-weight: 400;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: #cfe3e5; /* was #9fc3c7 — 3.49:1 over a bright frame. Now 4.96:1. */
+}
+
+/* ---- Mark: a small circular art token, for cards and headings ---- */
+
+.lm-mark {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 50%;
+}
+
+/* ---- Responsive ---- */
+
+@media (max-width: 720px) {
+  .lm-hero {
+    --lm-hero-ar: 1.9 / 1;
+  }
+  .lm-hero--short {
+    --lm-hero-ar: 2.4 / 1;
+  }
+  .lm-hero-cap {
+    left: 24px;
+    bottom: 14px;
+  }
+  .lm-aside,
+  .lm-aside--flip {
+    grid-template-columns: 1fr;
+    gap: 20px;
+  }
+  .lm-aside--flip .lm-aside-img {
+    order: 0;
+  }
+  .lm-aside-img {
+    --lm-aside-ar: 16 / 9;
+  }
+  .lm-photoband {
+    margin-left: -24px;
+    margin-right: -24px;
+    padding: 34px 24px;
+  }
+  .lm-photoband p {
+    font-size: 20px;
+  }
+}
+
+/* ---- Print: the hero survives, the decoration does not ---- */
+
+@media print {
+  .lm-hero {
+    /* NOT aspect-ratio + max-height. On an auto-width block the ratio derives
+       width FROM height, so 42mm tall became 168mm wide and the band printed
+       ~16mm narrower than the text column above it. Fix the height instead
+       and let the width fill the measure. */
+    aspect-ratio: auto;
+    width: 100%;
+    height: 38mm;
+    border-bottom: 1pt solid var(--line);
+    break-inside: avoid;
+    break-after: avoid;
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+
+  .lm-hero--photo::after,
+  .lm-hero-cap {
+    display: none;
+  }
+
+  /* Everything below is atmosphere. On paper it is just grey. */
+  .lm-plate,
+  .lm-aside-img {
+    display: none !important;
+  }
+
+  .lm-aside,
+  .lm-aside--flip {
+    display: block;
+    margin: 16pt 0;
+  }
+
+  /* The band keeps its sentence and loses its photograph: the line
+     is the point, the image was only ever the mood. */
+  .lm-photoband {
+    margin: 16pt 0;
+    padding: 12pt 14pt;
+    background: #fff;
+    border-left: 2.5pt solid var(--teal);
+    break-inside: avoid;
+  }
+
+  .lm-photoband img,
+  .lm-photoband::after {
+    display: none;
+  }
+
+  .lm-photoband p {
+    color: var(--ink);
+    font-size: 13pt;
+  }
+
+  .lm-photoband p em {
+    color: var(--teal);
+  }
+
+  .lm-photoband .lm-band-k {
+    color: var(--gray);
   }
 }

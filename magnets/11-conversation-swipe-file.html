@@ -3,10 +3,10 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>The Conversation Swipe File — Prospa Financial</title>
+    <title>What to Say — Prospa Financial</title>
     <meta
       name="description"
-      content="Seven ready-to-send messages for the conversations that unlock everything else — your accountant, your HR team, your super fund, your partner."
+      content="Seven conversations that unlock everything else on these sheets — your accountant, payroll, your super fund, your partner, a solicitor, your insurer, any adviser. Copy, adjust, send."
     />
     <link rel="icon" type="image/svg+xml" href="../assets/favicon.svg" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -17,72 +17,606 @@
     />
     <link rel="stylesheet" href="../assets/prospa.css" />
     <style>
+      /* ==========================================================
+         11 · WHAT TO SAY — sheet-local styles only.
+         Everything here is scoped to this document. No shared file
+         is touched, and every colour comes from a token.
+         ========================================================== */
+
+      /* ---------- The card tints ----------
+         Seven deliberate steps, not seven accidents. The five written
+         messages walk down a teal ramp in the order you would send
+         them; the two spoken scripts step out of that ramp in green.
+         So the fan reads as "five letters and two conversations"
+         before a word of it has been read — and the tint agrees with
+         the badge tone each card already carries.
+
+         The plain declarations are the fallback for engines without
+         color-mix; the @supports block overrides them where it is
+         available. Either way the values are brand tokens. */
+      #fan {
+        --tint-1: var(--accent);
+        --tint-2: var(--accent);
+        --tint-3: var(--bg2);
+        --tint-4: var(--bg1);
+        --tint-5: var(--bg2);
+        --tint-6: var(--bg2);
+        --tint-7: var(--bg1);
+      }
+
+      @supports (background: color-mix(in oklab, currentColor 50%, transparent)) {
+        #fan {
+          --tint-1: color-mix(in oklab, var(--teal) 22%, var(--white));
+          --tint-2: color-mix(in oklab, var(--teal) 18%, var(--white));
+          --tint-3: color-mix(in oklab, var(--teal) 14%, var(--white));
+          --tint-4: color-mix(in oklab, var(--green) 21%, var(--white));
+          --tint-5: color-mix(in oklab, var(--teal) 10%, var(--white));
+          --tint-6: color-mix(in oklab, var(--teal) 7%, var(--white));
+          --tint-7: color-mix(in oklab, var(--green) 12%, var(--white));
+        }
+      }
+
+      /* The mark, raised. The shared default sits at 0.3 opacity, which
+         is too faint to carry a drawing this considered. */
+      #fan .fan-art-mark {
+        color: var(--teal);
+        opacity: 0.55;
+      }
+
+      /* The shared default draws the mark at 34% of the card, which is
+         lost inside the ring below. These seven are drawn to be read. */
+      #fan .fan-art-mark svg {
+        width: 40%;
+        max-width: 96px;
+      }
+
+      /* The shared .fan-title is sized in cqw, but nothing on the page
+         declares a container, so the clamp pins it at its 19px maximum
+         even on the 7.5rem card a phone gets — four lines for a title
+         of four words. mountFan writes the real card width onto the
+         stage as --fan-card-w, so size the title off that instead:
+         13.5px at 120px, 19px by the time the card reaches 224px.
+         (A container-type here would be the textbook fix, but it would
+         flatten the card's preserve-3d and break the turn.) */
+      #fan .fan-title {
+        font-size: clamp(13.5px, calc(var(--fan-card-w, 16rem) * 0.053 + 7px), 19px);
+        line-height: 1.24;
+      }
+
+      @media (max-width: 520px) {
+        #fan .fan-len {
+          font-size: 9.5px;
+        }
+        #fan .fan-front-copy {
+          gap: 6px;
+        }
+        #fan .fan-front-copy .badge {
+          font-size: 11px;
+          padding: 5px 10px;
+        }
+      }
+
+      /* One ring behind every mark — the single thing that makes seven
+         separate drawings read as one set. It hangs off .fan-art rather
+         than off the mark itself, because the mark's box is as wide as
+         the card and a ring drawn on it comes out an ellipse. The white
+         fade (.fan-art::after) paints over it, so the ring dissolves
+         into the card's lower edge instead of stopping dead. */
+      #fan .fan-art::before {
+        content: '';
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        width: 58%;
+        aspect-ratio: 1;
+        transform: translate(-50%, -50%);
+        border-radius: 50%;
+        border: 1px solid var(--teal);
+        opacity: 0.17;
+      }
+
+      /* ---------- How to use it ---------- */
+      .howto {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 28px;
+        margin-top: 34px;
+      }
+
+      .howto-step {
+        display: flex;
+        gap: 14px;
+        align-items: flex-start;
+      }
+
+      .howto-k {
+        font-size: 15.5px;
+        font-weight: 600;
+        color: var(--ink);
+        letter-spacing: -0.01em;
+        margin-bottom: 4px;
+      }
+
+      .howto-step p + p {
+        font-size: 14px;
+        color: var(--gray);
+        line-height: 1.5;
+      }
+
+      .howto-note {
+        margin-top: 28px;
+        padding-top: 20px;
+        border-top: 1px solid var(--line);
+        font-size: 14.5px;
+        color: var(--gray);
+        max-width: 72ch;
+      }
+
+      /* ---------- Placeholder chips ---------- */
+      /* The chip is painted with a spread shadow rather than padding, so
+         it costs no advance width: "<em>[name]</em>," keeps its comma
+         tight against the word instead of floating a padded gap. */
+      .ph,
+      .script-text em {
+        font-style: normal;
+        background: var(--bg1);
+        color: var(--green-600);
+        font-weight: 600;
+        border-radius: 4px;
+        box-shadow: 0 0 0 3px var(--bg1);
+        -webkit-box-decoration-break: clone;
+        box-decoration-break: clone;
+      }
+
+      /* ---------- The tracker ---------- */
+      .tracker {
+        margin-bottom: 30px;
+      }
+
+      .tracker-head {
+        display: flex;
+        align-items: flex-start;
+        justify-content: space-between;
+        gap: 16px;
+        margin-bottom: 20px;
+        flex-wrap: wrap;
+      }
+
+      /* Scoped to the paragraph that follows the heading. A bare
+         `.tracker-head p` is (0,1,1) and so also beats `.howto-k` at (0,1,0),
+         which flattened "Keep your own score" into its own subtext. */
+      .tracker-head .howto-k + p {
+        font-size: 14px;
+        color: var(--gray);
+        max-width: 54ch;
+      }
+
+      .track-note {
+        margin-top: 14px;
+        font-size: 13.5px;
+        color: var(--gray);
+        max-width: 64ch;
+      }
+
+      /* ---------- A single script ---------- */
       .script {
         border: 1px solid var(--line);
         border-radius: var(--r-lg);
         overflow: hidden;
-        margin-bottom: 18px;
+        margin-bottom: 20px;
+        background: var(--white);
       }
+
       .script-head {
         display: flex;
         align-items: center;
-        gap: 14px;
-        padding: 18px 24px;
+        gap: 16px;
+        padding: 18px 26px;
         background: var(--bg2);
         border-bottom: 1px solid var(--line);
         flex-wrap: wrap;
       }
-      .script-head h3 {
-        font-size: 17px;
+
+      .script-titles {
+        flex: 1 1 200px;
+        min-width: 0;
+      }
+
+      .script-titles h3 {
+        font-size: 17.5px;
         letter-spacing: -0.015em;
       }
-      .script-head .to {
+
+      .script-to {
+        display: block;
+        margin-top: 5px;
         font-family: 'JetBrains Mono', monospace;
         font-size: 10.5px;
         letter-spacing: 0.1em;
         text-transform: uppercase;
         color: var(--gray);
-        margin-left: auto;
       }
+
+      .copy-btn {
+        flex: none;
+        min-width: 13rem;
+      }
+
+      /* The shared .btn carries no focus style of its own, and this is the one
+         button on the sheet a keyboard reader lands on without having moved
+         there — cue() focuses it after the fan hands over. */
+      .copy-btn:focus-visible {
+        outline: 2px solid var(--teal);
+        outline-offset: 3px;
+      }
+
+      .copy-ic svg {
+        width: 16px;
+        height: 16px;
+        display: block;
+      }
+
+      .copy-ic .ic-tick {
+        display: none;
+      }
+
+      .copy-btn[data-state] .ic-tick {
+        display: block;
+      }
+
+      .copy-btn[data-state] .ic-clip {
+        display: none;
+      }
+
+      .copy-btn[data-state='done'] {
+        background: var(--green);
+      }
+
       .script-body {
-        padding: 24px;
+        padding: 26px;
       }
-      .script-text {
+
+      .script-intro {
+        font-size: 14.5px;
+        color: var(--gray);
+        line-height: 1.6;
+        max-width: 70ch;
+        margin-bottom: 22px;
+      }
+
+      .script-subject {
+        display: flex;
+        gap: 10px;
+        align-items: baseline;
+        flex-wrap: wrap;
+        padding-bottom: 14px;
+        margin-bottom: 18px;
+        border-bottom: 1px dashed var(--line);
+      }
+
+      .script-subject .k {
+        font-family: 'JetBrains Mono', monospace;
+        font-size: 10.5px;
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+        color: var(--gray);
+        flex: none;
+      }
+
+      .script-subject .v {
         font-size: 15px;
-        color: var(--slate);
-        line-height: 1.7;
-        white-space: pre-wrap;
-        background: #fff;
-        border-left: 2px solid var(--green);
-        padding-left: 20px;
-      }
-      .script-text em {
-        font-style: normal;
-        background: var(--bg1);
-        color: var(--green-600);
-        padding: 1px 5px;
-        border-radius: 4px;
         font-weight: 600;
+        color: var(--ink);
       }
+
+      .script-text {
+        font-size: 15.5px;
+        color: var(--slate);
+        line-height: 1.72;
+        white-space: pre-wrap;
+        overflow-wrap: break-word;
+        border-left: 2px solid var(--green);
+        padding-left: 22px;
+        max-width: 68ch;
+      }
+
       .script-foot {
         display: flex;
-        align-items: center;
+        align-items: flex-end;
         justify-content: space-between;
-        gap: 14px;
-        margin-top: 20px;
-        padding-top: 16px;
+        gap: 20px;
+        margin-top: 24px;
+        padding-top: 18px;
         border-top: 1px solid var(--line-2);
         flex-wrap: wrap;
       }
+
       .script-why {
         font-size: 13.5px;
         color: var(--gray);
-        max-width: 56ch;
+        max-width: 58ch;
+        line-height: 1.55;
       }
-      .copy-btn[data-state='done'] {
-        background: var(--green);
-        color: #fff;
+
+      .script-flag {
+        margin-bottom: 8px;
+      }
+
+      /* ---------- Mark as sent ---------- */
+      .sent-btn {
+        flex: none;
+        display: inline-flex;
+        align-items: center;
+        gap: 10px;
+        padding: 9px 16px 9px 12px;
+        border-radius: var(--r-pill);
+        border: 1px solid var(--line);
+        background: var(--white);
+        color: var(--gray);
+        font-family: 'Poppins', sans-serif;
+        font-size: 13.5px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: border-color var(--dur-snap) var(--ease), color var(--dur-snap) var(--ease);
+      }
+
+      .sent-btn:hover {
+        border-color: var(--teal);
+        color: var(--teal);
+      }
+
+      .sent-btn:focus-visible {
+        outline: 2px solid var(--teal);
+        outline-offset: 2px;
+      }
+
+      .sent-box {
+        width: 20px;
+        height: 20px;
+        border-radius: 6px;
+        border: 1px solid var(--line);
+        background: var(--white);
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        flex: none;
+        transition: background var(--dur-snap) var(--ease), border-color var(--dur-snap) var(--ease);
+      }
+
+      .sent-box svg {
+        width: 13px;
+        height: 13px;
+        color: var(--white);
+        opacity: 0;
+        transition: opacity var(--dur-snap) var(--ease);
+      }
+
+      .sent-btn[aria-pressed='true'] {
         border-color: var(--green);
+        color: var(--green-600);
+      }
+
+      .sent-btn[aria-pressed='true'] .sent-box {
+        background: var(--green);
+        border-color: var(--green);
+      }
+
+      .sent-btn[aria-pressed='true'] .sent-box svg {
+        opacity: 1;
+      }
+
+      /* ---------- The cue when the fan sends you to a script ---------- */
+      .script.is-cued {
+        animation: cue 0.95s var(--ease);
+      }
+
+      /* Green, not --accent: --accent is a pale steel, and a pulse in it on a
+         white card is invisible — which left the fan's handover silent. */
+      @keyframes cue {
+        from {
+          box-shadow: 0 0 0 0 var(--green);
+        }
+        to {
+          box-shadow: 0 0 0 12px transparent;
+        }
+      }
+
+      @media (prefers-reduced-motion: reduce) {
+        .script.is-cued {
+          animation: none;
+        }
+      }
+
+      /* ---------- Ask this, not that ---------- */
+      .ask-pair {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 18px;
+        margin: 24px 0 22px;
+      }
+
+      .ask {
+        border: 1px solid var(--line);
+        border-radius: var(--r-md);
+        padding: 20px 22px;
+        background: var(--white);
+      }
+
+      .ask-k {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        font-size: 11px;
+        font-weight: 600;
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+        color: var(--gray);
+        margin-bottom: 12px;
+      }
+
+      .ask-k svg {
+        width: 15px;
+        height: 15px;
+        flex: none;
+      }
+
+      .ask p {
+        font-size: 16px;
+        line-height: 1.5;
+        color: var(--slate);
+      }
+
+      .ask-yes {
+        border-color: var(--green);
+      }
+
+      .ask-yes .ask-k {
+        color: var(--green-600);
+      }
+
+      .ask-yes p {
+        color: var(--ink);
+        font-weight: 500;
+      }
+
+      /* ---------- Responsive ---------- */
+      @media (max-width: 720px) {
+        .howto {
+          grid-template-columns: 1fr;
+          gap: 22px;
+        }
+        .ask-pair {
+          grid-template-columns: 1fr;
+        }
+      }
+
+      @media (max-width: 560px) {
+        .script-head {
+          padding: 16px 18px;
+          gap: 12px;
+        }
+        .script-body {
+          padding: 20px 18px;
+        }
+        .script-text {
+          padding-left: 16px;
+          font-size: 15px;
+        }
+        /* A full-width action is a better target than a floated pill. */
+        .copy-btn {
+          flex: 1 0 100%;
+          min-width: 0;
+          width: 100%;
+        }
+        .script-foot {
+          align-items: flex-start;
+        }
+      }
+
+      /* ---------- Print ----------
+         Nothing invented here is heavy, but it all gets its own paper
+         treatment: the sheet has to stay a clean, ink-light A4. */
+      @media print {
+        .script {
+          border: 0;
+          border-top: 1pt solid var(--line);
+          border-radius: 0;
+          margin-bottom: 0;
+          break-inside: avoid;
+        }
+        .script-head {
+          background: var(--white);
+          border-bottom: 0;
+          padding: 11pt 0 5pt;
+        }
+        .script-body {
+          padding: 0 0 11pt;
+        }
+        .script-intro,
+        .script-subject {
+          margin-bottom: 8pt;
+        }
+        .script-text {
+          font-size: 10pt;
+          max-width: none;
+        }
+        /* On paper a placeholder is a line to write on, not a chip. */
+        .script-text em,
+        .script-subject .ph {
+          background: none;
+          box-shadow: none;
+          color: var(--ink);
+          border-bottom: 1px solid var(--gray);
+          border-radius: 0;
+          padding: 0 2px;
+        }
+        .script-foot {
+          margin-top: 10pt;
+          padding-top: 8pt;
+        }
+        /* The tracker keeps its count and loses its bar: the bar is
+           forced to full width in print by the shared stylesheet, and a
+           full bar would misreport a half-finished list. */
+        .tracker .w-goal-track,
+        .tracker .w-goal-axis {
+          display: none !important;
+        }
+        .tracker {
+          break-inside: avoid;
+        }
+        .ask-pair {
+          break-inside: avoid;
+          gap: 10pt;
+        }
+        .howto {
+          gap: 10pt;
+        }
+        /* .num is white type on a teal fill. Chrome prints without
+           background graphics by default, which would leave a white
+           digit on white paper — so on paper it becomes an outline. */
+        .howto .num,
+        .script-head .num {
+          background: none;
+          color: var(--teal);
+          border: 1pt solid var(--teal);
+        }
+      }
+
+      /* ---- Generated card plates (see the `mark` helper) ---- */
+      /* #fan-scoped, because the rule above that dims the mark to 0.55 is too,
+         and an ID beats a class however late this comes in the file. 0.55 is
+         right for a stroked glyph; a plate at 0.55 is a grey smudge. */
+      #fan .fan-art-mark:has(.sw-plate) {
+        opacity: 1;
+      }
+      #fan .fan-art-mark .sw-plate {
+        width: 100%;
+        max-width: 160px;
+        height: auto;
+        display: block;
+        border-radius: var(--r-sm);
+        /* The plate's paper is off-white; multiplied against the card's tint
+           the paper drops out and only the ink stays, so the drawing sits in
+           the card rather than on a pasted white square. */
+        mix-blend-mode: multiply;
+      }
+      .fan-art-mark .sw-icon {
+        display: none;
+      }
+      .fan-art-sm .sw-plate {
+        display: none;
+      }
+
+      @media print {
+        .fan-art-mark .sw-plate {
+          display: none;
+        }
+        .fan-art-mark .sw-icon {
+          display: block;
+        }
+        .fan-art-mark {
+          opacity: 0.3;
+        }
       }
     </style>
   </head>
@@ -91,25 +625,44 @@
 
     <article class="sheet sheet-wide">
       <div data-sheet-masthead></div>
+      <div data-sheet-hero></div>
 
       <div class="pad">
         <div class="eyebrow">Session tool 11 · Swipe file</div>
-        <h1 class="doc-title">The <em>Conversation</em> Swipe File</h1>
+        <h1 class="doc-title">What to <em>Say</em></h1>
         <p class="lede">
-          Almost nothing on the other sheets moves until a conversation happens — with your
-          accountant, your HR team, your super fund, your partner. The hardest part is usually the
-          first sentence. <strong>Here are seven of them, ready to send.</strong>
+          Seven conversations that unlock everything else on these sheets. Copy, adjust, send.
         </p>
 
-        <div class="card card-tint" style="margin: 32px 0 0">
-          <p class="small">
-            <b style="color: var(--ink)">How to use these.</b> Turn a card over to see what is in it,
-            then take the full text below. Replace anything in
-            <em style="font-style: normal; background: var(--bg1); color: var(--green-600); padding: 1px 5px; border-radius: 4px; font-weight: 600">green</em>
-            with your own detail. None of them asks anyone for advice you would have to pay for —
-            each one asks a specific question that has a factual answer.
-          </p>
+        <div class="howto">
+          <div class="howto-step">
+            <span class="num">1</span>
+            <div>
+              <p class="howto-k">Pick the conversation</p>
+              <p>Turn the middle card over to see what is in it and who it is for.</p>
+            </div>
+          </div>
+          <div class="howto-step">
+            <span class="num">2</span>
+            <div>
+              <p class="howto-k">Copy the words</p>
+              <p>One button takes the whole message, subject line and all.</p>
+            </div>
+          </div>
+          <div class="howto-step">
+            <span class="num">3</span>
+            <div>
+              <p class="howto-k">Fill the gaps</p>
+              <p>Replace anything <em class="ph">highlighted</em> with your own detail, then send it.</p>
+            </div>
+          </div>
         </div>
+
+        <p class="howto-note">
+          None of these asks anyone for advice you would have to pay for. Each one asks a specific
+          question with a factual answer — a figure, a yes or no, a document — which is why they come
+          back quickly.
+        </p>
 
         <hr class="rule" />
 
@@ -117,32 +670,89 @@
         <div class="sec-head">
           <h2>Seven conversations</h2>
           <p>
-            Browse the fan, or read all seven in full below. Click the centre card to turn it over;
-            the arrows and dots move through the set.
+            Turn the middle card over to see what is inside it. The arrows and dots move through the
+            set, or read all seven in full below.
           </p>
         </div>
 
         <div class="fan" id="fan"></div>
 
+        <!-- ---------- Why starting is the hard part ---------- -->
+        <div class="lm-aside" style="--lm-aside-pos: 50% 38%">
+          <div class="lm-aside-img">
+            <img src="../assets/img/photo/adviser-client-tablet-lounge-consultation.webp" alt="" loading="lazy" decoding="async" />
+          </div>
+          <div>
+            <p class="sub-h">The hard part</p>
+            <h3 class="step-h">Nobody gets stuck on the answer. They get stuck on the first sentence.</h3>
+            <p class="muted">
+              Every other sheet in this pack ends in something you cannot do on your own — a figure
+              only your accountant holds, a form only payroll can send, a nomination only your fund
+              can confirm. None of it is complicated. It is simply unstarted, because the opening
+              line was never written.
+            </p>
+            <p class="muted" style="margin-top: 14px">
+              So here it is written, seven times over. Each one asks for something the person
+              receiving it can read off a record already in front of them.
+            </p>
+          </div>
+        </div>
+
         <hr class="rule" />
 
         <!-- ---------- Full text ---------- -->
         <div class="sec-head">
-          <h2>The full text</h2>
-          <p>Copy any of these straight out. They are deliberately short — a long message gets a slow reply.</p>
+          <h2>Copy the words</h2>
+          <p>Each message is short on purpose. A long message gets a slow reply.</p>
         </div>
+
+        <div class="card card-tint tracker">
+          <div class="tracker-head">
+            <div>
+              <p class="howto-k">Keep your own score</p>
+              <p>Tick each conversation as you start it. This stays in your browser and goes nowhere else.</p>
+            </div>
+            <button class="btn btn-ghost btn-sm no-print" type="button" data-reset>Clear the ticks</button>
+          </div>
+          <div id="track"></div>
+          <p class="track-note" data-track-note></p>
+        </div>
+
+        <p class="sr-only" role="status" aria-live="polite" id="copy-status"></p>
 
         <div id="scripts"></div>
 
-        <hr class="rule" />
+        <!-- ---------- The rule behind all seven ---------- -->
+        <div class="lm-photoband">
+          <img src="../assets/img/photo/mature-couple-cafe-conversation-iced-drinks.webp" alt="" loading="lazy" decoding="async" />
+          <p>A vague question gets a meeting. A <em>specific</em> question gets an answer.</p>
+          <span class="lm-band-k">The rule behind all seven</span>
+        </div>
 
-        <div class="card card-green">
-          <h3 class="step-h">The one rule that makes these work</h3>
-          <p class="muted" style="margin-top: 10px">
-            Every message asks a <strong>closed question with a factual answer</strong> — a figure, a
-            yes or no, a document. "What should I do about my super?" invites a meeting that never
-            gets booked. "What is my concessional headroom this financial year?" gets a number back
-            the same week. Keep the ask narrow and the reply comes fast.
+        <div class="card">
+          <h3 class="step-h">Why these get answered</h3>
+          <div class="ask-pair">
+            <div class="ask">
+              <span class="ask-k">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"
+                     stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 6 6 18M6 6l12 12"/></svg>
+                Invites a meeting that never gets booked
+              </span>
+              <p>&ldquo;What should I do about my super?&rdquo;</p>
+            </div>
+            <div class="ask ask-yes">
+              <span class="ask-k">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6"
+                     stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg>
+                Gets a figure back the same week
+              </span>
+              <p>&ldquo;What is my concessional headroom this financial year?&rdquo;</p>
+            </div>
+          </div>
+          <p class="muted small">
+            Every message on this sheet asks a closed question — one whose answer is a figure, a yes
+            or no, or a document. Keep the ask narrow and the reply comes fast. Widen it and you have
+            asked for advice, which is a different conversation.
           </p>
         </div>
 
@@ -163,31 +773,130 @@
     </article>
 
     <script type="module">
-      import { mountSheet, wirePrint } from '../assets/sheet.js'
+      import { mountSheet, wirePrint, store } from '../assets/sheet.js'
       import { mountFan } from '../assets/components.js'
+      import { goalProgress } from '../assets/widgets.js'
 
-      mountSheet({ no: '11', kind: 'Swipe file', wide: true })
+      mountSheet({
+        no: '11',
+        kind: 'Swipe file',
+        wide: true,
+        hero: {
+          src: 'photo/professionals-cafe-meeting-coffee-discussion.webp',
+          alt: '',
+          variant: 'photo',
+          pos: '50% 34%',
+        },
+      })
       wirePrint()
 
-      // Explicit width/height: the mark must never depend on CSS alone to be sized.
-      const mark = (d) =>
-        `<svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-          stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${d}</svg>`
+      const esc = (s) =>
+        String(s).replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]))
 
+      const reduced = () => window.matchMedia('(prefers-reduced-motion: reduce)').matches
+
+      /* The message body highlights its placeholders, so the subject line has
+         to as well — otherwise "replace anything highlighted" silently skips
+         the one sitting in the subject. Display only: the clipboard is built
+         from the plain string, not from this. */
+      const chips = (s) => esc(s).replace(/\[[^\]]+\]/g, (m) => `<em class="ph">${m}</em>`)
+
+      /* ----------------------------------------------------------
+         The card marks.
+         Seven drawings, one hand. Each is 32 units square with a
+         1.8 stroke, so they share an optical weight and a margin —
+         and each one names its counterparty rather than decorating
+         the card: a calculator for the accountant, a payslip with
+         its arrow turning upward for payroll, a vault for the fund,
+         two bubbles for the conversation at home, a set of scales
+         for the solicitor, a shield for the insurer, a person and a
+         bubble for the adviser.
+         Single-colour line art on currentColor, so the tint system
+         and the small 20px version both keep working.
+         ---------------------------------------------------------- */
+      /* Each card carries two marks and the CSS picks one.
+         The big card face shows a generated plate — the brand's abstract
+         language, drawn for this specific conversation. The 38px row icon
+         keeps the line drawing, because a paper-textured render turns to mush
+         at that size and a stroked glyph does not. Both come through the one
+         `mark` field mountFan already renders, so components.js is untouched. */
+      const mark = (d, plate) =>
+        `<img class="sw-plate" src="../assets/img/art/${plate}" alt="" loading="lazy" decoding="async" />` +
+        `<svg class="sw-icon" width="64" height="64" viewBox="0 0 32 32" fill="none" stroke="currentColor"
+          stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${d}</svg>`
+
+      const MARKS = {
+        // Calculator — the accountant.
+        calculator: mark(`
+          <rect x="6.5" y="3" width="19" height="26" rx="3"/>
+          <rect x="10" y="6.5" width="12" height="5.2" rx="1.3"/>
+          <path d="M10 16.5h2.2M14.9 16.5h2.2M19.8 16.5h2.2"/>
+          <path d="M10 20.5h2.2M14.9 20.5h2.2M19.8 20.5h2.2"/>
+          <path d="M10 24.5h2.2M14.9 24.5h7.1"/>`, 'swipe-1-headroom.webp'),
+
+        // A payslip with part of it turning upward — payroll.
+        payslip: mark(`
+          <rect x="4.5" y="4" width="16" height="24" rx="2.8"/>
+          <path d="M8 10.2h9M8 14.8h9M8 19.4h5.8"/>
+          <path d="M21.1 24.2c3.5 0 5.3-1.9 5.3-5.6"/>
+          <path d="M24.3 20.7 26.4 18.6 28.5 20.7"/>`, 'swipe-2-sacrifice.webp'),
+
+        // A vault door — money you cannot reach yet.
+        vault: mark(`
+          <rect x="3.5" y="5.5" width="25" height="21" rx="3"/>
+          <rect x="7" y="9" width="18" height="14" rx="2"/>
+          <circle cx="16" cy="16" r="3.6"/>
+          <path d="M16 10.6v1.8M16 19.6v1.8M10.6 16h1.8M19.6 16h1.8"/>`, 'swipe-3-fundaudit.webp'),
+
+        // Two bubbles, each pointing at its own speaker — the talk at home.
+        dialogue: mark(`
+          <rect x="3" y="4.5" width="15" height="10.6" rx="3.2"/>
+          <path d="M6.6 15.1v3.8l3.6-3.8"/>
+          <rect x="14" y="16.6" width="15" height="10.6" rx="3.2"/>
+          <path d="M25.4 16.6v-3.8l-3.6 3.8"/>`, 'swipe-4-athome.webp'),
+
+        // Scales — the solicitor, and the question of whether the documents agree.
+        scales: mark(`
+          <path d="M16 6.5v20.5"/>
+          <path d="M11.4 27h9.2"/>
+          <path d="M6 9.4h20"/>
+          <path d="M6 9.4 3 15.8h6z"/>
+          <path d="M26 9.4 23 15.8h6z"/>`, 'swipe-5-estate.webp'),
+
+        // A shield with a tick — cover, confirmed.
+        shield: mark(`
+          <path d="M16 3.2 26.3 6.9v8.4c0 6-4.2 11.2-10.3 13.5C9.9 26.5 5.7 21.3 5.7 15.3V6.9z"/>
+          <path d="M11.5 15.6 14.6 18.7 20.5 12.4"/>`, 'swipe-6-cover.webp'),
+
+        // A person and a bubble — any adviser, including us.
+        adviser: mark(`
+          <circle cx="12.4" cy="12.6" r="4.6"/>
+          <path d="M4.5 28.4a7.9 7.9 0 0 1 15.8 0"/>
+          <rect x="19.4" y="3.4" width="10.6" height="8.4" rx="2.4"/>
+          <path d="M22.7 11.8v3.3l3.1-3.3"/>
+          <path d="M22.3 6.4h5M22.3 8.9h3"/>`, 'swipe-7-firstmeeting.webp'),
+      }
+
+      /* ----------------------------------------------------------
+         The seven files.
+         `tint` points at the ramp defined in this file's stylesheet,
+         so the sequence is readable in one place and never a raw hex.
+         ---------------------------------------------------------- */
       const FILES = [
         {
           id: 'accountant-headroom',
-          title: 'The concessional headroom ask',
+          title: 'The super cap question',
           format: 'Email',
           tone: 'teal',
-          length: '1 email · 60 words',
+          length: '3 questions',
           subtitle: 'To your accountant',
-          tint: 'linear-gradient(155deg,#dceaec 0%,#f1f7f7 100%)',
-          mark: mark('<path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/>'),
-          body: 'The single highest-value question you can ask an accountant in sixty words. It has one factual answer and it expires each 30 June.',
+          tint: 'var(--tint-1)',
+          mark: MARKS.calculator,
+          body: 'The highest-value question you can put to an accountant, in one short email. It has one factual answer, and that answer expires each 30 June.',
           inside: ['Your remaining cap this year', 'Whether carry-forward is open to you', 'Whether Division 293 applies'],
           to: 'Accountant',
-          why: 'Concessional cap is use-it-or-lose-it, and carry-forward closes once your balance passes a threshold. Both answers are a lookup, not advice.',
+          subject: 'Concessional headroom before 30 June',
+          why: 'The concessional cap is use-it-or-lose-it, and carry-forward closes once your balance passes a threshold. Both answers are a lookup, not advice.',
           text: `Hi <em>[name]</em>,
 
 Quick question before the end of the financial year. For <em>[2026–27]</em>, could you tell me:
@@ -203,17 +912,19 @@ Thanks,
         },
         {
           id: 'hr-sacrifice',
-          title: 'The salary sacrifice request',
+          title: 'The salary sacrifice form',
           format: 'Email',
           tone: 'teal',
-          length: '1 email · 70 words',
+          length: '3 questions',
           subtitle: 'To HR or payroll',
-          tint: 'linear-gradient(155deg,#e2f6d9 0%,#f4fcf1 100%)',
-          mark: mark('<circle cx="9" cy="7" r="3"/><circle cx="17" cy="9" r="2.5"/><path d="M2 21a7 7 0 0 1 14 0M16 21a6 6 0 0 1 6 0"/>'),
-          body: 'Most people never ask because they assume it is complicated. It is a form. This finds out which form, and when it takes effect.',
+          tint: 'var(--tint-2)',
+          mark: MARKS.payslip,
+          body: 'Most people never ask, because they assume it is complicated. It is a form. This finds out which form, and when it takes effect.',
           inside: ['Whether an arrangement is available', 'The cut-off and when it starts', 'Whether bonuses can be included'],
           to: 'HR / Payroll',
-          why: 'Salary sacrifice has to be arranged before the income is earned. Asking in June about a bonus paid in May is too late.',
+          subject: 'Salary sacrifice to super — process and cut-off',
+          flag: 'Timing matters',
+          why: 'Salary sacrifice has to be arranged before the income is earned. Asking in June about a bonus paid in May is too late — which makes this the one message on the sheet with a deadline inside it.',
           text: `Hi <em>[name]</em>,
 
 I would like to look at a salary sacrifice arrangement into superannuation.
@@ -232,14 +943,15 @@ Thanks,
           title: 'The super fund audit',
           format: 'Email',
           tone: 'teal',
-          length: '1 email · 65 words',
+          length: '4 questions',
           subtitle: 'To your super fund',
-          tint: 'linear-gradient(155deg,#d5e6e8 0%,#eef5f6 100%)',
-          mark: mark('<circle cx="12" cy="12" r="9"/><path d="M12 7v10M9.5 9.5h4a1.5 1.5 0 0 1 0 3h-3a1.5 1.5 0 0 0 0 3h4"/>'),
-          body: 'Four facts about the largest asset you may own outside your home, none of which most people can state from memory.',
+          tint: 'var(--tint-3)',
+          mark: MARKS.vault,
+          body: 'Four facts about what may be the largest asset you own outside your home — none of which most people can state from memory.',
           inside: ['Your investment option and fees', 'Insurance held inside the fund', 'The nomination on file and its expiry'],
           to: 'Super fund',
-          why: 'Everything on the Super Cheatsheet and the Estate Checklist depends on these four answers. They take the fund minutes to supply.',
+          subject: 'Member [number] — request for four confirmations',
+          why: 'Everything on the Super Cheatsheet and the Estate Checklist depends on these four answers, and the fund can supply them in minutes.',
           text: `Hello,
 
 Member number <em>[number]</em>. Could you please confirm in writing:
@@ -257,15 +969,15 @@ Thank you,
           title: 'The conversation at home',
           format: 'Script',
           tone: 'green',
-          length: '1 script · 3 questions',
+          length: '3 questions',
           subtitle: 'With your partner',
-          tint: 'linear-gradient(155deg,#f6e7db 0%,#fcf6f1 100%)',
-          mark: mark('<path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>'),
+          tint: 'var(--tint-4)',
+          mark: MARKS.dialogue,
           body: 'The hardest one, and the one that decides the others. Three questions, asked once, with no numbers in the room.',
           inside: ['What "enough" means to each of you', 'The age you each picture', 'What you would each protect first'],
           to: 'Partner',
-          why: 'Two people rarely hold the same work-optional age or the same definition of enough. Planning to the wrong one wastes a decade.',
-          text: `Not a budget conversation. Three questions, separately, then compare.
+          why: 'Two people rarely hold the same work-optional age or the same definition of enough. Planning to the wrong one can waste a decade.',
+          text: `Not a budget conversation. Three questions, answered separately, then compared.
 
 1. "If money stopped being the deciding factor, what would you want a normal Tuesday to look like?"
 
@@ -273,20 +985,21 @@ Thank you,
 
 3. "If we had to protect one thing financially above everything else, what would you choose?"
 
-Write the answers down before discussing them. The gap between two sets of answers is the planning conversation.`,
+Write the answers down before discussing them. The gap between the two sets of answers is the planning conversation.`,
         },
         {
           id: 'estate-lawyer',
           title: 'The estate review brief',
           format: 'Email',
           tone: 'teal',
-          length: '1 email · 75 words',
-          subtitle: 'To an estate lawyer',
-          tint: 'linear-gradient(155deg,#dfeaec 0%,#f2f7f8 100%)',
-          mark: mark('<path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6M8 13h8M8 17h6"/>'),
+          length: '2 questions',
+          subtitle: 'To an estate solicitor',
+          tint: 'var(--tint-5)',
+          mark: MARKS.scales,
           body: 'Walks into the meeting with the right question already asked, which is usually the difference between a one-hour review and three.',
           inside: ['Which document controls which asset', 'Whether the three agree', 'What a review would cost'],
-          to: 'Estate lawyer',
+          to: 'Estate solicitor',
+          subject: 'Estate review — which document controls which asset',
           why: 'Super, jointly held property and trust assets can all pass outside a will. Naming that up front changes the whole scope of the review.',
           text: `Hello,
 
@@ -305,13 +1018,14 @@ Could you let me know your fee for a review on that basis?
           title: 'The cover confirmation',
           format: 'Email',
           tone: 'teal',
-          length: '1 email · 70 words',
+          length: '5 questions',
           subtitle: 'To your insurer or adviser',
-          tint: 'linear-gradient(155deg,#e7f5de 0%,#f5fcf2 100%)',
-          mark: mark('<path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10Z"/>'),
+          tint: 'var(--tint-6)',
+          mark: MARKS.shield,
           body: 'Answers most of the Income Protection Audit in one reply, in writing, from the only party who can settle it.',
           inside: ['Agreed value or indemnity', 'Waiting and benefit periods', 'Whether bonuses are covered'],
           to: 'Insurer / adviser',
+          subject: 'Policy [number] — confirmation of cover terms',
           why: 'Every one of these is already written into a contract you hold. The answers exist — they are simply not yet known to you.',
           text: `Hello,
 
@@ -332,14 +1046,14 @@ I am not looking to make a change at this stage, only to confirm what is in plac
           title: 'The first adviser meeting',
           format: 'Script',
           tone: 'green',
-          length: '1 script · 5 questions',
+          length: '5 questions',
           subtitle: 'For any adviser, including us',
-          tint: 'linear-gradient(155deg,#d2e3e6 0%,#ecf4f5 100%)',
-          mark: mark('<circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0 1 16 0"/>'),
+          tint: 'var(--tint-7)',
+          mark: MARKS.adviser,
           body: 'Five questions to ask any financial adviser before engaging one. We have included ourselves in that — ask us the same five.',
           inside: ['How they are paid, in dollars', 'What is not in scope', 'Who you actually deal with'],
           to: 'Any adviser',
-          why: 'A good adviser answers all five without hesitation. How readily they answer the fee question tells you most of what you need.',
+          why: 'A good adviser answers all five without hesitation. How readily the fee question is answered tells you most of what you need.',
           text: `Ask these before you engage anyone, including us.
 
 1. "How are you paid — in dollars, for the first year and for each year after?"
@@ -356,63 +1070,241 @@ If any of the five is answered vaguely, ask it again.`,
         },
       ]
 
+      /* ---------- The fan ---------- */
+
       mountFan(document.getElementById('fan'), FILES, {
         actionLabel: 'Read the full text',
-        onGet: (f) => {
-          const el = document.getElementById('s-' + f.id)
-          el?.scrollIntoView({ behavior: 'smooth', block: 'center' })
-          el?.animate?.(
-            [{ boxShadow: '0 0 0 0 rgba(93,206,56,.5)' }, { boxShadow: '0 0 0 10px rgba(93,206,56,0)' }],
-            { duration: 900, easing: 'cubic-bezier(.22,.61,.36,1)' }
-          )
-        },
+        onGet: (f) => cue(f.id),
       })
 
-      // The full text below the fan, with a copy button per script.
-      document.getElementById('scripts').innerHTML = FILES.map(
-        (f) => `
-        <div class="script" id="s-${f.id}">
+      /* ---------- The full text ---------- */
+
+      const CLIP = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+        stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" class="ic-clip">
+        <rect width="8" height="4" x="8" y="2" rx="1"/>
+        <path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/></svg>`
+
+      const TICK = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6"
+        stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" class="ic-tick">
+        <path d="M20 6 9 17l-5-5"/></svg>`
+
+      const host = document.getElementById('scripts')
+
+      host.innerHTML = FILES.map(
+        (f, i) => `
+        <section class="script" id="s-${f.id}" aria-labelledby="h-${f.id}">
           <div class="script-head">
-            <span class="num">${FILES.indexOf(f) + 1}</span>
-            <h3>${f.title}</h3>
-            <span class="to">To: ${f.to}</span>
+            <span class="num">${i + 1}</span>
+            <div class="script-titles">
+              <h3 id="h-${f.id}">${esc(f.title)}</h3>
+              <span class="script-to">${esc(f.subtitle)}</span>
+            </div>
+            <button type="button" class="btn btn-teal btn-sm copy-btn no-print" data-copy="${f.id}">
+              <span class="copy-ic">${CLIP}${TICK}</span>
+              <span class="copy-label">Copy message</span>
+            </button>
           </div>
           <div class="script-body">
+            <p class="script-intro">${esc(f.body)}</p>
+            ${
+              f.subject
+                ? `<div class="script-subject" id="subj-${f.id}" data-subject="${esc(f.subject)}">
+                     <span class="k">Subject</span><span class="v">${chips(f.subject)}</span>
+                   </div>`
+                : ''
+            }
             <div class="script-text" id="t-${f.id}">${f.text}</div>
             <div class="script-foot">
-              <p class="script-why"><b style="color:var(--ink)">Why it works.</b> ${f.why}</p>
-              <button class="btn btn-outline btn-sm copy-btn no-print" data-copy="${f.id}">
-                Copy text
+              <div>
+                ${
+                  f.flag
+                    ? `<span class="badge badge-ember script-flag"><i class="d"></i>${esc(f.flag)}</span>`
+                    : ''
+                }
+                <p class="script-why"><b style="color:var(--ink)">Why it works.</b> ${esc(f.why)}</p>
+              </div>
+              <button type="button" class="sent-btn no-print" data-sent="${f.id}" aria-pressed="false">
+                <span class="sent-box">${TICK}</span>
+                <span class="sent-label">Mark as started</span>
               </button>
             </div>
           </div>
-        </div>`
+        </section>`
       ).join('')
 
-      document.getElementById('scripts').addEventListener('click', async (e) => {
-        const btn = e.target.closest('[data-copy]')
-        if (!btn) return
-        const src = document.getElementById('t-' + btn.dataset.copy)
-        // Strip the placeholder highlighting so what lands on the clipboard is plain text.
-        const text = src.innerText
+      /* ---------- Cue: the fan sends you here, so land on the action ---------- */
+
+      function cue(id) {
+        const el = document.getElementById('s-' + id)
+        if (!el) return
+        el.scrollIntoView({ behavior: reduced() ? 'auto' : 'smooth', block: 'center' })
+        el.classList.remove('is-cued')
+        void el.offsetWidth // restart the animation if the same card is used twice
+        el.classList.add('is-cued')
+        el.addEventListener('animationend', () => el.classList.remove('is-cued'), { once: true })
+        const btn = el.querySelector('[data-copy]')
+        // preventScroll, or focusing would fight the smooth scroll already running.
+        window.setTimeout(() => btn?.focus({ preventScroll: true }), reduced() ? 0 : 520)
+      }
+
+      /* ---------- Copy ---------- */
+
+      const announcer = document.getElementById('copy-status')
+      const announce = (msg) => {
+        announcer.textContent = ''
+        window.setTimeout(() => (announcer.textContent = msg), 40)
+      }
+
+      /** Select the message so a reader can copy it by hand, and try the old API. */
+      function selectAndTry(el) {
         try {
-          await navigator.clipboard.writeText(text)
-          btn.textContent = 'Copied'
-          btn.dataset.state = 'done'
-        } catch {
-          // Clipboard blocked — select the text so it can be copied by hand.
           const range = document.createRange()
-          range.selectNodeContents(src)
+          range.selectNodeContents(el)
           const sel = window.getSelection()
           sel.removeAllRanges()
           sel.addRange(range)
-          btn.textContent = 'Selected — press Cmd/Ctrl+C'
-          btn.dataset.state = 'done'
+          return !!(document.execCommand && document.execCommand('copy'))
+        } catch {
+          return false
         }
-        setTimeout(() => {
-          btn.textContent = 'Copy text'
+      }
+
+      async function copyScript(btn) {
+        const id = btn.dataset.copy
+        const file = FILES.find((f) => f.id === id)
+        const bodyEl = document.getElementById('t-' + id)
+        if (!bodyEl) return
+
+        // innerText, not textContent: the panel is pre-wrap, so the line
+        // breaks the reader can see are the line breaks that get copied.
+        const message = bodyEl.innerText.trim()
+        const text = (file?.subject ? 'Subject: ' + file.subject + '\n\n' : '') + message
+
+        let ok = false
+        try {
+          await navigator.clipboard.writeText(text)
+          ok = true
+        } catch {
+          ok = selectAndTry(bodyEl)
+        }
+
+        const label = btn.querySelector('.copy-label')
+        if (ok) {
+          btn.dataset.state = 'done'
+          label.textContent = 'Copied'
+          announce(`Copied: ${file ? file.title : 'message'}.`)
+        } else {
+          btn.dataset.state = 'manual'
+          label.textContent = 'Press Cmd/Ctrl+C'
+          announce('The clipboard is blocked in this browser. The message is selected — press Control or Command and C.')
+        }
+
+        window.clearTimeout(btn._reset)
+        btn._reset = window.setTimeout(() => {
           delete btn.dataset.state
-        }, 2400)
+          label.textContent = 'Copy message'
+        }, 2800)
+      }
+
+      /* ---------- Sent tracker ---------- */
+
+      const saved = store('swipe:sent')
+      const sent = new Set(saved.read() || [])
+      const trackHost = document.getElementById('track')
+      const trackNote = document.querySelector('[data-track-note]')
+      let mounted = false
+
+      /* Stated, not prescribed: the note says what is true of the set, it does
+         not tell anyone which conversation to have or in what order. */
+      function noteFor(n) {
+        if (n === 0)
+          return 'Nothing ticked yet. The salary sacrifice message is the only one here with a cut-off attached; the rest keep.'
+        if (n === FILES.length)
+          return 'All seven started. Nothing on this sheet is waiting on you now.'
+        return `${n} of ${FILES.length} started. The remaining ${FILES.length - n} are already written — they only need your name on them.`
+      }
+
+      /** Paint the bar from the live count — never from a captured one. */
+      function paintFill() {
+        const fill = trackHost.querySelector('.w-goal-track i')
+        if (fill) fill.style.transform = `scaleX(${(sent.size / FILES.length).toFixed(3)})`
+      }
+
+      function renderTrack() {
+        const n = sent.size
+        if (!mounted) {
+          goalProgress(trackHost, {
+            label: 'Conversations you have started',
+            current: n,
+            target: FILES.length,
+            onTrack: false,
+            fmt: (v) => String(v),
+          })
+          // The widget labels its axis for a money goal. This one counts
+          // conversations, so the three stops are relabelled in place.
+          const ax = trackHost.querySelectorAll('.w-goal-axis span')
+          if (ax.length === 3) {
+            ax[0].textContent = 'None yet'
+            ax[1].textContent = 'Halfway'
+            ax[2].textContent = 'All seven'
+          }
+          // The widget holds its reveal until the bar is first scrolled into
+          // view, and that reveal replays the count captured here at mount.
+          // A tick made before the bar has been seen would therefore be wiped
+          // when it finally fires, so re-point the reveal at the live count.
+          // (Under reduced motion there is nothing to re-point: the widget has
+          // already played and leaves no hook behind.)
+          if (trackHost.__play) {
+            trackHost.__play = () => {
+              const fill = trackHost.querySelector('.w-goal-track i')
+              if (fill) fill.style.transition = `transform .9s var(--ease)`
+              requestAnimationFrame(paintFill)
+            }
+          }
+          mounted = true
+        } else {
+          // Patch rather than re-render: the widget's reveal is a one-shot
+          // observer, so a second mount would leave the bar sitting at zero.
+          const v = trackHost.querySelector('.w-goal-v')
+          if (v) v.innerHTML = `<b>${n}</b><span> / ${FILES.length}</span>`
+          paintFill()
+        }
+        trackNote.textContent = noteFor(n)
+      }
+
+      function paintSent(btn, on) {
+        btn.setAttribute('aria-pressed', String(on))
+        btn.querySelector('.sent-label').textContent = on ? 'Started' : 'Mark as started'
+      }
+
+      host.querySelectorAll('[data-sent]').forEach((btn) => paintSent(btn, sent.has(btn.dataset.sent)))
+      renderTrack()
+
+      host.addEventListener('click', (e) => {
+        const copyBtn = e.target.closest('[data-copy]')
+        if (copyBtn) return copyScript(copyBtn)
+
+        const sentBtn = e.target.closest('[data-sent]')
+        if (sentBtn) {
+          const id = sentBtn.dataset.sent
+          sent.has(id) ? sent.delete(id) : sent.add(id)
+          saved.write([...sent])
+          paintSent(sentBtn, sent.has(id))
+          renderTrack()
+          announce(
+            sent.has(id)
+              ? `Marked as started. ${sent.size} of ${FILES.length}.`
+              : `Unmarked. ${sent.size} of ${FILES.length}.`
+          )
+        }
+      })
+
+      document.querySelector('[data-reset]')?.addEventListener('click', () => {
+        sent.clear()
+        saved.clear()
+        host.querySelectorAll('[data-sent]').forEach((btn) => paintSent(btn, false))
+        renderTrack()
+        announce('Ticks cleared.')
       })
     </script>
   </body>

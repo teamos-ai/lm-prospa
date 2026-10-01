@@ -3,10 +3,10 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>The Executive Super Cheatsheet 2026–27 — Prospa Financial</title>
+    <title>The Super Cheatsheet — Prospa Financial</title>
     <meta
       name="description"
-      content="One page of the superannuation numbers that actually matter on a high income — caps, thresholds, carry-forward and what changed on 1 July 2026."
+      content="Every 2026–27 superannuation number that changes a decision on a high income — caps, thresholds, bring-forward tiers and what changed on 1 July 2026. One page."
     />
     <link rel="icon" type="image/svg+xml" href="../assets/favicon.svg" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -17,46 +17,342 @@
     />
     <link rel="stylesheet" href="../assets/prospa.css" />
     <style>
-      .keynum {
-        border: 1px solid var(--line);
-        border-radius: var(--r-lg);
-        padding: 24px 26px;
+      /* ==========================================================
+         07 · THE SUPER CHEATSHEET — sheet-local styling only.
+         Nothing here leaves this file. Tokens only; no raw brand
+         colour. This file spends the warm accent (--ember) exactly
+         once — on the Division 296 block. The shared components
+         spend it again on their own terms (.tradeoff labels, the
+         Risk chip), which is theirs to decide, not this sheet's.
+         ========================================================== */
+
+      /* ---------- 1 · Figure plates ----------
+         A cheatsheet lives or dies on how fast a figure can be
+         found. So: no boxes. A hairline above, a micro label, one
+         big mono numeral, its unit, one line of meaning, and — only
+         where the sheet already states one — the relationship. */
+
+      .figs {
+        display: grid;
+        gap: 28px 30px;
       }
-      .keynum .k {
+      .figs-3 {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+      }
+      .figs-2 {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+
+      .fig {
+        min-width: 0;
+        padding-top: 15px;
+        border-top: 2px solid var(--line);
+      }
+      /* The one figure on the sheet that every other number hangs off. */
+      .fig-lead {
+        border-top-color: var(--green);
+      }
+      .fig-key {
+        border-top-color: var(--teal);
+      }
+
+      .fig-k {
+        display: block;
         font-size: 11px;
         font-weight: 600;
         letter-spacing: 0.13em;
         text-transform: uppercase;
         color: var(--gray);
-        display: block;
-        margin-bottom: 10px;
-        min-height: 28px;
       }
-      .keynum .v {
+      .fig-v {
+        display: block;
+        margin-top: 11px;
         font-family: 'JetBrains Mono', monospace;
-        font-size: 27px;
+        font-size: clamp(28px, 4.3vw, 36px);
         font-weight: 500;
-        letter-spacing: -0.03em;
+        line-height: 1.04;
+        letter-spacing: -0.045em;
         color: var(--teal);
         font-variant-numeric: tabular-nums;
-        line-height: 1.1;
       }
-      .keynum p {
-        font-size: 13px;
-        color: var(--gray);
-        margin-top: 12px;
-      }
-      .keynum.hot {
-        background: var(--bg1);
-        border-color: transparent;
-      }
-      .keynum.hot .v {
+      .fig-lead .fig-v {
         color: var(--green-600);
       }
+      .fig-v-md {
+        font-size: clamp(23px, 3.2vw, 27px);
+      }
+      .fig-u {
+        display: block;
+        margin-top: 9px;
+        font-size: 12px;
+        color: var(--gray);
+      }
+      .fig-p {
+        margin-top: 12px;
+        font-size: 13.5px;
+        color: var(--gray);
+      }
+      /* A relationship the sheet already states, said in one breath. */
+      .fig-rel {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        margin-top: 13px;
+        font-family: 'JetBrains Mono', monospace;
+        font-size: 10.5px;
+        letter-spacing: 0.09em;
+        text-transform: uppercase;
+        color: var(--teal);
+      }
+      .fig-rel::before {
+        content: '';
+        width: 5px;
+        height: 5px;
+        border-radius: 50%;
+        background: var(--green);
+        flex: none;
+      }
+
+      /* ---------- 2 · Headroom — the reader's own arithmetic ----------
+         The sheet can state the cap. It cannot know how much of it
+         an employer has already eaten. Two figures, typed by the
+         reader, and the answer is theirs. */
+
+      .hr {
+        background: var(--bg2);
+        border-radius: var(--r-lg);
+        padding: 32px 34px;
+      }
+      /* Ask on one row, answer on the next. The figures get the
+         whole width — a cramped $32,500 is worse than no chart. */
+      .hr-top {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+        gap: 36px;
+        align-items: start;
+      }
+      .hr h3 {
+        font-size: 19px;
+        letter-spacing: -0.02em;
+        margin-bottom: 10px;
+      }
+      .hr-p {
+        font-size: 14px;
+        color: var(--gray);
+      }
+      .hr-fields {
+        display: grid;
+        gap: 16px;
+      }
+      .hr-foot {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 14px;
+        flex-wrap: wrap;
+        margin-top: 18px;
+      }
+      .hr-priv {
+        font-size: 12px;
+        color: var(--gray);
+        max-width: 46ch;
+      }
+      /* The quiet action sits on the text edge, not inset from it. */
+      .hr-foot .btn-ghost {
+        padding-inline: 0;
+      }
+      .hr-out-wrap {
+        margin-top: 26px;
+        padding-top: 26px;
+        /* On the band's own tint, --line disappears; --accent does not. */
+        border-top: 1px solid var(--accent);
+      }
+      .hr-out-k {
+        display: block;
+        font-size: 11px;
+        font-weight: 600;
+        letter-spacing: 0.13em;
+        text-transform: uppercase;
+        color: var(--gray);
+        margin-bottom: 12px;
+      }
+
+      /* The cap as one bar: what the employer takes, what you have
+         already arranged, and what is left. Widths are set directly,
+         so it is correct the moment it is drawn and correct on paper. */
+      .capbar {
+        display: flex;
+        height: 16px;
+        border-radius: var(--r-sm);
+        background: var(--line);
+        overflow: hidden;
+      }
+      .capbar i {
+        display: block;
+        height: 100%;
+        width: 0;
+        transition: width var(--dur-base) var(--ease);
+      }
+      .capbar .seg-sg {
+        background: var(--teal);
+      }
+      .capbar .seg-ss {
+        background: var(--green);
+      }
+      .capkey {
+        display: flex;
+        gap: 18px;
+        flex-wrap: wrap;
+        margin-top: 13px;
+        font-size: 12px;
+        color: var(--gray);
+      }
+      .capkey span {
+        display: inline-flex;
+        align-items: center;
+        gap: 7px;
+      }
+      .capkey i {
+        width: 9px;
+        height: 9px;
+        border-radius: 3px;
+        flex: none;
+      }
+      .capkey .k-sg {
+        background: var(--teal);
+      }
+      .capkey .k-ss {
+        background: var(--green);
+      }
+      .capkey .k-left {
+        background: var(--line);
+      }
+
+      .hr-empty {
+        border: 1px dashed var(--line);
+        border-radius: var(--r-md);
+        padding: 22px 24px;
+        font-size: 13.5px;
+        color: var(--gray);
+        background: #fff;
+      }
+      .hr-metrics {
+        margin-top: 18px;
+      }
+      /* Three tiles, not four: the shared strip assumes four columns. */
+      .hr-metrics.w-metrics {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+      }
+      /* Over the cap is a caution, not the page's headline warning —
+         so it takes the amber feedback token and leaves --ember alone. */
+      .hr-metrics .w-metric-over {
+        background: var(--amber-soft);
+        border-color: transparent;
+      }
+      .hr-metrics .w-metric-over .w-metric-v {
+        color: var(--ink);
+      }
+      .hr-flag {
+        display: inline-flex;
+        align-items: center;
+        gap: 9px;
+        margin-top: 16px;
+        padding: 9px 15px;
+        border-radius: var(--r-pill);
+        background: var(--amber-soft);
+        font-size: 12.5px;
+        font-weight: 600;
+        color: var(--slate);
+      }
+      .hr-flag::before {
+        content: '';
+        width: 7px;
+        height: 7px;
+        border-radius: 50%;
+        background: var(--amber);
+        flex: none;
+      }
+
+      #hr-empty[hidden],
+      #hr-out[hidden],
+      #hr-flag[hidden] {
+        display: none !important;
+      }
+
+      /* ---------- 3 · The bring-forward ladder ----------
+         Four rungs, and the three pips say at a glance how many
+         years of cap each balance band still reaches. */
+
+      .ladder {
+        list-style: none;
+        margin: 0;
+        padding: 0;
+      }
+      .ladder li {
+        display: grid;
+        grid-template-columns: 56px minmax(0, 1fr) auto;
+        gap: 20px;
+        align-items: center;
+        padding: 15px 0;
+        border-bottom: 1px solid var(--line-2);
+      }
+      .ladder li:last-child {
+        border-bottom: none;
+      }
+      .ladder-pips {
+        display: flex;
+        gap: 5px;
+        align-items: flex-end;
+        height: 22px;
+      }
+      .ladder-pips i {
+        display: block;
+        width: 9px;
+        border-radius: 2px;
+        background: var(--line);
+      }
+      .ladder-pips i:nth-child(1) {
+        height: 10px;
+      }
+      .ladder-pips i:nth-child(2) {
+        height: 16px;
+      }
+      .ladder-pips i:nth-child(3) {
+        height: 22px;
+      }
+      .ladder-pips i.on {
+        background: var(--green);
+      }
+      .ladder-b {
+        display: block;
+        font-size: 14.5px;
+        font-weight: 600;
+        color: var(--ink);
+      }
+      .ladder-n {
+        display: block;
+        margin-top: 2px;
+        font-size: 12.5px;
+        color: var(--gray);
+      }
+      .ladder-v {
+        font-family: 'JetBrains Mono', monospace;
+        font-size: 19px;
+        font-weight: 500;
+        letter-spacing: -0.035em;
+        color: var(--teal);
+        font-variant-numeric: tabular-nums;
+        white-space: nowrap;
+      }
+      .ladder-nil .ladder-v {
+        color: var(--gray);
+      }
+
+      /* ---------- 4 · Notes ---------- */
 
       .note {
         border-radius: var(--r-md);
-        padding: 20px 24px;
+        padding: 22px 26px;
         background: var(--bg2);
         font-size: 14.5px;
         color: var(--slate);
@@ -64,6 +360,8 @@
       .note b {
         color: var(--ink);
       }
+      /* The single warmest thing on the sheet: new law, first
+         measurement date still ahead. --ember is spent here. */
       .note.new {
         background: var(--ember-soft);
       }
@@ -71,22 +369,198 @@
         color: var(--ember-strong);
       }
 
-      .q-item {
-        padding: 20px 0;
-        border-bottom: 1px solid var(--line-2);
+      /* ---------- 5 · The shortcut tracker's staging ---------- */
+
+      .sc-stage {
+        margin-bottom: 34px;
       }
-      .q-item:last-child {
-        border-bottom: none;
+      .sc-stage-k {
+        display: block;
+        margin-bottom: 12px;
+        font-size: 11px;
+        font-weight: 600;
+        letter-spacing: 0.14em;
+        text-transform: uppercase;
+        color: var(--gray);
+      }
+      .sc-stage-note {
+        margin-top: 13px;
+        font-size: 12.5px;
+        color: var(--gray);
+      }
+
+      /* ---------- 6 · Questions ---------- */
+
+      .q-item {
+        display: grid;
+        grid-template-columns: 24px minmax(0, 1fr);
+        gap: 16px;
+        padding: 18px 0;
+      }
+      /* Rules BETWEEN the questions, not after the last one — the
+         disclaimer is also a div, so :last-child never fires here. */
+      .q-item + .q-item {
+        border-top: 1px solid var(--line-2);
+      }
+      .q-n {
+        font-family: 'JetBrains Mono', monospace;
+        font-size: 12px;
+        color: var(--teal);
+        padding-top: 4px;
       }
       .q-item b {
         display: block;
         font-size: 16px;
         color: var(--ink);
-        margin-bottom: 6px;
+        margin-bottom: 5px;
+        line-height: 1.35;
       }
       .q-item p {
-        font-size: 14.5px;
+        font-size: 14px;
         color: var(--gray);
+      }
+
+      /* ---------- 7 · Responsive ---------- */
+
+      @media (max-width: 880px) {
+        .figs-3 {
+          grid-template-columns: repeat(2, minmax(0, 1fr));
+        }
+      }
+      @media (max-width: 780px) {
+        .hr-top {
+          grid-template-columns: minmax(0, 1fr);
+          gap: 24px;
+        }
+      }
+      @media (max-width: 640px) {
+        .figs-3,
+        .figs-2 {
+          grid-template-columns: minmax(0, 1fr);
+        }
+        .figs {
+          gap: 24px;
+        }
+        .hr {
+          padding: 24px 20px;
+        }
+        .hr-metrics.w-metrics {
+          grid-template-columns: minmax(0, 1fr);
+        }
+      }
+      @media (max-width: 560px) {
+        .ladder li {
+          grid-template-columns: minmax(0, 1fr) auto;
+          gap: 14px;
+        }
+        .ladder-pips {
+          display: none;
+        }
+        .ladder-v {
+          font-size: 16.5px;
+        }
+      }
+
+      /* ---------- 8 · Print ----------
+         Everything invented on this page has to survive A4 without
+         drinking ink. Hairlines stay, fills go, nothing breaks
+         across a page mid-figure. */
+
+      @media print {
+        .figs {
+          gap: 11pt 16pt;
+        }
+        .fig {
+          padding-top: 7pt;
+          border-top-width: 1pt;
+          break-inside: avoid;
+        }
+        .fig-v {
+          font-size: 15.5pt;
+        }
+        .fig-v-md {
+          font-size: 13pt;
+        }
+        .fig-p {
+          margin-top: 6pt;
+        }
+        .hr {
+          background: #fff;
+          border: 1px solid var(--line);
+          padding: 11pt 13pt;
+          break-inside: avoid;
+        }
+        .hr-top {
+          grid-template-columns: minmax(0, 1fr);
+          gap: 10pt;
+        }
+        .hr-out-wrap {
+          margin-top: 11pt;
+          padding-top: 11pt;
+        }
+        .capbar {
+          height: 7pt;
+          -webkit-print-color-adjust: exact;
+          print-color-adjust: exact;
+        }
+        /* The bar is forced to print; its key has to be forced with it,
+           or the reader gets three coloured segments and three unlabelled
+           words. */
+        .capkey i {
+          -webkit-print-color-adjust: exact;
+          print-color-adjust: exact;
+          border: 0.5pt solid var(--gray);
+        }
+        .hr-empty {
+          padding: 9pt 11pt;
+        }
+        /* Background fills do not print unless the reader asks for them.
+           These two carry meaning, so on paper they are drawn with a rule
+           instead of a fill. */
+        .hr-metrics .w-metric-over {
+          border: 1px solid var(--amber);
+        }
+        .hr-flag {
+          display: block;
+          padding: 7pt 0 7pt 10pt;
+          border-left: 2.5pt solid var(--amber);
+          border-radius: 0;
+          color: var(--ink);
+        }
+        .hr-flag::before {
+          display: none;
+        }
+        /* The pips say nothing the row's own words do not. On paper they
+           would be an empty 56px column, so the column goes too. */
+        .ladder-pips {
+          display: none;
+        }
+        .ladder li {
+          grid-template-columns: minmax(0, 1fr) auto;
+          gap: 12pt;
+        }
+        /* Both notes lose their tint on paper. The Division 296 block is
+           the one genuinely new thing on this sheet — it keeps an edge. */
+        .note {
+          padding: 9pt 0 9pt 11pt;
+          border-left: 1.5pt solid var(--line);
+          border-radius: 0;
+        }
+        .note.new {
+          border-left-color: var(--ember-strong);
+        }
+        .ladder li,
+        .q-item,
+        .sc-stage,
+        .note {
+          break-inside: avoid;
+        }
+        .ladder li {
+          padding: 7pt 0;
+        }
+        .q-item {
+          padding: 7pt 0;
+        }
       }
     </style>
   </head>
@@ -95,165 +569,264 @@
 
     <article class="sheet">
       <div data-sheet-masthead></div>
+      <div data-sheet-hero></div>
 
       <div class="pad">
         <div class="eyebrow">Session tool 07 · Cheatsheet</div>
-        <h1 class="doc-title">The Executive <em>Super Cheatsheet</em></h1>
+        <h1 class="doc-title">The <em>Super</em> Cheatsheet</h1>
         <p class="lede">
-          The superannuation numbers that actually change decisions on a high income, for the
-          <strong>2026–27 Australian financial year</strong>. One page. Keep it until July, then
-          check it again — most of these index.
+          Every 2026–27 superannuation number that changes a decision on a high income. One page.
         </p>
 
         <hr class="rule" />
 
         <!-- ---------- Caps ---------- -->
         <div class="sec-head">
-          <h2>Contribution caps</h2>
-          <p>Annual, and largely use-it-or-lose-it.</p>
+          <h2>The three caps</h2>
+          <p>Annual, and mostly use-it-or-lose-it.</p>
         </div>
 
-        <div class="grid g3">
-          <div class="keynum hot">
-            <span class="k">Concessional cap</span>
-            <span class="v">$32,500</span>
-            <p>Before-tax: employer SG, salary sacrifice and personal deductible contributions, combined. Up from $30,000.</p>
+        <div class="figs figs-3">
+          <div class="fig fig-lead">
+            <span class="fig-k">Concessional cap</span>
+            <span class="fig-v">$32,500</span>
+            <span class="fig-u">a year, before tax</span>
+            <p class="fig-p">
+              Employer SG, salary sacrifice and personal deductible contributions, combined.
+            </p>
+            <span class="fig-rel">Up from $30,000</span>
           </div>
-          <div class="keynum">
-            <span class="k">Non-concessional cap</span>
-            <span class="v">$130,000</span>
-            <p>After-tax contributions, where your total super balance allows them.</p>
+          <div class="fig">
+            <span class="fig-k">Non-concessional cap</span>
+            <span class="fig-v">$130,000</span>
+            <span class="fig-u">a year, after tax</span>
+            <p class="fig-p">
+              After-tax contributions, where your total super balance allows them.
+            </p>
+            <span class="fig-rel">Set by your balance</span>
           </div>
-          <div class="keynum">
-            <span class="k">Bring-forward maximum</span>
-            <span class="v">$390,000</span>
-            <p>Up to three years of non-concessional cap brought into one year, subject to your balance.</p>
+          <div class="fig">
+            <span class="fig-k">Bring-forward maximum</span>
+            <span class="fig-v">$390,000</span>
+            <span class="fig-u">in one year, after tax</span>
+            <p class="fig-p">
+              Up to three years of non-concessional cap brought into a single year, subject to your
+              balance.
+            </p>
+            <span class="fig-rel">Three × the after-tax cap</span>
           </div>
         </div>
 
-        <div class="note" style="margin-top: 22px">
-          <b>The trap in the concessional cap.</b> It includes what your employer already pays. On a
-          salary at or above the maximum contribution base, employer contributions alone consume a
-          large share of the $32,500 before you have salary sacrificed a dollar. Check the headroom
-          before committing a bonus to super.
+        <!-- ---------- Headroom ---------- -->
+        <div class="hr" style="margin-top: 34px">
+          <div class="hr-top">
+            <div>
+              <h3>The trap in the concessional cap</h3>
+              <p class="hr-p">
+                It includes what your employer already pays. On a salary at or above the maximum
+                contribution base, employer contributions alone consume a large share of the $32,500
+                before you have salary sacrificed a dollar. Your two figures, and the headroom is
+                arithmetic.
+              </p>
+            </div>
+
+            <div class="hr-fields">
+              <div class="field">
+                <label for="hr-sg">Employer contributions this financial year</label>
+                <div class="input-wrap">
+                  <span class="affix" aria-hidden="true">$</span>
+                  <input
+                    type="text"
+                    id="hr-sg"
+                    inputmode="numeric"
+                    autocomplete="off"
+                    placeholder="0"
+                    data-persist="sg"
+                    aria-describedby="hr-sg-hint"
+                  />
+                </div>
+                <span class="hint" id="hr-sg-hint">Your payroll team can give you this in one email.</span>
+              </div>
+              <div class="field">
+                <label for="hr-ss">Salary sacrifice already arranged</label>
+                <div class="input-wrap">
+                  <span class="affix" aria-hidden="true">$</span>
+                  <input
+                    type="text"
+                    id="hr-ss"
+                    inputmode="numeric"
+                    autocomplete="off"
+                    placeholder="0"
+                    data-persist="ss"
+                    aria-describedby="hr-ss-hint"
+                  />
+                </div>
+                <span class="hint" id="hr-ss-hint">For the full year. Leave blank if there is none.</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="hr-foot">
+            <p class="hr-priv">
+              Nothing leaves this page. Your figures stay in this browser and print with the sheet.
+            </p>
+            <button type="button" class="btn btn-ghost btn-sm no-print" data-clear>
+              Clear these figures
+            </button>
+          </div>
+
+          <div class="hr-out-wrap">
+            <span class="hr-out-k">Your concessional cap, this year</span>
+
+            <p class="hr-empty" id="hr-empty">
+              Put either figure in and this fills itself: what is committed, what is left, and how
+              much of the $32,500 is still yours to use.
+            </p>
+
+            <div id="hr-out" hidden>
+              <div class="capbar" id="hr-bar" role="img" aria-label="Concessional cap usage">
+                <i class="seg-sg"></i>
+                <i class="seg-ss"></i>
+              </div>
+              <div class="capkey" aria-hidden="true">
+                <span><i class="k-sg"></i>Employer</span>
+                <span><i class="k-ss"></i>Salary sacrifice</span>
+                <span><i class="k-left"></i>Headroom</span>
+              </div>
+              <div class="hr-metrics" id="hr-metrics"></div>
+            </div>
+
+            <p class="hr-flag" id="hr-flag" hidden></p>
+            <span class="sr-only" id="hr-live" aria-live="polite"></span>
+          </div>
         </div>
 
         <hr class="rule" />
 
         <!-- ---------- High income thresholds ---------- -->
         <div class="sec-head">
-          <h2>The thresholds that bite on a high income</h2>
-          <p>These are the ones most often discovered after the fact.</p>
+          <h2>Thresholds that bite</h2>
+          <p>The numbers most people meet after the fact rather than before it.</p>
         </div>
 
-        <table class="tbl">
-          <thead>
-            <tr>
-              <th>What</th>
-              <th>2026–27</th>
-              <th>Why it matters to you</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td><b>Division 293 threshold</b></td>
-              <td class="n">$250,000</td>
-              <td>
-                Above this — income plus concessional contributions, combined — concessional
-                contributions are effectively taxed at 30% rather than 15%. It narrows the gap to
-                your marginal rate; it does not usually close it.
-              </td>
-            </tr>
-            <tr>
-              <td><b>Carry-forward concessional</b></td>
-              <td class="n">TSB under $500,000</td>
-              <td>
-                Unused concessional cap from the previous five years can be used, but only if your
-                total super balance was under $500,000 on the prior 30 June. Unused amounts expire
-                after five years.
-              </td>
-            </tr>
-            <tr>
-              <td><b>Superannuation guarantee</b></td>
-              <td class="n">12%</td>
-              <td>Of ordinary time earnings. Unchanged for 2026–27.</td>
-            </tr>
-            <tr>
-              <td><b>Maximum contribution base</b></td>
-              <td class="n">$270,830</td>
-              <td>
-                The quarterly-equivalent earnings ceiling above which an employer is not required to
-                pay SG. Earnings beyond it generate no further compulsory contribution.
-              </td>
-            </tr>
-            <tr>
-              <td><b>Transfer balance cap</b></td>
-              <td class="n">$2.1 million</td>
-              <td>
-                The lifetime limit on what can move into a tax-free retirement-phase income stream.
-                Increased from $2 million on 1 July 2026.
-              </td>
-            </tr>
-            <tr>
-              <td><b>CGT cap (lifetime)</b></td>
-              <td class="n">$1,935,000</td>
-              <td>
-                For eligible small-business sale proceeds contributed to super, outside the
-                non-concessional cap. Relevant if a business exit is part of your plan.
-              </td>
-            </tr>
-          </tbody>
-        </table>
+        <div class="figs figs-2">
+          <div class="fig fig-key">
+            <span class="fig-k">Division 293 threshold</span>
+            <span class="fig-v fig-v-md">$250,000</span>
+            <span class="fig-u">income plus concessional contributions</span>
+            <p class="fig-p">
+              Above it, concessional contributions are effectively taxed at 30% rather than 15%. That
+              narrows the gap to your marginal rate; it does not usually close it.
+            </p>
+          </div>
+
+          <div class="fig">
+            <span class="fig-k">Carry-forward concessional</span>
+            <span class="fig-v fig-v-md">$500,000</span>
+            <span class="fig-u">total super balance, prior 30 June</span>
+            <p class="fig-p">
+              Under it, unused cap from the previous five years is still available to you. Unused
+              amounts expire after five years.
+            </p>
+          </div>
+
+          <div class="fig">
+            <span class="fig-k">Superannuation guarantee</span>
+            <span class="fig-v fig-v-md">12%</span>
+            <span class="fig-u">of ordinary time earnings</span>
+            <p class="fig-p">Unchanged for 2026–27, and counted inside the concessional cap.</p>
+          </div>
+
+          <div class="fig">
+            <span class="fig-k">Maximum contribution base</span>
+            <span class="fig-v fig-v-md">$270,830</span>
+            <span class="fig-u">quarterly-equivalent earnings ceiling</span>
+            <p class="fig-p">
+              Above it an employer is not required to pay SG. Earnings beyond it generate no further
+              compulsory contribution.
+            </p>
+          </div>
+
+          <div class="fig">
+            <span class="fig-k">Transfer balance cap</span>
+            <span class="fig-v fig-v-md">$2.1 million</span>
+            <span class="fig-u">lifetime, into retirement phase</span>
+            <p class="fig-p">
+              The limit on what can move into a tax-free retirement-phase income stream.
+            </p>
+            <span class="fig-rel">Up from $2 million on 1 July 2026</span>
+          </div>
+
+          <div class="fig">
+            <span class="fig-k">CGT cap</span>
+            <span class="fig-v fig-v-md">$1,935,000</span>
+            <span class="fig-u">lifetime, small-business sale</span>
+            <p class="fig-p">
+              For eligible small-business sale proceeds contributed to super, outside the
+              non-concessional cap.
+            </p>
+          </div>
+        </div>
 
         <hr class="rule" />
 
         <!-- ---------- Bring-forward ---------- -->
         <div class="sec-head">
-          <h2>Bring-forward, by total super balance</h2>
+          <h2>What you can add after tax</h2>
           <p>
-            What you can contribute after tax depends on your total super balance at the previous
-            30 June — not on your income.
+            It depends on your total super balance at the previous 30 June — not on what you earn.
           </p>
         </div>
 
-        <table class="tbl tbl-tight">
-          <thead>
-            <tr>
-              <th>Total super balance at 30 June 2026</th>
-              <th>Bring-forward available</th>
-              <th>Maximum non-concessional</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td>Under $1,840,000</td>
-              <td>Three years</td>
-              <td class="n">$390,000</td>
-            </tr>
-            <tr>
-              <td>$1,840,000 to under $1,970,000</td>
-              <td>Two years</td>
-              <td class="n">$260,000</td>
-            </tr>
-            <tr>
-              <td>$1,970,000 to under $2,100,000</td>
-              <td>No bring-forward</td>
-              <td class="n">$130,000</td>
-            </tr>
-            <tr>
-              <td>$2,100,000 or more</td>
-              <td>None</td>
-              <td class="n">Nil</td>
-            </tr>
-          </tbody>
-        </table>
+        <ol class="ladder">
+          <li>
+            <span class="ladder-pips" aria-hidden="true">
+              <i class="on"></i><i class="on"></i><i class="on"></i>
+            </span>
+            <span>
+              <span class="ladder-b">Under $1,840,000</span>
+              <span class="ladder-n">Three years of cap available</span>
+            </span>
+            <b class="ladder-v">$390,000</b>
+          </li>
+          <li>
+            <span class="ladder-pips" aria-hidden="true">
+              <i class="on"></i><i class="on"></i><i></i>
+            </span>
+            <span>
+              <span class="ladder-b">$1,840,000 to under $1,970,000</span>
+              <span class="ladder-n">Two years of cap available</span>
+            </span>
+            <b class="ladder-v">$260,000</b>
+          </li>
+          <li>
+            <span class="ladder-pips" aria-hidden="true">
+              <i class="on"></i><i></i><i></i>
+            </span>
+            <span>
+              <span class="ladder-b">$1,970,000 to under $2,100,000</span>
+              <span class="ladder-n">No bring-forward — one year only</span>
+            </span>
+            <b class="ladder-v">$130,000</b>
+          </li>
+          <li class="ladder-nil">
+            <span class="ladder-pips" aria-hidden="true">
+              <i></i><i></i><i></i>
+            </span>
+            <span>
+              <span class="ladder-b">$2,100,000 or more</span>
+              <span class="ladder-n">None available</span>
+            </span>
+            <b class="ladder-v">Nil</b>
+          </li>
+        </ol>
 
         <hr class="rule" />
 
         <!-- ---------- What changed ---------- -->
         <div class="sec-head">
-          <h2>What changed on 1 July 2026</h2>
-          <p>The one genuinely new thing on this page.</p>
+          <h2>What changed this year</h2>
+          <p>One genuinely new thing on this page.</p>
         </div>
 
         <div class="note new">
@@ -277,40 +850,61 @@
 
         <!-- ---------- Preservation ---------- -->
         <div class="sec-head">
-          <h2>Access</h2>
+          <h2>When you can get at it</h2>
+          <p>Two numbers, and both are simpler than they used to be.</p>
         </div>
 
-        <div class="grid g2">
-          <div class="keynum">
-            <span class="k">Preservation age</span>
-            <span class="v">60</span>
-            <p>
+        <!-- No photograph beside these two. CLAIMS.md §8c rule 2: imagery is
+             atmosphere, never evidence — a person never appears next to a
+             number. The page's photography sits in the band below, against a
+             sentence. -->
+        <div class="figs figs-2">
+          <div class="fig fig-key">
+            <span class="fig-k">Preservation age</span>
+            <span class="fig-v">60</span>
+            <span class="fig-u">for everyone still working</span>
+            <p class="fig-p">
               From 1 July 2024, preservation age is 60 for everyone who had not already reached it.
               The old sliding scale by birth year no longer produces a different answer for anyone
               still working.
             </p>
           </div>
-          <div class="keynum">
-            <span class="k">Tax on withdrawals after 60</span>
-            <span class="v">Generally nil</span>
-            <p>
-              On the taxable component of a benefit from a taxed source, once a condition of release
-              is met. Untaxed elements, defined benefit schemes and death benefits follow different
-              rules.
+          <div class="fig">
+            <span class="fig-k">Tax on withdrawals after 60</span>
+            <span class="fig-v fig-v-md">Generally nil</span>
+            <span class="fig-u">taxable component, taxed source</span>
+            <p class="fig-p">
+              Once a condition of release is met. Untaxed elements, defined benefit schemes and
+              death benefits follow different rules.
             </p>
           </div>
         </div>
 
-
-        <hr class="rule" />
+        <div class="lm-photoband">
+          <img
+            src="../assets/img/photo/senior-man-blazer-window-reflective.webp"
+            alt=""
+            loading="lazy"
+            decoding="async"
+          />
+          <p>Most of these numbers index every year. <em>The decisions they allow</em> do not wait that long.</p>
+          <span class="lm-band-k">Figures for 2026–27 · confirm before acting</span>
+        </div>
 
         <!-- ---------- Shortcuts ---------- -->
         <div class="sec-head">
-          <h2>Eight shortcuts hiding in those numbers</h2>
+          <h2>Eight shortcuts in these numbers</h2>
           <p>
-            Each one is a decision already available to you that most people on a high income are
-            not using. Mark the ones that apply — the list you build is the agenda, and it prints
-            with the page.
+            Each one is a decision already available to you. Mark the ones that apply — the list you
+            build is the agenda, and it prints with the page.
+          </p>
+        </div>
+
+        <div class="sc-stage">
+          <span class="sc-stage-k">Your agenda, as you build it</span>
+          <div class="sc-tally" data-shortcut-tally></div>
+          <p class="sc-stage-note">
+            Marks are kept in this browser only. Nothing is sent anywhere.
           </p>
         </div>
 
@@ -325,7 +919,7 @@
             </span>
             <div>
               <div class="shortcut-head">
-                <b>Use up to five years of unused concessional cap at once</b>
+                <b>Use five years of unused cap in one year</b>
                 <span class="shortcut-saves">
                   <span class="sc-chip sc-green">Tax</span><span class="sc-chip sc-green">Money</span>
                 </span>
@@ -354,7 +948,7 @@
             </span>
             <div>
               <div class="shortcut-head">
-                <b>Fill the concessional cap rather than guessing at it</b>
+                <b>Fill the cap instead of guessing at it</b>
                 <span class="shortcut-saves">
                   <span class="sc-chip sc-green">Tax</span><span class="sc-chip sc-teal">Time</span>
                 </span>
@@ -382,7 +976,7 @@
             </span>
             <div>
               <div class="shortcut-head">
-                <b>Know whether Division 293 applies before you contribute</b>
+                <b>Find out whether Division 293 applies to you</b>
                 <span class="shortcut-saves">
                   <span class="sc-chip sc-slate">Knowledge</span><span class="sc-chip sc-green">Money</span>
                 </span>
@@ -469,7 +1063,7 @@
             </span>
             <div>
               <div class="shortcut-head">
-                <b>Put a binding nomination in place, and diarise its expiry</b>
+                <b>Put a binding nomination in place — and diarise it</b>
                 <span class="shortcut-saves">
                   <span class="sc-chip sc-ember">Risk</span><span class="sc-chip sc-teal">Admin</span>
                 </span>
@@ -528,7 +1122,7 @@
             </span>
             <div>
               <div class="shortcut-head">
-                <b>If a business sale is in your future, look at the CGT cap early</b>
+                <b>Look at the CGT cap long before a business sale</b>
                 <span class="shortcut-saves">
                   <span class="sc-chip sc-green">Tax</span><span class="sc-chip sc-green">Money</span>
                 </span>
@@ -551,35 +1145,48 @@
 
         </div>
 
-        <div class="sc-tally" data-shortcut-tally style="margin-top: 28px"></div>
-
         <hr class="rule" />
 
         <!-- ---------- Questions ---------- -->
         <div class="sec-head">
-          <h2>Five questions this page should prompt</h2>
+          <h2>Five questions to ask</h2>
           <p>If you cannot answer one of these, that is the one worth asking about.</p>
         </div>
 
         <div class="q-item">
-          <b>How much concessional headroom do I actually have this year?</b>
-          <p>$32,500 less what your employer will contribute, less any salary sacrifice already in place.</p>
+          <span class="q-n" aria-hidden="true">01</span>
+          <div>
+            <b>How much concessional headroom do I actually have this year?</b>
+            <p>$32,500 less what your employer will contribute, less any salary sacrifice already in place.</p>
+          </div>
         </div>
         <div class="q-item">
-          <b>Does Division 293 apply to me, and have I accounted for it?</b>
-          <p>It changes what a concessional contribution is worth — it rarely makes it worthless.</p>
+          <span class="q-n" aria-hidden="true">02</span>
+          <div>
+            <b>Does Division 293 apply to me, and have I accounted for it?</b>
+            <p>It changes what a concessional contribution is worth — it rarely makes it worthless.</p>
+          </div>
         </div>
         <div class="q-item">
-          <b>Was my total super balance under $500,000 at the last 30 June?</b>
-          <p>If so, up to five years of unused concessional cap may still be available. If not, the opportunity has closed.</p>
+          <span class="q-n" aria-hidden="true">03</span>
+          <div>
+            <b>Was my total super balance under $500,000 at the last 30 June?</b>
+            <p>If so, up to five years of unused concessional cap may still be available. If not, the opportunity has closed.</p>
+          </div>
         </div>
         <div class="q-item">
-          <b>If I want work to be optional before 60, what funds those years?</b>
-          <p>Nothing on this page does. That is a question for capital held outside super.</p>
+          <span class="q-n" aria-hidden="true">04</span>
+          <div>
+            <b>If I want work to be optional before 60, what funds those years?</b>
+            <p>Nothing on this page does. That is a question for capital held outside super.</p>
+          </div>
         </div>
         <div class="q-item">
-          <b>Who would receive this if I died tomorrow, and what would they pay?</b>
-          <p>Super is not automatically an estate asset, and the tax outcome depends on who receives it.</p>
+          <span class="q-n" aria-hidden="true">05</span>
+          <div>
+            <b>Who would receive this if I died tomorrow, and what would they pay?</b>
+            <p>Super is not automatically an estate asset, and the tax outcome depends on who receives it.</p>
+          </div>
         </div>
 
         <div class="disclaimer" style="margin-top: 32px">
@@ -587,7 +1194,9 @@
           Australian financial year and are indexed or amended from time to time. This page is a
           summary: eligibility for every cap, threshold and concession depends on your circumstances,
           including your age, total super balance, work status and contribution history. It is not a
-          recommendation to make or change any contribution. Confirm the current figures at
+          recommendation to make or change any contribution, and the shortcuts listed above are
+          questions to raise, not advice to act on. The headroom figure is arithmetic on the numbers
+          you entered, nothing more. Confirm the current figures at
           <a href="https://www.ato.gov.au/tax-rates-and-codes/key-superannuation-rates-and-thresholds"
              target="_blank" rel="noopener noreferrer" style="color: var(--teal); font-weight: 600">ato.gov.au</a>
           and seek personal advice before acting.
@@ -602,12 +1211,130 @@
     </article>
 
     <script type="module">
-      import { mountSheet, wirePrint } from '../assets/sheet.js'
+      import { mountSheet, wirePrint, persistFields, money } from '../assets/sheet.js'
       import { shortcuts } from '../assets/components.js'
+      import { metricStrip } from '../assets/widgets.js'
 
-      mountSheet({ no: '07', kind: 'Cheatsheet · 2026–27' })
+      mountSheet({
+        no: '07',
+        kind: 'Cheatsheet · 2026–27',
+        hero: { src: 'art/07-vault.webp', alt: '', variant: 'art', pos: '50% 56%' },
+      })
       wirePrint()
       shortcuts('super-cheatsheet')
+
+      /* ==========================================================
+         HEADROOM — the one figure this sheet cannot know.
+         The cap is stated on the page; what an employer has already
+         used of it is the reader's. Everything below is arithmetic
+         on two numbers they typed, and it never leaves the browser.
+         ========================================================== */
+
+      // Stated on this sheet, and in the claims register: the 2026–27
+      // concessional contributions cap. No other figure is invented here.
+      const CAP = 32500
+
+      const sg = document.getElementById('hr-sg')
+      const ss = document.getElementById('hr-ss')
+      const out = document.getElementById('hr-out')
+      const empty = document.getElementById('hr-empty')
+      const bar = document.getElementById('hr-bar')
+      const segSg = bar.querySelector('.seg-sg')
+      const segSs = bar.querySelector('.seg-ss')
+      const strip = document.getElementById('hr-metrics')
+      const flag = document.getElementById('hr-flag')
+      const live = document.getElementById('hr-live')
+
+      const amount = (el) => {
+        const v = parseFloat(String(el.value).replace(/[^0-9.]/g, ''))
+        return Number.isFinite(v) && v > 0 ? v : 0
+      }
+
+      const pct = (n) => Math.round((n / CAP) * 100)
+
+      // A field counts as answered only once it holds a digit. Typing a letter
+      // is not an answer, and this sheet must never report "100% of the cap
+      // still unused" to someone who has told it nothing.
+      const answered = (el) => /\d/.test(el.value)
+
+      function renderHeadroom() {
+        const touched = answered(sg) || answered(ss)
+        if (!touched) {
+          out.hidden = true
+          flag.hidden = true
+          empty.hidden = false
+          live.textContent = ''
+          return
+        }
+
+        const employer = amount(sg)
+        const sacrifice = amount(ss)
+        const used = employer + sacrifice
+        const left = CAP - used
+
+        empty.hidden = true
+        out.hidden = false
+
+        // The bar never overflows: the second segment only takes the
+        // room the first one left, so the fill always reads honestly.
+        const wSg = Math.min(employer, CAP)
+        const wSs = Math.min(Math.max(CAP - employer, 0), sacrifice)
+        segSg.style.width = ((wSg / CAP) * 100).toFixed(2) + '%'
+        segSs.style.width = ((wSs / CAP) * 100).toFixed(2) + '%'
+        bar.setAttribute(
+          'aria-label',
+          'Of the ' +
+            money(CAP) +
+            ' concessional cap, ' +
+            money(used) +
+            ' is committed and ' +
+            (left >= 0 ? money(left) + ' is unused.' : 'the cap is exceeded by ' + money(-left) + '.')
+        )
+
+        const tiles = [
+          {
+            label: 'Concessional cap',
+            value: money(CAP),
+            note: 'Before tax, every source combined',
+          },
+          {
+            label: 'Already committed',
+            value: money(used),
+            note: 'Employer contributions plus salary sacrifice',
+          },
+          left >= 0
+            ? {
+                label: 'Headroom left',
+                value: money(left),
+                tone: 'key',
+                note: pct(left) + '% of the cap still unused this year',
+              }
+            : {
+                label: 'Over the cap by',
+                value: money(-left),
+                tone: 'over',
+                note: 'Excess concessional contributions have tax consequences',
+              },
+        ]
+        metricStrip(strip, tiles)
+
+        if (left < 0) {
+          flag.hidden = false
+          flag.textContent =
+            'These two figures already exceed the cap. Check the position before contributing anything further.'
+        } else {
+          flag.hidden = true
+        }
+
+        live.textContent =
+          left >= 0
+            ? 'Headroom left: ' + money(left) + ' of the ' + money(CAP) + ' concessional cap.'
+            : 'Over the concessional cap by ' + money(-left) + '.'
+      }
+
+      persistFields('super-cheatsheet')
+      ;[sg, ss].forEach((el) => el.addEventListener('input', renderHeadroom))
+      renderHeadroom()
     </script>
   </body>
 </html>

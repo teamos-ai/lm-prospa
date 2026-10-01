@@ -3,10 +3,10 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>From High Income to Financial Independence — the guide | Prospa Financial</title>
+    <title>From High Income to Real Wealth — the guide | Prospa Financial</title>
     <meta
       name="description"
-      content="The short guide behind the workshop. Ten pages on why a strong income does not automatically build wealth, and what changes when peak earning years are used deliberately."
+      content="The illustrated guide behind the workshop. Eighteen short pages on why a strong salary does not become wealth on its own, and what changes when peak earning years are used deliberately."
     />
     <link rel="icon" type="image/svg+xml" href="../assets/favicon.svg" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -16,21 +16,200 @@
       rel="stylesheet"
     />
     <link rel="stylesheet" href="../assets/prospa.css" />
+
+    <style>
+      /* ==========================================================
+         SHEET 12 ONLY — nothing here leaves this file.
+         Three jobs, in order of importance:
+
+         1 · Put a plate on every chapter page of the book without
+             touching components.js. The plate is injected through
+             the one chapter field the shared renderer prints as
+             HTML, and is then moved below the body text with
+             `order`, so reading order is unaffected and the
+             illustration always sits above the page footer.
+
+         2 · Make the plate incapable of breaking a page. A book
+             page is a fixed-height box with overflow:hidden, so a
+             block that cannot shrink silently eats the last
+             paragraph. The plate is `flex: 1 1 0` with
+             `min-height: 0`: it takes exactly the space the text
+             did not want, down to nothing. Text can never be
+             pushed out by it.
+
+         3 · Give the pages the extra height the illustrations
+             need — screen only, so the print rules in prospa.css
+             (which lay the pages out as static blocks) still win
+             on paper.
+         ========================================================== */
+
+      /* ---- 1 · Page geometry, screen only ----
+         prospa.css prints the book as static blocks and resets
+         aspect-ratio to auto. These selectors carry an id, so they
+         would beat that reset — hence @media screen. */
+      @media screen {
+        /* Spread: two 400 x 586 pages rather than 400 x 540. */
+        #book .book-sheets {
+          aspect-ratio: 800 / 586;
+        }
+        /* Single page on narrow screens: taller again, because the
+           same words take more lines in a one-column page.
+           680 and not 620: at 620 the tightest page in the book —
+           chapter 3, whose stat caption is the longest and wraps to
+           three lines on a phone — was left with a 26px smear of
+           illustration. At 680 the smallest plate in the book is
+           140px, and no page clips at any width. */
+        #book .book-one {
+          aspect-ratio: 400 / 680;
+        }
+      }
+
+      /* ---- 2 · The chapter plate ---- */
+      #book .gb-plate {
+        /* Below the body copy, above the running foot. */
+        order: 1;
+        /* Takes the leftover space and nothing more. Never forces
+           the page taller, never clips a paragraph. */
+        flex: 1 1 0;
+        min-height: 0;
+        max-height: 260px;
+        margin: 16px 0 0;
+        overflow: hidden;
+        border: 1px solid var(--line);
+        border-radius: var(--r-sm);
+        background: var(--bg2);
+      }
+
+      #book .gb-plate img {
+        display: block;
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        /* Each plate carries its subject at a different height;
+           a blind centre crop cuts the tops off three of them. */
+        object-position: var(--gb-pos, 50% 50%);
+      }
+
+      #book .book-foot {
+        order: 2;
+      }
+
+      /* The empty span left behind by closing the chapter label
+         early. It must occupy no space. */
+      #book .gb-void {
+        display: none;
+      }
+
+      /* The last line of an illustrated chapter names the sheet
+         that answers it. Quieter than the body, and ruled off. */
+      #book .book-pg:has(.gb-plate) .book-p:last-of-type {
+        margin: 2px 0 0;
+        padding-top: 10px;
+        border-top: 1px solid var(--line-2);
+        font-size: 12px;
+        line-height: 1.45;
+        font-weight: 500;
+        color: var(--teal);
+      }
+
+      /* Below 375px there is no honest room for a picture, and the
+         number is measured rather than guessed: at a 361px viewport
+         the page column is 275px, and the chapter carrying the
+         longest stat caption is left with a 26px smear. 375px is the
+         first width at which every plate in the book clears 140px.
+         Below it the words are the point — keep those, and give the
+         page the height they need, or the eleven-row contents pages
+         lose their last rows to overflow:hidden. */
+      @media screen and (max-width: 374px) {
+        #book .gb-plate {
+          display: none;
+        }
+        #book .book-one {
+          aspect-ratio: 400 / 720;
+        }
+      }
+
+      /* ---- 3 · Buying the plates their space back ----
+         Every point reclaimed here is a point the plate gets,
+         because the plate is the only thing on the page that
+         flexes. The two pages carrying a stat block are the
+         tightest in the book: without this they were left with a
+         29px sliver of picture.
+
+         Screen only, like section 1, and for the same reason: on
+         paper the plates are hidden and the page is a min-height
+         box that grows to fit, so there is nothing to buy back and
+         no reason to print the type tighter than the stock rhythm. */
+      @media screen {
+        #book .book-h {
+          margin: 7px 0 9px;
+        }
+
+        #book .book-stat {
+          padding: 11px 15px;
+          margin-bottom: 13px;
+        }
+
+        #book .book-stat b {
+          font-size: 21px;
+        }
+
+        /* Eleven rows at the stock rhythm overflow a page. Tightened
+           here rather than shortened, because the list is the page. */
+        #book .book-toc li {
+          padding: 5px 0;
+          font-size: 12.5px;
+        }
+      }
+
+      /* ---- 4 · Host page ---- */
+      .gb-aside-copy h2 {
+        font-size: 24px;
+        letter-spacing: -0.02em;
+        margin-bottom: 12px;
+      }
+
+      .gb-checks {
+        margin-top: 22px;
+      }
+
+      .check label .sub {
+        margin-top: 2px;
+        font-size: 13px;
+        color: var(--gray);
+      }
+
+      .gb-progress {
+        margin-top: 26px;
+        padding-top: 24px;
+        border-top: 1px solid var(--line);
+      }
+
+      /* ---- 5 · Print ----
+         The plates are atmosphere. On paper they are grey boxes. */
+      @media print {
+        #book .gb-plate {
+          display: none !important;
+        }
+        .gb-progress {
+          break-inside: avoid;
+        }
+      }
+    </style>
   </head>
   <body>
     <div data-sheet-back></div>
 
     <article class="sheet sheet-wide">
       <div data-sheet-masthead></div>
+      <div data-sheet-hero></div>
 
       <div class="pad">
         <div class="eyebrow">Session tool 12 · Guide</div>
-        <h1 class="doc-title">From High Income to <em>Financial Independence</em></h1>
+        <h1 class="doc-title">From High Income to <em>Real Wealth</em></h1>
         <p class="lede">
-          The short guide behind the workshop. Ten pages on why a strong income does not
-          automatically become lasting wealth, and what changes when peak earning years are used
-          deliberately. <strong>Page through it here</strong> — nothing to download, nothing to
-          hand over.
+          Why a strong salary does not become wealth on its own — and what changes when you use
+          your peak earning years deliberately.
         </p>
 
         <hr class="rule" />
@@ -41,13 +220,13 @@
 
         <div class="grid g3">
           <div class="card card-tint">
-            <div class="stat"><span class="k">Pages</span><span class="figure fig-lg">10</span></div>
+            <div class="stat"><span class="k">Pages</span><span class="figure fig-lg">18</span></div>
             <p class="small muted" style="margin-top: 10px">
-              Short ones. The whole guide is a twelve-minute read.
+              Ten short chapters, two pull quotes and three lists.
             </p>
           </div>
           <div class="card card-tint">
-            <div class="stat"><span class="k">Reading time</span><span class="figure fig-lg">12 min</span></div>
+            <div class="stat"><span class="k">Reading time</span><span class="figure fig-lg">7 min</span></div>
             <p class="small muted" style="margin-top: 10px">
               Arrow keys turn pages, or click the outer half of a page.
             </p>
@@ -60,7 +239,89 @@
           </div>
         </div>
 
-        <div class="card card-green" style="margin-top: 26px">
+        <div class="lm-aside" style="--lm-aside-ar: 1 / 1; --lm-aside-pos: 50% 40%; margin-top: 44px">
+          <div class="lm-aside-img">
+            <img src="../assets/img/photo/mature-couple-cafe-conversation-iced-drinks.webp" alt="" loading="lazy" decoding="async" />
+          </div>
+          <div class="gb-aside-copy">
+            <h2>The questions it leaves you with</h2>
+            <p class="muted">
+              A guide is only worth the conversation it starts. These are the seven questions the
+              chapters keep circling. Tick one when you have actually asked it of someone — your
+              accountant, your super fund, your partner, an adviser.
+            </p>
+            <p class="small muted" style="margin-top: 12px">
+              Ticks are saved in this browser only. Nothing is sent anywhere.
+            </p>
+          </div>
+        </div>
+
+        <div class="gb-checks">
+          <div class="check">
+            <input type="checkbox" id="q1" data-strike="q1" />
+            <label for="q1">
+              What is my surplus, actually?
+              <span class="sub">Not the gross salary. What is genuinely left over each month.</span>
+            </label>
+          </div>
+          <div class="check">
+            <input type="checkbox" id="q2" data-strike="q2" />
+            <label for="q2">
+              What annual lifestyle do I want work to become optional for?
+              <span class="sub">One number, in today's money.</span>
+            </label>
+          </div>
+          <div class="check">
+            <input type="checkbox" id="q3" data-strike="q3" />
+            <label for="q3">
+              How many years sit between that age and 60?
+              <span class="sub">Those are the years superannuation cannot pay for.</span>
+            </label>
+          </div>
+          <div class="check">
+            <input type="checkbox" id="q4" data-strike="q4" />
+            <label for="q4">
+              Which of my assets could I reach before 60 — and which could I not?
+              <span class="sub">Where wealth sits decides when it is available.</span>
+            </label>
+          </div>
+          <div class="check">
+            <input type="checkbox" id="q5" data-strike="q5" />
+            <label for="q5">
+              Is my income cover sized against the salary I earn now?
+              <span class="sub">Or against the one I earned when it was arranged.</span>
+            </label>
+          </div>
+          <div class="check">
+            <input type="checkbox" id="q6" data-strike="q6" />
+            <label for="q6">
+              Does every super account have a current nomination that agrees with my will?
+              <span class="sub">Super is held in trust. The will does not reach it.</span>
+            </label>
+          </div>
+          <div class="check">
+            <input type="checkbox" id="q7" data-strike="q7" />
+            <label for="q7">
+              Who have I never actually said any of this out loud to?
+              <span class="sub">Usually the shortest question and the longest answer.</span>
+            </label>
+          </div>
+        </div>
+
+        <div class="gb-progress">
+          <div id="q-progress"></div>
+          <div class="row no-print" style="margin-top: 20px">
+            <button class="btn btn-ghost btn-sm" data-strike-clear type="button">Reset the list</button>
+          </div>
+        </div>
+
+        <div class="lm-photoband">
+          <img src="../assets/img/photo/senior-couple-coastal-hike-ocean-vista.webp" alt="" loading="lazy" decoding="async" />
+          <p>A strong income buys options. It becomes wealth only once you <em>decide what it is for</em>.</p>
+          <span class="lm-band-k">The whole guide, in one line</span>
+        </div>
+
+        <div class="card card-green">
           <h3 class="step-h">Where to go next</h3>
           <p class="muted" style="margin-top: 10px; margin-bottom: 20px">
             The guide raises the questions. The other tools answer them with your own numbers —
@@ -96,101 +357,305 @@
 
     <script type="module">
       import { mountSheet, wirePrint } from '../assets/sheet.js'
-      import { mountBook } from '../assets/components.js'
+      import { mountBook, strikeList } from '../assets/components.js'
+      import { goalProgress } from '../assets/widgets.js'
 
-      mountSheet({ no: '12', kind: 'Guide · 10 pages', wide: true })
+      mountSheet({
+        no: '12',
+        kind: 'Guide · 18 pages',
+        wide: true,
+        /* The brief specified pos '50% 40%'. The source is square and
+           the two hikers sit at 58–90% of its height, while the band
+           is 2.7:1 on desktop, 1.9:1 on mobile and 4:1 in print — so
+           40% puts the frame edge straight through their heads at two
+           of those three ratios. 8% is the only region that is clean
+           at all three: sky and peaks, no one cut in half. */
+        hero: {
+          src: 'photo/seniors-mountain-summit-binoculars-hiking.webp',
+          alt: '',
+          variant: 'photo',
+          pos: '50% 8%',
+        },
+      })
       wirePrint()
 
+      /* ----------------------------------------------------------
+         Illustrating a chapter without editing components.js.
+
+         The shared renderer escapes every chapter field but one:
+         the chapter number is interpolated raw, inside the label
+         span. So `fig()` closes that span early, emits the plate,
+         and opens a throwaway span for the renderer's own closing
+         tag to land on. The result is valid markup:
+
+           <span class="book-k">Chapter 1</span>
+           <figure class="gb-plate"><img …></figure>
+           <span class="gb-void"></span>
+
+         CSS then moves the figure below the body copy. Doing it
+         through the page data rather than the DOM matters: the
+         narrow single-page renderer rebuilds its page on every
+         turn and every resize, so anything patched into the DOM
+         afterwards would be wiped on the next page turn.
+         ---------------------------------------------------------- */
+      const fig = (n, file, pos) =>
+        `${n}</span>` +
+        `<figure class="gb-plate" style="--gb-pos:${pos}">` +
+        `<img src="../assets/img/art/${file}" alt="" loading="eager" fetchpriority="low" decoding="async" />` +
+        `</figure>` +
+        `<span class="gb-void">`
+
       mountBook(document.getElementById('book'), {
-        title: 'From High Income to Financial Independence',
+        title: 'From High Income to Real Wealth',
         subtitle: 'Why a strong salary is the start of the question, not the answer',
         format: 'Guide',
         readLabel: 'Read the guide',
         pages: [
+          /* 1 */
           { kind: 'cover' },
+
+          /* 2 */
           {
             kind: 'contents',
             title: 'In this guide',
             items: [
               { label: 'The Financial Freedom Gap', page: 3 },
               { label: 'Where the money actually goes', page: 4 },
-              { label: 'The preservation age problem', page: 5 },
-              { label: 'Three buckets, three timeframes', page: 6 },
-              { label: 'The next dollar', page: 7 },
-              { label: 'What you have not insured', page: 9 },
-              { label: 'Where to start', page: 10 },
+              { label: 'The preservation age problem', page: 6 },
+              { label: 'Three buckets, three timeframes', page: 7 },
+              { label: 'The next dollar', page: 8 },
+              { label: 'Where an asset lives', page: 9 },
+              { label: 'The bonus you already spent', page: 12 },
+              { label: 'What you have not insured', page: 13 },
+              { label: 'What happens after you', page: 14 },
+              { label: 'The conversation nobody starts', page: 15 },
+              { label: 'Where to start', page: 18 },
             ],
           },
+
+          /* 3 */
           {
             kind: 'chapter',
-            number: 1,
+            number: fig(1, 'book-01-gap.webp', '50% 49%'),
             title: 'The Financial Freedom Gap',
             body: [
-              'A high income creates opportunity. It does not, on its own, create wealth. The two are related by a single variable — what the income is deliberately directed to do — and that variable is the one most often left unset.',
-              'The gap is not a gap in earnings. It is the distance between what a strong income could build and what it is currently building, and it widens quietly during exactly the years it should be closing.',
+              'A high income creates opportunity. On its own it does not create wealth. One variable decides which of the two you end up with: what the income is deliberately told to do.',
+              'The gap is not in what you earn. It is the distance between what a strong income could build and what it is currently building — and it widens quietly.',
+              'Your Wealth Score measures how deliberate those arrangements already are.',
             ],
           },
+
+          /* 4 */
           {
             kind: 'chapter',
-            number: 2,
+            number: fig(2, 'book-02-tax.webp', '50% 62%'),
             title: 'Where the money actually goes',
             stat: { v: '47%', k: 'Top marginal rate with the Medicare levy' },
             body: [
-              'At the top bracket, nearly half of each additional dollar is tax before anything else happens to it. What remains meets a mortgage, a lifestyle that grew with the salary, and the commitments that arrived alongside the promotion.',
-              'None of that is waste. But a surplus that is never named is a surplus that cannot be directed, and lifestyle expands to meet income unless something structural stops it.',
+              'Nearly half of each extra dollar is tax before anything else happens to it. What is left is not waste — but a surplus nobody has named cannot be directed.',
+              'The Bonus Playbook is where a surplus gets named.',
             ],
           },
+
+          /* 5 */
           {
             kind: 'quote',
             text: 'My income has increased faster than my financial planning has evolved.',
-            cite: 'The most common sentence we hear in a first conversation',
+            cite: 'The sentence we hear most often in a first conversation',
           },
+
+          /* 6 */
           {
             kind: 'chapter',
-            number: 3,
+            number: fig(3, 'book-03-preservation.webp', '50% 40%'),
             title: 'The preservation age problem',
             stat: { v: '60', k: 'Preservation age, for everyone reaching it from 1 July 2024' },
             body: [
-              'Superannuation is the most tax-effective structure most people will ever have access to. It is also locked. From 1 July 2024, preservation age is 60 for everyone who had not already reached it.',
-              'So if you would like work to become optional at 55, you have also chosen five years that superannuation cannot fund. The question stops being how much you have and becomes where it sits, and when it unlocks.',
+              'Superannuation is the most tax-effective structure most people ever have.',
+              'It is also locked. Choose to make work optional at 55, and you have also chosen five years superannuation cannot fund.',
+              'The Gap Years puts your own two ages either side of that.',
             ],
           },
+
+          /* 7 */
           {
             kind: 'chapter',
-            number: 4,
+            number: fig(4, 'book-04-buckets.webp', '50% 52%'),
             title: 'Three buckets, three timeframes',
             body: [
               'Today: liquidity for the next nought to three years. Freedom: capital you can reach before 60. Retirement: the long-term pool.',
-              'A strong balance sheet can still be poorly aligned. Significant wealth in the family home and in super, with very little accessible in between, is wealth pointed almost entirely at one timeframe.',
+              'A strong balance sheet can still be badly aimed. Most of the wealth in the home and in super, with little in between, points at one timeframe only.',
+              'Your Three Buckets is the worksheet for this one.',
             ],
           },
+
+          /* 8 */
           {
             kind: 'chapter',
-            number: 5,
+            number: fig(5, 'book-05-nextdollar.webp', '50% 52%'),
             title: 'The next dollar',
             body: [
-              'Mortgage, super, or investments outside super — the right answer depends on your marginal rate, your timeframe, whether the debt is deductible, and when you need the money back.',
-              'Only one of those questions has a near-universal answer: clear high-interest, non-deductible debt first. After that it is genuinely a trade-off, and the easiest option is rarely the most efficient one.',
+              'Mortgage, super, or investments outside super. The answer depends on your marginal rate, your timeframe, whether the debt is deductible, and when you need the money back.',
+              'Only one part has a near-universal answer: clear high-interest, non-deductible debt first. After that it is a genuine trade-off.',
+              'Your Next Dollar walks the decision in order.',
             ],
           },
+
+          /* 9 */
           {
             kind: 'chapter',
-            number: 6,
-            title: 'What you have not insured',
+            number: fig(6, 'book-07-structure.webp', '50% 48%'),
+            title: 'Where an asset lives',
             body: [
-              'You insure the house without hesitating. While you are still accumulating, the largest asset you own is not the house — it is the income you have not earned yet, and everything on your balance sheet was bought with it.',
-              'Cover arranged against an earlier salary rarely matches a later one, and the terms available have changed materially since 2021. The gap widens quietly, every year you are promoted.',
+              'Two people can hold the same investment and keep different amounts of it. The difference is not the asset. It is the name it is held in.',
+              'Personal name, joint names, a trust, a company, a bond, super. Where an asset is held changes what it earns after tax, when you can reach it, and where it goes when you die.',
+              'Where Your Wealth Lives sets the six side by side.',
             ],
           },
+
+          /* 10 */
+          {
+            kind: 'contents',
+            title: 'The six areas the score measures',
+            /* No numbers in the right-hand column here. The other two
+               contents pages use it for page numbers and for sheet
+               numbers; a third meaning on the same component would
+               only read as a wrong page number. */
+            items: [
+              { label: 'Cash Flow & Surplus', page: '' },
+              { label: 'Superannuation', page: '' },
+              { label: 'Investments & Structure', page: '' },
+              { label: 'Financial Independence', page: '' },
+              { label: 'Protection & Resilience', page: '' },
+              { label: 'Estate & Legacy', page: '' },
+            ],
+          },
+
+          /* 11 */
+          {
+            kind: 'quote',
+            text: 'The decisions that matter most are the ones nobody sets a deadline for.',
+            cite: 'Why the gap widens quietly',
+          },
+
+          /* 12 */
+          {
+            kind: 'chapter',
+            number: fig(7, 'book-08-bonus.webp', '50% 58%'),
+            title: 'The bonus you already spent',
+            body: [
+              'A bonus, a vesting parcel, a distribution, the month a loan finally clears. Irregular income is where the largest single decisions get made fastest.',
+              'Start from the net, not the headline. Set the split before the money lands. A rule you cannot say in one sentence is not a rule.',
+              'The Bonus Playbook is where you write that rule down.',
+            ],
+          },
+
+          /* 13 */
+          {
+            kind: 'chapter',
+            number: fig(8, 'book-06-insurance.webp', '50% 58%'),
+            title: 'What you have not insured',
+            body: [
+              'You insure the house without hesitating. While you are still accumulating, your largest asset is not the house — it is the income you have not earned yet.',
+              'Cover arranged against an earlier salary rarely matches a later one, and the terms available have changed materially since 2021.',
+              'Is Your Income Covered? audits what you actually hold.',
+            ],
+          },
+
+          /* 14 */
+          {
+            kind: 'chapter',
+            number: fig(9, 'book-09-estate.webp', '50% 51%'),
+            title: 'What happens after you',
+            body: [
+              'Your will does not control everything you own. Super is held in trust. Property held as joint tenants usually passes by survivorship. Both sit outside the will.',
+              'This is the one area where the cost of leaving it is paid entirely by other people, and where the documents most often contradict each other unnoticed.',
+              'The Estate Checklist is the one to do with the documents open.',
+            ],
+          },
+
+          /* 15 */
+          {
+            kind: 'chapter',
+            number: fig(10, 'book-10-conversation.webp', '50% 49%'),
+            title: 'The conversation nobody starts',
+            body: [
+              'Almost nothing in this guide moves until a conversation happens — with your accountant, your HR team, your super fund, your partner.',
+              'The hardest part is almost always the first sentence. Not the decision, and not the paperwork. The opening line of an email nobody has written.',
+              'What to Say has seven of those first sentences, ready to send.',
+            ],
+          },
+
+          /* 16 */
+          {
+            kind: 'contents',
+            title: 'Where each question gets answered',
+            items: [
+              { label: 'Your Wealth Score', page: '01' },
+              { label: 'Your Freedom Score', page: '02' },
+              { label: 'The Gap Years', page: '03' },
+              { label: 'Your Next Dollar', page: '04' },
+              { label: 'Your Three Buckets', page: '05' },
+              { label: 'The Bonus Playbook', page: '06' },
+              { label: 'The Super Cheatsheet', page: '07' },
+              { label: 'Where Your Wealth Lives', page: '08' },
+              { label: 'Is Your Income Covered?', page: '09' },
+              { label: 'The Estate Checklist', page: '10' },
+              { label: 'What to Say', page: '11' },
+            ],
+          },
+
+          /* 17 */
+          {
+            kind: 'cta',
+            title: 'Three numbers to find first',
+            body: 'What your surplus actually is. What annual lifestyle you want work to become optional for. And how many years sit between that age and 60. Almost everything else in the set is downstream of those three.',
+            action: 'Work out your number',
+            href: '02-freedom-number.html',
+          },
+
+          /* 18 */
           {
             kind: 'cta',
             title: 'Where to start',
-            body: 'Not with a product. With three numbers: what your surplus actually is, what annual lifestyle you want work to become optional for, and how many years sit between that age and 60. The Wealth Score takes about three minutes and tells you which of the six areas is furthest behind.',
+            body: 'Not with a product. With a straight answer about which of the six areas is furthest behind. The Wealth Score takes about three minutes and tells you exactly that.',
             action: 'Take the Wealth Score',
             href: '01-wealth-score.html',
           },
         ],
       })
+
+      /* The closed-book aside is rendered once and never re-rendered,
+         so this single correction is safe: this is the whole guide,
+         not a preview of one. */
+      const shelf = document.querySelector('#book .book-closed .eyebrow')
+      if (shelf) shelf.textContent = 'Complete guide · 18 pages'
+
+      /* ----------------------------------------------------------
+         The seven questions, and one honest measure of them.
+
+         goalProgress registers an element with a shared "already
+         animated" set the first time it is seen, and silently
+         refuses to re-animate it afterwards — so re-rendering into
+         the same node would leave the bar stuck empty. Painting
+         into a fresh child each time avoids that entirely.
+         ---------------------------------------------------------- */
+      const host = document.getElementById('q-progress')
+
+      function paintProgress(done, total) {
+        host.textContent = ''
+        const el = document.createElement('div')
+        host.appendChild(el)
+        goalProgress(el, {
+          label: 'Questions you have actually asked',
+          current: done,
+          target: total,
+          onTrack: done === total,
+          fmt: (v) => String(v),
+        })
+      }
+
+      strikeList('freedom-guide-questions', paintProgress)
     </script>
   </body>
 </html>
