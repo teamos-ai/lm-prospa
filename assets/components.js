@@ -258,7 +258,7 @@ export function mountFan(el, files, { actionLabel = 'Use this script', onGet } =
               </div>
             </div>
             <div>
-              <h4 class="fan-back-title">${esc(f.title)}</h4>
+              <h3 class="fan-back-title">${esc(f.title)}</h3>
               <p class="fan-sub">${esc(f.subtitle)}</p>
             </div>
             <div class="fan-inside">

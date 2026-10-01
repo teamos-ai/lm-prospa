@@ -2255,13 +2255,15 @@ input[type='range']::-moz-range-thumb {
   border-color: transparent;
 }
 .w-metric-key .w-metric-k {
+  /* A mint that only exists on the teal panel — 4.56:1, so it holds, but it is
+     the one colour here with no token behind it. */
   color: #9fd8c4;
 }
 .w-metric-key .w-metric-v {
-  color: #fff;
+  color: var(--white);
 }
 .w-metric-key .w-metric-n {
-  color: #cfe0e2;
+  color: var(--accent);
 }
 
 /* ---------- Breakdown bar ---------- */
