@@ -1,0 +1,419 @@
+<!DOCTYPE html>
+<html lang="en-AU">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>The Conversation Swipe File — Prospa Financial</title>
+    <meta
+      name="description"
+      content="Seven ready-to-send messages for the conversations that unlock everything else — your accountant, your HR team, your super fund, your partner."
+    />
+    <link rel="icon" type="image/svg+xml" href="../assets/favicon.svg" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="../assets/prospa.css" />
+    <style>
+      .script {
+        border: 1px solid var(--line);
+        border-radius: var(--r-lg);
+        overflow: hidden;
+        margin-bottom: 18px;
+      }
+      .script-head {
+        display: flex;
+        align-items: center;
+        gap: 14px;
+        padding: 18px 24px;
+        background: var(--bg2);
+        border-bottom: 1px solid var(--line);
+        flex-wrap: wrap;
+      }
+      .script-head h3 {
+        font-size: 17px;
+        letter-spacing: -0.015em;
+      }
+      .script-head .to {
+        font-family: 'JetBrains Mono', monospace;
+        font-size: 10.5px;
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+        color: var(--gray);
+        margin-left: auto;
+      }
+      .script-body {
+        padding: 24px;
+      }
+      .script-text {
+        font-size: 15px;
+        color: var(--slate);
+        line-height: 1.7;
+        white-space: pre-wrap;
+        background: #fff;
+        border-left: 2px solid var(--green);
+        padding-left: 20px;
+      }
+      .script-text em {
+        font-style: normal;
+        background: var(--bg1);
+        color: var(--green-600);
+        padding: 1px 5px;
+        border-radius: 4px;
+        font-weight: 600;
+      }
+      .script-foot {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 14px;
+        margin-top: 20px;
+        padding-top: 16px;
+        border-top: 1px solid var(--line-2);
+        flex-wrap: wrap;
+      }
+      .script-why {
+        font-size: 13.5px;
+        color: var(--gray);
+        max-width: 56ch;
+      }
+      .copy-btn[data-state='done'] {
+        background: var(--green);
+        color: #fff;
+        border-color: var(--green);
+      }
+    </style>
+  </head>
+  <body>
+    <div data-sheet-back></div>
+
+    <article class="sheet sheet-wide">
+      <div data-sheet-masthead></div>
+
+      <div class="pad">
+        <div class="eyebrow">Session tool 11 · Swipe file</div>
+        <h1 class="doc-title">The <em>Conversation</em> Swipe File</h1>
+        <p class="lede">
+          Almost nothing on the other sheets moves until a conversation happens — with your
+          accountant, your HR team, your super fund, your partner. The hardest part is usually the
+          first sentence. <strong>Here are seven of them, ready to send.</strong>
+        </p>
+
+        <div class="card card-tint" style="margin: 32px 0 0">
+          <p class="small">
+            <b style="color: var(--ink)">How to use these.</b> Turn a card over to see what is in it,
+            then take the full text below. Replace anything in
+            <em style="font-style: normal; background: var(--bg1); color: var(--green-600); padding: 1px 5px; border-radius: 4px; font-weight: 600">green</em>
+            with your own detail. None of them asks anyone for advice you would have to pay for —
+            each one asks a specific question that has a factual answer.
+          </p>
+        </div>
+
+        <hr class="rule" />
+
+        <!-- ---------- The fan ---------- -->
+        <div class="sec-head">
+          <h2>Seven conversations</h2>
+          <p>
+            Browse the fan, or read all seven in full below. Click the centre card to turn it over;
+            the arrows and dots move through the set.
+          </p>
+        </div>
+
+        <div class="fan" id="fan"></div>
+
+        <hr class="rule" />
+
+        <!-- ---------- Full text ---------- -->
+        <div class="sec-head">
+          <h2>The full text</h2>
+          <p>Copy any of these straight out. They are deliberately short — a long message gets a slow reply.</p>
+        </div>
+
+        <div id="scripts"></div>
+
+        <hr class="rule" />
+
+        <div class="card card-green">
+          <h3 class="step-h">The one rule that makes these work</h3>
+          <p class="muted" style="margin-top: 10px">
+            Every message asks a <strong>closed question with a factual answer</strong> — a figure, a
+            yes or no, a document. "What should I do about my super?" invites a meeting that never
+            gets booked. "What is my concessional headroom this financial year?" gets a number back
+            the same week. Keep the ask narrow and the reply comes fast.
+          </p>
+        </div>
+
+        <div class="disclaimer" style="margin-top: 32px">
+          <b>General information only.</b> These are templates for asking questions, not advice about
+          what to do with the answers. Nothing here recommends a product, strategy or structure, and
+          none of it considers your objectives, financial situation or needs. Whether any action is
+          appropriate for you depends on your circumstances — seek personal advice before acting on
+          anything you learn.
+        </div>
+
+        <div class="row no-print" style="margin-top: 26px">
+          <button class="btn btn-outline btn-sm" data-print>Print or save as PDF</button>
+        </div>
+      </div>
+
+      <div data-sheet-foot></div>
+    </article>
+
+    <script type="module">
+      import { mountSheet, wirePrint } from '../assets/sheet.js'
+      import { mountFan } from '../assets/components.js'
+
+      mountSheet({ no: '11', kind: 'Swipe file', wide: true })
+      wirePrint()
+
+      // Explicit width/height: the mark must never depend on CSS alone to be sized.
+      const mark = (d) =>
+        `<svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+          stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${d}</svg>`
+
+      const FILES = [
+        {
+          id: 'accountant-headroom',
+          title: 'The concessional headroom ask',
+          format: 'Email',
+          tone: 'teal',
+          length: '1 email · 60 words',
+          subtitle: 'To your accountant',
+          tint: 'linear-gradient(155deg,#dceaec 0%,#f1f7f7 100%)',
+          mark: mark('<path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/>'),
+          body: 'The single highest-value question you can ask an accountant in sixty words. It has one factual answer and it expires each 30 June.',
+          inside: ['Your remaining cap this year', 'Whether carry-forward is open to you', 'Whether Division 293 applies'],
+          to: 'Accountant',
+          why: 'Concessional cap is use-it-or-lose-it, and carry-forward closes once your balance passes a threshold. Both answers are a lookup, not advice.',
+          text: `Hi <em>[name]</em>,
+
+Quick question before the end of the financial year. For <em>[2026–27]</em>, could you tell me:
+
+1. My remaining concessional contributions headroom, after employer contributions and any salary sacrifice already in place.
+2. Whether I have any unused cap from prior years still available to carry forward.
+3. Whether Division 293 applies to me this year.
+
+Figures are fine — I am not asking for a recommendation at this stage.
+
+Thanks,
+<em>[your name]</em>`,
+        },
+        {
+          id: 'hr-sacrifice',
+          title: 'The salary sacrifice request',
+          format: 'Email',
+          tone: 'teal',
+          length: '1 email · 70 words',
+          subtitle: 'To HR or payroll',
+          tint: 'linear-gradient(155deg,#e2f6d9 0%,#f4fcf1 100%)',
+          mark: mark('<circle cx="9" cy="7" r="3"/><circle cx="17" cy="9" r="2.5"/><path d="M2 21a7 7 0 0 1 14 0M16 21a6 6 0 0 1 6 0"/>'),
+          body: 'Most people never ask because they assume it is complicated. It is a form. This finds out which form, and when it takes effect.',
+          inside: ['Whether an arrangement is available', 'The cut-off and when it starts', 'Whether bonuses can be included'],
+          to: 'HR / Payroll',
+          why: 'Salary sacrifice has to be arranged before the income is earned. Asking in June about a bonus paid in May is too late.',
+          text: `Hi <em>[name]</em>,
+
+I would like to look at a salary sacrifice arrangement into superannuation.
+
+Could you let me know:
+
+1. Whether the company offers salary sacrifice to super, and the form or process to set it up.
+2. The cut-off for changes, and when a change would take effect.
+3. Whether an upcoming bonus or incentive payment can be included in the arrangement, and by when I would need to elect that.
+
+Thanks,
+<em>[your name]</em>`,
+        },
+        {
+          id: 'super-fund',
+          title: 'The super fund audit',
+          format: 'Email',
+          tone: 'teal',
+          length: '1 email · 65 words',
+          subtitle: 'To your super fund',
+          tint: 'linear-gradient(155deg,#d5e6e8 0%,#eef5f6 100%)',
+          mark: mark('<circle cx="12" cy="12" r="9"/><path d="M12 7v10M9.5 9.5h4a1.5 1.5 0 0 1 0 3h-3a1.5 1.5 0 0 0 0 3h4"/>'),
+          body: 'Four facts about the largest asset you may own outside your home, none of which most people can state from memory.',
+          inside: ['Your investment option and fees', 'Insurance held inside the fund', 'The nomination on file and its expiry'],
+          to: 'Super fund',
+          why: 'Everything on the Super Cheatsheet and the Estate Checklist depends on these four answers. They take the fund minutes to supply.',
+          text: `Hello,
+
+Member number <em>[number]</em>. Could you please confirm in writing:
+
+1. My current investment option, and the total fees I paid last financial year in dollars.
+2. Any insurance held through the fund — cover type, amount and annual premium.
+3. The beneficiary nomination currently on file, its type, and the date it expires if it lapses.
+4. My total super balance as at the most recent 30 June.
+
+Thank you,
+<em>[your name]</em>`,
+        },
+        {
+          id: 'partner',
+          title: 'The conversation at home',
+          format: 'Script',
+          tone: 'green',
+          length: '1 script · 3 questions',
+          subtitle: 'With your partner',
+          tint: 'linear-gradient(155deg,#f6e7db 0%,#fcf6f1 100%)',
+          mark: mark('<path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>'),
+          body: 'The hardest one, and the one that decides the others. Three questions, asked once, with no numbers in the room.',
+          inside: ['What "enough" means to each of you', 'The age you each picture', 'What you would each protect first'],
+          to: 'Partner',
+          why: 'Two people rarely hold the same work-optional age or the same definition of enough. Planning to the wrong one wastes a decade.',
+          text: `Not a budget conversation. Three questions, separately, then compare.
+
+1. "If money stopped being the deciding factor, what would you want a normal Tuesday to look like?"
+
+2. "What age do you picture when you imagine work becoming optional — not when you think it is realistic, when you picture it?"
+
+3. "If we had to protect one thing financially above everything else, what would you choose?"
+
+Write the answers down before discussing them. The gap between two sets of answers is the planning conversation.`,
+        },
+        {
+          id: 'estate-lawyer',
+          title: 'The estate review brief',
+          format: 'Email',
+          tone: 'teal',
+          length: '1 email · 75 words',
+          subtitle: 'To an estate lawyer',
+          tint: 'linear-gradient(155deg,#dfeaec 0%,#f2f7f8 100%)',
+          mark: mark('<path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6M8 13h8M8 17h6"/>'),
+          body: 'Walks into the meeting with the right question already asked, which is usually the difference between a one-hour review and three.',
+          inside: ['Which document controls which asset', 'Whether the three agree', 'What a review would cost'],
+          to: 'Estate lawyer',
+          why: 'Super, jointly held property and trust assets can all pass outside a will. Naming that up front changes the whole scope of the review.',
+          text: `Hello,
+
+I would like a review of my estate arrangements.
+
+Rather than starting with the will, the question I want answered is: for each of my major assets, which document actually controls where it goes — the will, a superannuation nomination, the property title, or a trust deed — and do those documents currently agree with each other?
+
+The assets are <em>[home, super, investments, business interest]</em>.
+
+Could you let me know your fee for a review on that basis?
+
+<em>[your name]</em>`,
+        },
+        {
+          id: 'insurer',
+          title: 'The cover confirmation',
+          format: 'Email',
+          tone: 'teal',
+          length: '1 email · 70 words',
+          subtitle: 'To your insurer or adviser',
+          tint: 'linear-gradient(155deg,#e7f5de 0%,#f5fcf2 100%)',
+          mark: mark('<path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10Z"/>'),
+          body: 'Answers most of the Income Protection Audit in one reply, in writing, from the only party who can settle it.',
+          inside: ['Agreed value or indemnity', 'Waiting and benefit periods', 'Whether bonuses are covered'],
+          to: 'Insurer / adviser',
+          why: 'Every one of these is already written into a contract you hold. The answers exist — they are simply not yet known to you.',
+          text: `Hello,
+
+Policy number <em>[number]</em>. Could you confirm in writing:
+
+1. Whether my income protection cover is agreed value or indemnity.
+2. The waiting period and the benefit period.
+3. The monthly benefit payable, and the income definition it is measured against — specifically whether bonuses and incentives are included.
+4. Whether the TPD definition is own occupation or any occupation.
+5. Whether premiums are stepped or level.
+
+I am not looking to make a change at this stage, only to confirm what is in place.
+
+<em>[your name]</em>`,
+        },
+        {
+          id: 'adviser',
+          title: 'The first adviser meeting',
+          format: 'Script',
+          tone: 'green',
+          length: '1 script · 5 questions',
+          subtitle: 'For any adviser, including us',
+          tint: 'linear-gradient(155deg,#d2e3e6 0%,#ecf4f5 100%)',
+          mark: mark('<circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0 1 16 0"/>'),
+          body: 'Five questions to ask any financial adviser before engaging one. We have included ourselves in that — ask us the same five.',
+          inside: ['How they are paid, in dollars', 'What is not in scope', 'Who you actually deal with'],
+          to: 'Any adviser',
+          why: 'A good adviser answers all five without hesitation. How readily they answer the fee question tells you most of what you need.',
+          text: `Ask these before you engage anyone, including us.
+
+1. "How are you paid — in dollars, for the first year and for each year after?"
+
+2. "What does that fee include, and what sits outside it?"
+
+3. "Who holds your licence, and what products or services does that licence limit you to?"
+
+4. "Who will I actually be dealing with day to day?"
+
+5. "If I came back in three years, what would you expect to be able to show me that would prove this was worth it?"
+
+If any of the five is answered vaguely, ask it again.`,
+        },
+      ]
+
+      mountFan(document.getElementById('fan'), FILES, {
+        actionLabel: 'Read the full text',
+        onGet: (f) => {
+          const el = document.getElementById('s-' + f.id)
+          el?.scrollIntoView({ behavior: 'smooth', block: 'center' })
+          el?.animate?.(
+            [{ boxShadow: '0 0 0 0 rgba(93,206,56,.5)' }, { boxShadow: '0 0 0 10px rgba(93,206,56,0)' }],
+            { duration: 900, easing: 'cubic-bezier(.22,.61,.36,1)' }
+          )
+        },
+      })
+
+      // The full text below the fan, with a copy button per script.
+      document.getElementById('scripts').innerHTML = FILES.map(
+        (f) => `
+        <div class="script" id="s-${f.id}">
+          <div class="script-head">
+            <span class="num">${FILES.indexOf(f) + 1}</span>
+            <h3>${f.title}</h3>
+            <span class="to">To: ${f.to}</span>
+          </div>
+          <div class="script-body">
+            <div class="script-text" id="t-${f.id}">${f.text}</div>
+            <div class="script-foot">
+              <p class="script-why"><b style="color:var(--ink)">Why it works.</b> ${f.why}</p>
+              <button class="btn btn-outline btn-sm copy-btn no-print" data-copy="${f.id}">
+                Copy text
+              </button>
+            </div>
+          </div>
+        </div>`
+      ).join('')
+
+      document.getElementById('scripts').addEventListener('click', async (e) => {
+        const btn = e.target.closest('[data-copy]')
+        if (!btn) return
+        const src = document.getElementById('t-' + btn.dataset.copy)
+        // Strip the placeholder highlighting so what lands on the clipboard is plain text.
+        const text = src.innerText
+        try {
+          await navigator.clipboard.writeText(text)
+          btn.textContent = 'Copied'
+          btn.dataset.state = 'done'
+        } catch {
+          // Clipboard blocked — select the text so it can be copied by hand.
+          const range = document.createRange()
+          range.selectNodeContents(src)
+          const sel = window.getSelection()
+          sel.removeAllRanges()
+          sel.addRange(range)
+          btn.textContent = 'Selected — press Cmd/Ctrl+C'
+          btn.dataset.state = 'done'
+        }
+        setTimeout(() => {
+          btn.textContent = 'Copy text'
+          delete btn.dataset.state
+        }, 2400)
+      })
+    </script>
+  </body>
+</html>

@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="en-AU">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>From High Income to Financial Independence — the guide | Prospa Financial</title>
+    <meta
+      name="description"
+      content="The short guide behind the workshop. Ten pages on why a strong income does not automatically build wealth, and what changes when peak earning years are used deliberately."
+    />
+    <link rel="icon" type="image/svg+xml" href="../assets/favicon.svg" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="../assets/prospa.css" />
+  </head>
+  <body>
+    <div data-sheet-back></div>
+
+    <article class="sheet sheet-wide">
+      <div data-sheet-masthead></div>
+
+      <div class="pad">
+        <div class="eyebrow">Session tool 12 · Guide</div>
+        <h1 class="doc-title">From High Income to <em>Financial Independence</em></h1>
+        <p class="lede">
+          The short guide behind the workshop. Ten pages on why a strong income does not
+          automatically become lasting wealth, and what changes when peak earning years are used
+          deliberately. <strong>Page through it here</strong> — nothing to download, nothing to
+          hand over.
+        </p>
+
+        <hr class="rule" />
+
+        <div id="book"></div>
+
+        <hr class="rule" />
+
+        <div class="grid g3">
+          <div class="card card-tint">
+            <div class="stat"><span class="k">Pages</span><span class="figure fig-lg">10</span></div>
+            <p class="small muted" style="margin-top: 10px">
+              Short ones. The whole guide is a twelve-minute read.
+            </p>
+          </div>
+          <div class="card card-tint">
+            <div class="stat"><span class="k">Reading time</span><span class="figure fig-lg">12 min</span></div>
+            <p class="small muted" style="margin-top: 10px">
+              Arrow keys turn pages, or click the outer half of a page.
+            </p>
+          </div>
+          <div class="card card-tint">
+            <div class="stat"><span class="k">Email required</span><span class="figure fig-lg">None</span></div>
+            <p class="small muted" style="margin-top: 10px">
+              You already registered. The guide is simply here.
+            </p>
+          </div>
+        </div>
+
+        <div class="card card-green" style="margin-top: 26px">
+          <h3 class="step-h">Where to go next</h3>
+          <p class="muted" style="margin-top: 10px; margin-bottom: 20px">
+            The guide raises the questions. The other tools answer them with your own numbers —
+            start with the score, then the two calculators.
+          </p>
+          <div class="row no-print">
+            <a class="btn btn-teal btn-sm" href="01-wealth-score.html">Take the Wealth Score</a>
+            <a class="btn btn-outline btn-sm" href="02-freedom-number.html">Calculate your number</a>
+            <a class="btn btn-ghost btn-sm" href="03-gap-years.html">
+              Map the gap years
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                   stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <path d="M5 12h14M12 5l7 7-7 7" />
+              </svg>
+            </a>
+          </div>
+        </div>
+
+        <div class="disclaimer" style="margin-top: 32px">
+          <b>General information only.</b> This guide is educational. It does not consider your
+          objectives, financial situation or needs, and nothing in it is a recommendation of any
+          financial product, strategy or structure. Figures and rules described are for the 2026–27
+          Australian financial year and change over time. Seek personal advice before acting.
+        </div>
+
+        <div class="row no-print" style="margin-top: 26px">
+          <button class="btn btn-outline btn-sm" data-print>Print or save as PDF</button>
+        </div>
+      </div>
+
+      <div data-sheet-foot></div>
+    </article>
+
+    <script type="module">
+      import { mountSheet, wirePrint } from '../assets/sheet.js'
+      import { mountBook } from '../assets/components.js'
+
+      mountSheet({ no: '12', kind: 'Guide · 10 pages', wide: true })
+      wirePrint()
+
+      mountBook(document.getElementById('book'), {
+        title: 'From High Income to Financial Independence',
+        subtitle: 'Why a strong salary is the start of the question, not the answer',
+        format: 'Guide',
+        readLabel: 'Read the guide',
+        pages: [
+          { kind: 'cover' },
+          {
+            kind: 'contents',
+            title: 'In this guide',
+            items: [
+              { label: 'The Financial Freedom Gap', page: 3 },
+              { label: 'Where the money actually goes', page: 4 },
+              { label: 'The preservation age problem', page: 5 },
+              { label: 'Three buckets, three timeframes', page: 6 },
+              { label: 'The next dollar', page: 7 },
+              { label: 'What you have not insured', page: 9 },
+              { label: 'Where to start', page: 10 },
+            ],
+          },
+          {
+            kind: 'chapter',
+            number: 1,
+            title: 'The Financial Freedom Gap',
+            body: [
+              'A high income creates opportunity. It does not, on its own, create wealth. The two are related by a single variable — what the income is deliberately directed to do — and that variable is the one most often left unset.',
+              'The gap is not a gap in earnings. It is the distance between what a strong income could build and what it is currently building, and it widens quietly during exactly the years it should be closing.',
+            ],
+          },
+          {
+            kind: 'chapter',
+            number: 2,
+            title: 'Where the money actually goes',
+            stat: { v: '47%', k: 'Top marginal rate with the Medicare levy' },
+            body: [
+              'At the top bracket, nearly half of each additional dollar is tax before anything else happens to it. What remains meets a mortgage, a lifestyle that grew with the salary, and the commitments that arrived alongside the promotion.',
+              'None of that is waste. But a surplus that is never named is a surplus that cannot be directed, and lifestyle expands to meet income unless something structural stops it.',
+            ],
+          },
+          {
+            kind: 'quote',
+            text: 'My income has increased faster than my financial planning has evolved.',
+            cite: 'The most common sentence we hear in a first conversation',
+          },
+          {
+            kind: 'chapter',
+            number: 3,
+            title: 'The preservation age problem',
+            stat: { v: '60', k: 'Preservation age, for everyone reaching it from 1 July 2024' },
+            body: [
+              'Superannuation is the most tax-effective structure most people will ever have access to. It is also locked. From 1 July 2024, preservation age is 60 for everyone who had not already reached it.',
+              'So if you would like work to become optional at 55, you have also chosen five years that superannuation cannot fund. The question stops being how much you have and becomes where it sits, and when it unlocks.',
+            ],
+          },
+          {
+            kind: 'chapter',
+            number: 4,
+            title: 'Three buckets, three timeframes',
+            body: [
+              'Today: liquidity for the next nought to three years. Freedom: capital you can reach before 60. Retirement: the long-term pool.',
+              'A strong balance sheet can still be poorly aligned. Significant wealth in the family home and in super, with very little accessible in between, is wealth pointed almost entirely at one timeframe.',
+            ],
+          },
+          {
+            kind: 'chapter',
+            number: 5,
+            title: 'The next dollar',
+            body: [
+              'Mortgage, super, or investments outside super — the right answer depends on your marginal rate, your timeframe, whether the debt is deductible, and when you need the money back.',
+              'Only one of those questions has a near-universal answer: clear high-interest, non-deductible debt first. After that it is genuinely a trade-off, and the easiest option is rarely the most efficient one.',
+            ],
+          },
+          {
+            kind: 'chapter',
+            number: 6,
+            title: 'What you have not insured',
+            body: [
+              'You insure the house without hesitating. While you are still accumulating, the largest asset you own is not the house — it is the income you have not earned yet, and everything on your balance sheet was bought with it.',
+              'Cover arranged against an earlier salary rarely matches a later one, and the terms available have changed materially since 2021. The gap widens quietly, every year you are promoted.',
+            ],
+          },
+          {
+            kind: 'cta',
+            title: 'Where to start',
+            body: 'Not with a product. With three numbers: what your surplus actually is, what annual lifestyle you want work to become optional for, and how many years sit between that age and 60. The Wealth Score takes about three minutes and tells you which of the six areas is furthest behind.',
+            action: 'Take the Wealth Score',
+            href: '01-wealth-score.html',
+          },
+        ],
+      })
+    </script>
+  </body>
+</html>

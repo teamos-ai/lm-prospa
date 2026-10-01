@@ -21,7 +21,7 @@ export const PROSPA = {
     'This document provides general information only. It does not consider your personal objectives, financial situation or needs, and it is not a recommendation of any financial product, strategy or structure. Consider whether it is appropriate for you and seek personal advice before acting.',
 }
 
-/** The ten magnets, in order. Single source for titles and routes. */
+/** The twelve magnets, in order. Single source for titles and routes. */
 export const MAGNETS = [
   { no: '01', slug: '01-wealth-score', title: 'The Executive Wealth Score', kind: 'Scored assessment', agenda: 8 },
   { no: '02', slug: '02-freedom-number', title: 'Your Financial Freedom Number', kind: 'Calculator', agenda: 5 },
@@ -33,6 +33,8 @@ export const MAGNETS = [
   { no: '08', slug: '08-structures', title: 'Wealth Structures, Compared', kind: 'Comparison', agenda: 4 },
   { no: '09', slug: '09-income-protection', title: 'The Income Protection Audit', kind: 'Audit', agenda: 6 },
   { no: '10', slug: '10-estate-checklist', title: 'The Estate & Beneficiary Checklist', kind: 'Checklist', agenda: 7 },
+  { no: '11', slug: '11-conversation-swipe-file', title: 'The Conversation Swipe File', kind: 'Swipe file', agenda: 9 },
+  { no: '12', slug: '12-freedom-guide', title: 'From High Income to Financial Independence', kind: 'Guide', agenda: 0 },
 ]
 
 const esc = (s) =>

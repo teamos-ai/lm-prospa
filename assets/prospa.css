@@ -793,7 +793,7 @@ input[type='range']::-moz-range-thumb {
 .back {
   display: inline-flex;
   align-items: center;
-  gap: 9px;
+  gap: 8px;
   font-size: 13.5px;
   font-weight: 600;
   color: var(--teal);
@@ -987,5 +987,1117 @@ input[type='range']::-moz-range-thumb {
 
   a[href^='http']::after {
     content: '';
+  }
+}
+
+/* ============================================================
+   INTERACTION COMPONENTS
+   Shortcut tracker · strike lists · swipe-file fan · ebook.
+   Behaviour lives in assets/components.js.
+   ============================================================ */
+
+/* ---------- 1 · Shortcuts ---------- */
+
+.shortcut {
+  display: grid;
+  grid-template-columns: 46px 1fr;
+  gap: 18px;
+  padding: 24px 0;
+  border-bottom: 1px solid var(--line-2);
+}
+.shortcut:last-of-type {
+  border-bottom: none;
+}
+.shortcut-ic {
+  width: 46px;
+  height: 46px;
+  border-radius: var(--r-sm);
+  background: var(--bg2);
+  color: var(--teal);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex: none;
+  transition: background var(--dur-base) var(--ease), color var(--dur-base) var(--ease);
+}
+.shortcut-ic svg {
+  width: 21px;
+  height: 21px;
+}
+.shortcut.claimed .shortcut-ic {
+  background: var(--green);
+  color: #fff;
+}
+.shortcut-head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 14px;
+  flex-wrap: wrap;
+  margin-bottom: 8px;
+}
+.shortcut-head b {
+  font-size: 16.5px;
+  color: var(--ink);
+  font-weight: 700;
+  line-height: 1.35;
+}
+.shortcut p {
+  font-size: 14.5px;
+  color: var(--gray);
+}
+.shortcut .tradeoff {
+  display: block;
+  margin-top: 10px;
+  font-size: 13.5px;
+  color: var(--slate);
+  background: var(--bg2);
+  border-radius: var(--r-sm);
+  padding: 11px 15px;
+}
+.shortcut .tradeoff b {
+  color: var(--ember-strong);
+  font-weight: 600;
+}
+
+/* The saves-you chips */
+.sc-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  padding: 5px 11px;
+  border-radius: var(--r-pill);
+  white-space: nowrap;
+}
+.sc-chip svg {
+  width: 13px;
+  height: 13px;
+  flex: none;
+}
+.sc-chip b {
+  font-family: 'JetBrains Mono', monospace;
+  font-weight: 500;
+  letter-spacing: 0;
+}
+.sc-green {
+  background: var(--bg1);
+  color: var(--green-600);
+}
+.sc-teal {
+  background: var(--bg2);
+  color: var(--teal);
+}
+.sc-ember {
+  background: var(--ember-soft);
+  color: var(--ember-strong);
+}
+.sc-slate {
+  background: #f1f2f4;
+  color: var(--slate);
+}
+.shortcut-saves {
+  display: flex;
+  gap: 7px;
+  flex-wrap: wrap;
+}
+
+/* Claim toggle */
+.claim {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 14px;
+  padding: 9px 16px 9px 12px;
+  border: 1.5px solid var(--line);
+  border-radius: var(--r-pill);
+  background: #fff;
+  font-family: 'Poppins', sans-serif;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--gray);
+  cursor: pointer;
+  transition: border-color var(--dur-snap) var(--ease), color var(--dur-snap) var(--ease),
+    background var(--dur-snap) var(--ease);
+}
+.claim:hover {
+  border-color: var(--accent);
+  color: var(--teal);
+}
+.claim .claim-box {
+  width: 17px;
+  height: 17px;
+  border-radius: 5px;
+  border: 2px solid var(--line);
+  flex: none;
+  position: relative;
+  transition: background var(--dur-snap) var(--ease), border-color var(--dur-snap) var(--ease);
+}
+.claim[aria-pressed='true'] {
+  border-color: var(--green);
+  background: var(--bg1);
+  color: var(--green-600);
+}
+.claim[aria-pressed='true'] .claim-box {
+  background: var(--green);
+  border-color: var(--green);
+}
+.claim[aria-pressed='true'] .claim-box::after {
+  content: '';
+  position: absolute;
+  left: 4px;
+  top: 0.5px;
+  width: 4px;
+  height: 8.5px;
+  border: solid #fff;
+  border-width: 0 2.4px 2.4px 0;
+  transform: rotate(45deg);
+}
+.claim:focus-visible {
+  outline: 2px solid var(--teal);
+  outline-offset: 2px;
+}
+
+/* The tally */
+.sc-tally {
+  background: var(--teal);
+  border-radius: var(--r-xl);
+  padding: 32px 36px;
+  color: #fff;
+}
+.sc-tally-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 26px;
+  flex-wrap: wrap;
+  margin-bottom: 18px;
+}
+.sc-tally-k {
+  display: block;
+  font-size: 11.5px;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: #9fd8c4;
+  margin-bottom: 8px;
+}
+.sc-tally-n {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 34px;
+  font-weight: 500;
+  letter-spacing: -0.03em;
+  color: #fff;
+  font-variant-numeric: tabular-nums;
+}
+.sc-tally-n i {
+  font-style: normal;
+  font-size: 16px;
+  color: #9fbdc0;
+}
+.sc-tally-track {
+  flex: 1;
+  min-width: 160px;
+  height: 7px;
+  border-radius: 4px;
+  background: rgba(255, 255, 255, 0.18);
+  overflow: hidden;
+}
+.sc-tally-track i {
+  display: block;
+  height: 100%;
+  border-radius: 4px;
+  background: var(--green);
+  transform-origin: left center;
+  transition: transform var(--dur-reveal) var(--ease);
+}
+.sc-chips {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin-bottom: 16px;
+}
+.sc-tally .sc-chip {
+  background: rgba(255, 255, 255, 0.12);
+  color: #fff;
+}
+.sc-tally-note {
+  font-size: 14px;
+  color: #cfe0e2;
+  max-width: 62ch;
+}
+
+/* ---------- 2 · Strike lists ---------- */
+
+.check label,
+.audit-q b,
+.strike-row .strike-label {
+  transition: color var(--dur-base) var(--ease), opacity var(--dur-base) var(--ease);
+}
+.check.struck label,
+.audit-q.struck b,
+.strike-row.struck .strike-label {
+  text-decoration: line-through;
+  text-decoration-color: var(--green);
+  text-decoration-thickness: 2px;
+  color: var(--gray);
+}
+.check.struck label .sub,
+.audit-q.struck p {
+  opacity: 0.55;
+}
+/* A line-through propagates to descendants and a child cannot switch it off.
+   Making the sub-line an atomic inline box keeps the rule from reaching it. */
+.check label .sub {
+  display: inline-block;
+  width: 100%;
+}
+.audit-q.struck .num {
+  background: var(--green);
+}
+.check.struck .sub {
+  text-decoration: none;
+}
+
+/* ---------- 3 · Swipe-file fan ---------- */
+
+.fan {
+  --fan-card-w: 16rem;
+}
+.fan-stage {
+  position: relative;
+  width: 100%;
+  height: 34rem;
+  perspective: 1600px;
+  margin-bottom: 6px;
+}
+.fan-cards {
+  position: absolute;
+  inset: 0;
+}
+.fan-card {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: var(--fan-card-w);
+  aspect-ratio: 4 / 7;
+  transform-style: preserve-3d;
+  transition: transform 0.6s var(--ease), opacity 0.4s var(--ease);
+  will-change: transform;
+}
+.fan-inner {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  transform-style: preserve-3d;
+  transition: transform 0.65s var(--ease);
+}
+.fan-card.is-turned .fan-inner {
+  transform: rotateY(180deg);
+}
+.fan-face {
+  position: absolute;
+  inset: 0;
+  border-radius: var(--r-lg);
+  border: 1px solid var(--line);
+  background: #fff;
+  box-shadow: var(--sh-card);
+  overflow: hidden;
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+}
+.fan-card.is-centre .fan-face {
+  box-shadow: var(--sh-raise);
+}
+.fan-front {
+  display: flex;
+  flex-direction: column;
+  text-align: left;
+  padding: 0;
+  cursor: pointer;
+  font-family: 'Poppins', sans-serif;
+}
+.fan-front:focus-visible,
+.fan-back:focus-visible {
+  outline: 2px solid var(--teal);
+  outline-offset: 3px;
+}
+.fan-art {
+  position: relative;
+  flex: 1;
+  min-height: 0;
+  background: var(--tint);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.fan-art::after {
+  content: '';
+  position: absolute;
+  inset: auto 0 0;
+  height: 26%;
+  background: linear-gradient(to bottom, transparent, #fff);
+}
+.fan-art-mark {
+  color: var(--teal);
+  opacity: 0.3;
+}
+.fan-art-mark svg {
+  width: 34%;
+  max-width: 76px;
+  height: auto;
+  display: block;
+}
+.fan-front-copy {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 8px;
+  background: #fff;
+  padding: 0 clamp(14px, 7%, 22px) clamp(16px, 7%, 24px);
+  position: relative;
+  z-index: 1;
+}
+.fan-title {
+  font-size: clamp(15px, 7.5cqw, 19px);
+  font-weight: 700;
+  color: var(--ink);
+  letter-spacing: -0.015em;
+  line-height: 1.25;
+}
+.fan-len {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10.5px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--gray);
+}
+
+.fan-back {
+  transform: rotateY(180deg);
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: clamp(13px, 5%, 18px);
+  overflow-y: auto;
+}
+.fan-back-head {
+  display: flex;
+  align-items: center;
+  gap: 13px;
+}
+.fan-art-sm {
+  width: 38px;
+  height: 38px;
+  border-radius: var(--r-sm);
+  background: var(--tint);
+  color: var(--teal);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex: none;
+  opacity: 0.85;
+}
+.fan-art-sm svg {
+  width: 20px;
+  height: 20px;
+}
+.fan-meta {
+  display: block;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--gray);
+  margin-top: 6px;
+}
+.fan-back-title {
+  font-size: 16.5px;
+  letter-spacing: -0.015em;
+  margin-bottom: 4px;
+}
+.fan-sub {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--gray);
+}
+.fan-body {
+  font-size: 12.5px;
+  color: var(--gray);
+  line-height: 1.45;
+}
+.fan-inside-k {
+  display: block;
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--gray);
+  margin-bottom: 8px;
+}
+.fan-inside ul {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+}
+.fan-inside li {
+  display: flex;
+  gap: 8px;
+  align-items: flex-start;
+  font-size: 12px;
+  color: var(--ink);
+  line-height: 1.35;
+}
+.fan-inside li svg {
+  width: 14px;
+  height: 14px;
+  flex: none;
+  margin-top: 3px;
+  color: var(--green-600);
+}
+.fan-actions {
+  margin-top: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  align-items: stretch;
+  padding-top: 6px;
+}
+.fan-actions .btn {
+  width: 100%;
+  justify-content: center;
+}
+/* The turn-back is a quiet text action: it must not cost a button's height. */
+.fan-actions .btn-ghost {
+  padding: 5px 8px;
+  font-size: 12.5px;
+}
+.fan-actions .btn-primary {
+  padding: 11px 18px;
+  font-size: 14px;
+}
+
+.fan-status {
+  text-align: center;
+  font-size: 13px;
+  color: var(--gray);
+  margin-bottom: 14px;
+}
+.fan-controls {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 18px;
+}
+.fan-nav {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  border: 1px solid var(--line);
+  background: #fff;
+  color: var(--teal);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: border-color var(--dur-snap) var(--ease), background var(--dur-snap) var(--ease),
+    opacity var(--dur-snap) var(--ease);
+}
+.fan-nav svg {
+  width: 17px;
+  height: 17px;
+}
+.fan-nav:hover:not(:disabled) {
+  border-color: var(--teal);
+  background: var(--bg2);
+}
+.fan-nav:disabled {
+  opacity: 0.35;
+  cursor: not-allowed;
+}
+.fan-nav:focus-visible {
+  outline: 2px solid var(--teal);
+  outline-offset: 2px;
+}
+.fan-dots {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+.fan-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  border: none;
+  padding: 0;
+  background: var(--line);
+  cursor: pointer;
+  transition: background var(--dur-snap) var(--ease), width var(--dur-snap) var(--ease);
+}
+.fan-dot.on {
+  background: var(--green);
+  width: 22px;
+  border-radius: var(--r-pill);
+}
+.fan-dot:focus-visible {
+  outline: 2px solid var(--teal);
+  outline-offset: 2px;
+}
+
+/* ---------- 4 · Ebook ---------- */
+
+/* A class rule beats the [hidden] attribute's UA style, so say it explicitly
+   or the closed book stays on screen once the reader opens. */
+.book-closed[hidden],
+.book-reader[hidden] {
+  display: none;
+}
+.book-closed {
+  display: grid;
+  grid-template-columns: 240px 1fr;
+  gap: 44px;
+  align-items: center;
+}
+.book-cover-btn {
+  border: 0;
+  background: none;
+  padding: 0;
+  cursor: pointer;
+  perspective: 900px;
+  display: block;
+  border-radius: var(--r-md);
+}
+.book-cover-btn:focus-visible {
+  outline: 2px solid var(--teal);
+  outline-offset: 4px;
+}
+.book-3d {
+  position: relative;
+  display: block;
+  width: 240px;
+  aspect-ratio: 49 / 60;
+  transform-style: preserve-3d;
+  transition: transform var(--dur-base) var(--ease);
+}
+.book-cover-btn:hover .book-3d,
+.book-cover-btn:focus-visible .book-3d {
+  transform: rotateY(-20deg) translateX(-8px);
+}
+.book-front {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  overflow: hidden;
+  border-radius: var(--r-md);
+  border: 1px solid var(--line);
+  background: #fff;
+  box-shadow: var(--sh-card);
+  transition: box-shadow var(--dur-base) var(--ease);
+}
+.book-cover-btn:hover .book-front {
+  box-shadow: var(--sh-raise);
+}
+.book-art {
+  position: relative;
+  flex: 1;
+  min-height: 0;
+  background: linear-gradient(150deg, var(--bg2) 0%, var(--bg1) 55%, #e8f4ec 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.book-art::after {
+  content: '';
+  position: absolute;
+  inset: auto 0 0;
+  height: 40%;
+  background: linear-gradient(to bottom, transparent, #fff);
+}
+.book-art-mark {
+  color: var(--teal);
+  opacity: 0.32;
+}
+.book-art-mark svg {
+  width: 72px;
+  height: 72px;
+  display: block;
+}
+.book-front-copy {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 8px;
+  background: #fff;
+  padding: 0 16px 20px 30px;
+  position: relative;
+  z-index: 1;
+  text-align: left;
+}
+.book-title {
+  font-family: 'Poppins', sans-serif;
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--ink);
+  letter-spacing: -0.015em;
+  line-height: 1.2;
+}
+.book-sub {
+  font-family: 'Poppins', sans-serif;
+  font-size: 12.5px;
+  color: var(--gray);
+  line-height: 1.4;
+}
+/* the binding: a soft shade on the spine and two fold lines */
+.book-crease {
+  position: absolute;
+  inset: 0 auto 0 0;
+  width: 13px;
+  background: rgba(19, 95, 105, 0.05);
+  pointer-events: none;
+}
+.book-crease::before,
+.book-crease::after {
+  content: '';
+  position: absolute;
+  inset-block: 0;
+  width: 1px;
+}
+.book-crease::before {
+  left: 13px;
+  background: rgba(19, 95, 105, 0.1);
+}
+.book-crease::after {
+  left: 17px;
+  background: rgba(255, 255, 255, 0.7);
+}
+/* The page edge: a 30px face stood up on the book's right-hand side.
+   `left: 0` is required — without it the element starts at its static
+   position and the transform carries it off the book entirely. */
+.book-edge {
+  position: absolute;
+  left: 0;
+  top: 3px;
+  height: calc(100% - 6px);
+  width: 30px;
+  background: var(--bg2);
+  border-block: 1px solid var(--line);
+  transform: translateX(221px) rotateY(90deg) translateX(16px);
+}
+.book-back {
+  position: absolute;
+  inset: 0;
+  border-radius: var(--r-md);
+  border: 1px solid var(--line);
+  background: var(--accent);
+  transform: translateZ(-32px);
+}
+.book-aside-title {
+  font-size: 27px;
+  letter-spacing: -0.025em;
+  margin-bottom: 10px;
+}
+.book-aside-sub {
+  color: var(--gray);
+  font-size: 16px;
+  margin-bottom: 24px;
+  max-width: 44ch;
+}
+
+/* --- Reader --- */
+.book-stage {
+  perspective: 2200px;
+  padding: 10px 0 18px;
+}
+.book-stage:focus-visible {
+  outline: none;
+}
+.book-sheets {
+  position: relative;
+  width: 100%;
+  max-width: 800px;
+  margin: 0 auto;
+  aspect-ratio: 800 / 540;
+  transform-style: preserve-3d;
+}
+.book-sheets::before {
+  /* the spine shade down the middle */
+  content: '';
+  position: absolute;
+  inset-block: 0;
+  left: 50%;
+  width: 26px;
+  transform: translateX(-50%);
+  background: linear-gradient(90deg, transparent, rgba(19, 95, 105, 0.07), transparent);
+  pointer-events: none;
+  z-index: 300;
+}
+.book-sheets.single::before {
+  display: none;
+}
+/* At the cover only one page shows, so slide the spread across to centre it. */
+.book-sheets {
+  transition: transform 0.75s var(--ease);
+}
+.book-sheets.at-cover:not(.single) {
+  transform: translateX(-25%);
+}
+.book-sheets.at-end:not(.single) {
+  transform: translateX(25%);
+}
+.book-sheet {
+  position: absolute;
+  top: 0;
+  left: 50%;
+  width: 50%;
+  height: 100%;
+  transform-origin: left center;
+  transform-style: preserve-3d;
+  transition: transform 0.75s var(--ease);
+}
+.book-sheet.flipped {
+  transform: rotateY(-180deg);
+}
+.book-sheets.single .book-sheet {
+  left: 0;
+  width: 100%;
+}
+.book-page {
+  position: absolute;
+  inset: 0;
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+  background: #fff;
+  border: 1px solid var(--line);
+  overflow: hidden;
+}
+.book-page-front {
+  border-radius: 0 var(--r-sm) var(--r-sm) 0;
+  box-shadow: inset 14px 0 22px -16px rgba(19, 95, 105, 0.22);
+}
+.book-page-back {
+  transform: rotateY(180deg);
+  border-radius: var(--r-sm) 0 0 var(--r-sm);
+  box-shadow: inset -14px 0 22px -16px rgba(19, 95, 105, 0.22);
+}
+.book-sheets.single .book-page {
+  border-radius: var(--r-sm);
+  box-shadow: none;
+}
+.book-pg {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  padding: clamp(18px, 4.5%, 34px);
+}
+.book-pg-cover {
+  padding: 0;
+}
+.book-art-page {
+  flex: 1;
+  min-height: 0;
+}
+.book-pg-copy {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 10px;
+  padding: 0 clamp(18px, 5%, 32px) clamp(22px, 6%, 36px);
+  position: relative;
+  z-index: 1;
+}
+.book-pg-title {
+  font-family: 'Poppins', sans-serif;
+  font-size: clamp(18px, 3cqw, 23px);
+  font-weight: 700;
+  color: var(--ink);
+  letter-spacing: -0.02em;
+  line-height: 1.2;
+}
+.book-pg-sub {
+  font-size: 13.5px;
+  color: var(--gray);
+}
+.book-k {
+  font-size: 10.5px;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--teal);
+}
+.book-h {
+  font-size: clamp(17px, 2.4cqw, 21px);
+  letter-spacing: -0.02em;
+  margin: 9px 0 12px;
+}
+.book-p {
+  font-size: 13.5px;
+  color: var(--gray);
+  line-height: 1.6;
+  margin-bottom: 11px;
+}
+.book-toc {
+  list-style: none;
+  margin: 6px 0 0;
+  padding: 0;
+}
+.book-toc li {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 14px;
+  padding: 8px 0;
+  border-bottom: 1px solid var(--line-2);
+  font-size: 13.5px;
+  color: var(--ink);
+}
+.book-toc em {
+  font-style: normal;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 12px;
+  color: var(--gray);
+}
+.book-stat {
+  background: var(--bg1);
+  border-radius: var(--r-sm);
+  padding: 14px 18px;
+  margin-bottom: 16px;
+}
+.book-stat b {
+  display: block;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 24px;
+  font-weight: 500;
+  color: var(--green-600);
+  letter-spacing: -0.03em;
+}
+.book-stat span {
+  display: block;
+  font-size: 10.5px;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--gray);
+  margin-top: 4px;
+}
+.book-pg-quote figure {
+  margin: auto 0;
+  border-left: 2px solid var(--green);
+  padding-left: 20px;
+}
+.book-pg-quote blockquote p {
+  font-size: clamp(16px, 2.3cqw, 20px);
+  font-weight: 700;
+  color: var(--ink);
+  letter-spacing: -0.02em;
+  line-height: 1.35;
+}
+.book-pg-quote figcaption {
+  margin-top: 12px;
+  font-size: 12px;
+  color: var(--gray);
+}
+.book-cta {
+  align-self: flex-start;
+  margin-top: 4px;
+}
+.book-foot {
+  margin-top: auto;
+  padding-top: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 9.5px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--gray);
+}
+.book-foot span:first-child {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.book-blank {
+  height: 100%;
+  background: #fff;
+}
+/* Narrow screens: one page at a time, in the same frame as a spread page. */
+.book-one {
+  position: relative;
+  width: 100%;
+  max-width: 400px;
+  margin: 0 auto;
+  aspect-ratio: 400 / 540;
+}
+.book-one[hidden] {
+  display: none;
+}
+.book-page-one {
+  border-radius: var(--r-sm);
+  box-shadow: var(--sh-card);
+}
+.book-sheets[hidden] {
+  display: none;
+}
+.book-controls {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+.book-status {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 12px;
+  letter-spacing: 0.06em;
+  color: var(--gray);
+  min-width: 150px;
+  text-align: center;
+}
+
+@media (max-width: 860px) {
+  .book-closed {
+    grid-template-columns: 1fr;
+    gap: 28px;
+    justify-items: start;
+  }
+}
+@media (max-width: 720px) {
+  .book-sheets {
+    aspect-ratio: 400 / 540;
+    max-width: 400px;
+  }
+  .sc-tally {
+    padding: 24px 22px;
+  }
+  .shortcut {
+    grid-template-columns: 1fr;
+    gap: 12px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .fan-card,
+  .fan-inner,
+  .book-sheet,
+  .book-3d {
+    transition-duration: 0.01ms !important;
+  }
+}
+
+@media print {
+  /* The fan prints as a plain list of fronts; the book prints its pages in order. */
+  .fan-stage {
+    height: auto;
+    perspective: none;
+  }
+  .fan-cards {
+    position: static;
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 10pt;
+  }
+  .fan-card {
+    position: static;
+    width: auto;
+    aspect-ratio: auto;
+    transform: none !important;
+    opacity: 1 !important;
+    break-inside: avoid;
+  }
+  .fan-inner {
+    transform: none !important;
+  }
+  .fan-face {
+    position: static;
+    backface-visibility: visible;
+    -webkit-backface-visibility: visible;
+    box-shadow: none;
+  }
+  .fan-front {
+    display: none;
+  }
+  .fan-back {
+    transform: none !important;
+    overflow: visible;
+  }
+  .fan-actions,
+  .fan-controls,
+  .fan-status {
+    display: none;
+  }
+  .book-closed {
+    display: none;
+  }
+  .book-reader[hidden] {
+    display: block !important;
+  }
+  .book-stage {
+    perspective: none;
+  }
+  .book-sheets {
+    position: static;
+    aspect-ratio: auto;
+    max-width: none;
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 10pt;
+  }
+  .book-sheets::before {
+    display: none;
+  }
+  .book-sheet {
+    position: static;
+    width: auto;
+    height: auto;
+    transform: none !important;
+    display: contents;
+  }
+  .book-page {
+    position: static;
+    backface-visibility: visible;
+    -webkit-backface-visibility: visible;
+    transform: none !important;
+    min-height: 92mm;
+    box-shadow: none;
+    break-inside: avoid;
+  }
+  .book-controls {
+    display: none;
+  }
+  .sc-tally {
+    background: var(--bg2);
+    color: var(--slate);
+  }
+  .sc-tally-k,
+  .sc-tally-note {
+    color: var(--gray);
+  }
+  .sc-tally-n {
+    color: var(--teal);
+  }
+  .sc-tally .sc-chip {
+    background: #fff;
+    color: var(--teal);
+    border: 1px solid var(--line);
+  }
+  .claim {
+    display: none;
+  }
+  .shortcut.claimed {
+    background: var(--bg1);
+    border-radius: var(--r-sm);
+    padding-inline: 10pt;
   }
 }

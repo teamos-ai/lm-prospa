@@ -1,6 +1,6 @@
 # Claims register — every figure on every sheet
 
-Every number, rate, threshold and rule stated across the ten tools, with where it came from and
+Every number, rate, threshold and rule stated across the twelve tools, with where it came from and
 when it was checked. Anything not in this table was not asserted as fact.
 
 **Checked:** 1 October 2026 · **Financial year:** 2026–27 (Australia)
@@ -9,7 +9,8 @@ when it was checked. Anything not in this table was not asserted as fact.
 
 ## 1. Superannuation — caps and thresholds
 
-Used on: **07 Super Cheatsheet**, **04 Next Dollar**, **06 Bonus Playbook**, **08 Structures**
+Used on: **07 Super Cheatsheet** (including its eight shortcuts), **04 Next Dollar**,
+**06 Bonus Playbook**, **08 Structures**
 
 | Claim | Value | Where it appears | Source |
 |---|---|---|---|
@@ -37,7 +38,8 @@ Used on: **07 Super Cheatsheet**, **04 Next Dollar**, **06 Bonus Playbook**, **0
 
 ## 2. Preservation age
 
-Used on: **01 Wealth Score**, **03 Gap Years**, **04 Next Dollar**, **07 Super Cheatsheet**, **08 Structures**
+Used on: **01 Wealth Score**, **03 Gap Years**, **04 Next Dollar**, **07 Super Cheatsheet**,
+**08 Structures**, **12 Freedom Guide**
 
 | Claim | Value | Source |
 |---|---|---|
@@ -70,7 +72,7 @@ Used on: **07 Super Cheatsheet**, **08 Structures**
 
 ## 4. Personal income tax
 
-Used on: **04 Next Dollar**, **06 Bonus Playbook**
+Used on: **04 Next Dollar**, **06 Bonus Playbook**, **12 Freedom Guide**
 
 | Bracket (resident, 2026–27) | Rate | With 2% Medicare levy |
 |---|---:|---:|
@@ -90,7 +92,7 @@ super — 17, 24 and 32 percentage points respectively; and 17 points where Divi
 
 ## 5. Income protection / disability income insurance
 
-Used on: **09 Income Protection Audit**
+Used on: **09 Income Protection Audit**, **12 Freedom Guide** (the 2021 change, in general terms)
 
 | Claim | Stated as | Source |
 |---|---|---|
@@ -146,6 +148,24 @@ Used on: **every sheet**, from one source in `assets/sheet.js`
 | Office | Level 1, 36 Mills Street, Albert Park VIC 3206 | Same |
 | Website | prospafinancial.com.au | Same |
 | Positioning / tagline | People. Advice. Progress. / Plan. Grow. Prosper. | Same |
+
+## 8b. The two newest sheets
+
+**11 Conversation Swipe File** asserts no figures at all. Every one of its seven templates is a
+question to ask someone else, and the page says so: *"These are templates for asking questions, not
+advice about what to do with the answers."* The only substantive claim is procedural — that a salary
+sacrifice arrangement must be in place before the income is earned — which is the standard position
+and is stated as a reason the template exists, not as tax advice.
+
+**12 Freedom Guide** introduces no new figures. Everything in it is already registered above: the
+47% top marginal rate with the Medicare levy (§4), preservation age 60 from 1 July 2024 (§2), and
+the 2021 change to income protection terms (§5). The three stat blocks in the book reuse those three
+numbers and nothing else.
+
+**07's eight shortcuts** restate figures from §1 and §3 — the $32,500 cap, the $500,000 carry-forward
+threshold, the $250,000 Division 293 threshold and the $1,935,000 CGT cap — and add one procedural
+point: binding lapsing nominations typically expire after three years, which is registered in §7.
+Each shortcut carries an explicit trade-off line, so no shortcut reads as a recommendation.
 
 ## 9. Deliberately not claimed
 

@@ -1,6 +1,6 @@
 # lm-prospa — Prospa Financial lead magnets
 
-Ten session tools for Prospa Financial's **Executive Financial Wellbeing Workshop**
+Twelve session tools for Prospa Financial's **Executive Financial Wellbeing Workshop**
 ("From High Income to Financial Independence"), led by the **Executive Wealth Score**.
 
 Built on the [Prospa Financial Design System](https://github.com/teamos-ai/prospa-financial-design-system)
@@ -11,7 +11,7 @@ and grounded in the [Prospa Financial database](https://github.com/teamos-ai/pro
 
 ---
 
-## The ten
+## The twelve
 
 Each maps to one agenda item, so every tool has a moment in the session where it is handed out and
 used rather than filed and forgotten.
@@ -28,6 +28,8 @@ used rather than filed and forgotten.
 | 08 | Wealth Structures, Compared | Comparison | 4 · Tax-Effective Wealth Structures |
 | 09 | The Income Protection Audit | Audit | 6 · Protecting What You Have Built |
 | 10 | The Estate & Beneficiary Checklist | Checklist | 7 · Passing on Wealth |
+| 11 | The Conversation Swipe File | Swipe file | 9 · Live Q&A, and after |
+| 12 | From High Income to Financial Independence | Guide (ebook) | The session in short |
 
 ### What came from the client, and what changed
 
@@ -40,11 +42,43 @@ Four pieces of attendee collateral were supplied. All four survive, substantiall
 | Three Wealth Buckets Worksheet (PDF) | **05 Three Buckets** | Same three buckets, same prompts. Added live allocation visual and a read of the shape, which is where the insight was always hiding. |
 | 2-Minute Financial Freedom Check-In (PDF) | *informs 01 and the webinar* | Kept as the pre-session instrument it was designed to be. Its proposed "Wealth Score" follow-up is what 01 now implements — properly specified. See `SCORING.md`. |
 
-Six are new, chosen for this audience: the gap years (03) is the genuinely under-served question
+Eight are new, chosen for this audience: the gap years (03) is the genuinely under-served question
 for anyone wanting to stop before 60; the next-dollar map (04) answers the question high earners
 actually ask; the bonus playbook (06) addresses lumpy executive income; the cheatsheet (07),
 structures comparison (08) and estate checklist (10) are the reference documents this audience
-keeps and shares.
+keeps and shares; the swipe file (11) is what finally makes the rest happen, because almost nothing
+moves until a conversation does; and the guide (12) is the session itself, as something to read.
+
+---
+
+## The four interaction patterns
+
+All four live in [`assets/components.js`](assets/components.js) — plain JavaScript and CSS 3D
+transforms, no framework, no library, so the sheets stay buildless and still print.
+
+**`shortcuts(key)` — the cheatsheet tracker.** Each shortcut on a cheatsheet carries chips for what
+it saves (tax, money, time, admin, risk, knowledge) and a plain statement of its trade-off. The
+reader marks the ones that apply, and a running tally shows how many they have claimed and across
+which kinds of saving. The claimed items carry through to print, so the page leaves with a personal
+agenda on it. Used on **07**.
+
+**`strikeList(key, onChange)` — checklists that cross out.** Ticking an item draws a green line
+through it, greys it and keeps the explanatory sub-line readable. Counts stay in step through the
+callback. Used on **09** and **10**.
+
+**`mountFan(el, files)` — the swipe-file fan.** Up to seven cards in an arc; hovering lifts one and
+eases its neighbours apart; activating the centre card turns it over to a spec sheet. Arrow keys and
+dots move the fan, Escape turns a card back, and only the visible face is reachable by keyboard.
+Used on **11**.
+
+**`mountBook(el, spec)` — the ebook.** A closed 3D book with a page edge and a binding crease that
+turns on hover, opening into a reader built from real sheets rotated about the spine — two pages to
+a spread, or one page at a time below 720px, because a sheet model on a phone would skip every
+second page. Used on **12**.
+
+> Both effects are behavioural ports of the Health OS design system's `SwipeFiles.tsx` and
+> `Ebook.tsx`, rebuilt without React, framer-motion or react-pageflip so that nothing here needs a
+> build step.
 
 ---
 
@@ -67,6 +101,7 @@ magnets/                one self-contained HTML file per tool
 assets/
   prospa.css            the design language, ported from the design system's tokens
   sheet.js              shared masthead, compliance footer, money formatting, persistence
+  components.js         shortcut tracker, strike lists, the swipe-file fan, the ebook
   prospa-logo.png
   favicon.svg
 SCORING.md              the Wealth Score model, in full
@@ -74,7 +109,7 @@ CLAIMS.md               every figure on every sheet, with its source and check d
 ```
 
 `assets/sheet.js` is the single source for the AFSL line and the general-advice warning. Change it
-there and all eleven pages change together — that is deliberate, and compliance text should never
+there and all thirteen pages change together — that is deliberate, and compliance text should never
 be edited into an individual sheet.
 
 ---
@@ -96,9 +131,12 @@ to a bordered block — the client can email these as PDFs without anything bein
 no analytics, and there is no third-party script on any page. The gallery says *"0 data collected"*
 because that is literally true, and it is a trust asset with this audience.
 
-**Accessible and responsive.** Verified at 375px with no horizontal overflow on any of the eleven
-pages; the one wide table scrolls inside its own container. Option buttons use real
-`aria-pressed` state, charts carry titles, and `prefers-reduced-motion` is honoured.
+**Accessible and responsive.** Verified at 375px and 1000px with no horizontal overflow and no
+runtime errors on any of the thirteen pages; the one wide table scrolls inside its own container.
+Option buttons and claim toggles use real `aria-pressed` state, the fan exposes only the visible
+card face to keyboard and screen readers, the reader announces its page politely, charts carry
+titles, and `prefers-reduced-motion` is honoured throughout. The fan prints as a plain list of card
+backs and the book prints its pages in order, so both still export to PDF.
 
 ---
 
@@ -111,7 +149,7 @@ structure. No sheet considers anybody's objectives, financial situation or needs
 The calculators state their limitations prominently — the Freedom Number sheet lists what it
 ignores before it shows what it produces.
 
-**2. Every figure is sourced.** `CLAIMS.md` registers every number across all ten tools with its
+**2. Every figure is sourced.** `CLAIMS.md` registers every number across all twelve tools with its
 source and check date, and records what was deliberately *not* claimed. The published
 "500+ customers" and "50+ years" claims are absent on purpose: the database's own source register
 flags them as needing compliance review before reuse. No testimonial, award, outcome or named
