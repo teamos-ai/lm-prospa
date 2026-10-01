@@ -1,0 +1,437 @@
+<!DOCTYPE html>
+<html lang="en-AU">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>The Next Dollar Decision Map — Prospa Financial</title>
+    <meta
+      name="description"
+      content="Mortgage, super, or investments outside super? The questions that decide where your next dollar works hardest — and why the easiest answer is rarely the most efficient."
+    />
+    <link rel="icon" type="image/svg+xml" href="../assets/favicon.svg" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="../assets/prospa.css" />
+    <style>
+      .route {
+        display: grid;
+        grid-template-columns: 54px 1fr;
+        gap: 22px;
+        padding: 30px 0;
+        border-bottom: 1px solid var(--line);
+      }
+      .route:last-of-type {
+        border-bottom: none;
+      }
+      .route-q {
+        font-size: 19px;
+        font-weight: 700;
+        color: var(--ink);
+        letter-spacing: -0.01em;
+        margin-bottom: 8px;
+        line-height: 1.3;
+      }
+      .route-why {
+        color: var(--gray);
+        font-size: 15px;
+        margin-bottom: 18px;
+      }
+      .route-then {
+        background: var(--bg2);
+        border-radius: var(--r-md);
+        padding: 18px 22px;
+        font-size: 15px;
+        color: var(--slate);
+      }
+      .route-then b {
+        color: var(--teal);
+        font-weight: 600;
+      }
+      .route-then + .route-then {
+        margin-top: 10px;
+      }
+      .route-then.stop {
+        background: var(--ember-soft);
+      }
+      .route-then.stop b {
+        color: var(--ember-strong);
+      }
+
+      .dest {
+        border-radius: var(--r-lg);
+        padding: 28px;
+        border: 1px solid var(--line);
+        display: flex;
+        flex-direction: column;
+      }
+      .dest h3 {
+        font-size: 19px;
+        margin: 14px 0 10px;
+      }
+      .dest p {
+        color: var(--gray);
+        font-size: 14.5px;
+      }
+      .dest ul {
+        margin: 16px 0 0;
+        padding: 0;
+        list-style: none;
+      }
+      .dest li {
+        font-size: 14px;
+        color: var(--slate);
+        padding: 8px 0 8px 22px;
+        position: relative;
+        border-top: 1px solid var(--line-2);
+      }
+      .dest li::before {
+        content: '';
+        position: absolute;
+        left: 2px;
+        top: 15px;
+        width: 7px;
+        height: 7px;
+        border-radius: 50%;
+        background: var(--green);
+      }
+      .dest li.watch::before {
+        background: var(--ember);
+      }
+      .dest .tag {
+        font-family: 'JetBrains Mono', monospace;
+        font-size: 10.5px;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+        color: var(--gray);
+        margin-top: 18px;
+        padding-top: 14px;
+        border-top: 1px solid var(--line-2);
+      }
+
+      .rate-tbl .hl {
+        background: var(--bg1);
+      }
+
+      @media (max-width: 760px) {
+        .route {
+          grid-template-columns: 1fr;
+          gap: 14px;
+        }
+        .route-q {
+          font-size: 17px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div data-sheet-back></div>
+
+    <article class="sheet">
+      <div data-sheet-masthead></div>
+
+      <div class="pad">
+        <div class="eyebrow">Session tool 04 · Decision guide</div>
+        <h1 class="doc-title">The <em>Next Dollar</em> Decision Map</h1>
+        <p class="lede">
+          A bonus lands. A loan is repaid. Income steps up. The question is always the same —
+          mortgage, super, or investments outside super? There is no universal answer, but there is
+          a reliable order of questions. Work down it until one stops you.
+        </p>
+
+        <div class="card card-tint" style="margin: 32px 0 0">
+          <p class="small">
+            <b style="color: var(--ink)">Why this order.</b> Each question below either removes a
+            destination or changes what the others are worth. Answering them out of order is how
+            people end up with a technically reasonable decision that does not suit them.
+          </p>
+        </div>
+
+        <hr class="rule" />
+
+        <div class="sec-head">
+          <h2>Six questions, in order</h2>
+          <p>Each one is a fork. Some are hard stops.</p>
+        </div>
+
+        <div class="route">
+          <span class="num">01</span>
+          <div>
+            <p class="route-q">Is there any high-interest or non-deductible consumer debt?</p>
+            <p class="route-why">
+              Credit cards, personal loans, buy-now-pay-later balances. Nothing else competes with
+              a guaranteed, after-tax return equal to the interest rate you are paying.
+            </p>
+            <div class="route-then stop">
+              <b>If yes — stop here.</b> This is the only question on the page with a near-universal
+              answer. Clear it first.
+            </div>
+          </div>
+        </div>
+
+        <div class="route">
+          <span class="num">02</span>
+          <div>
+            <p class="route-q">Could you survive six to twelve months without income?</p>
+            <p class="route-why">
+              Liquidity is not a return, it is permission. Without it, the first unexpected event
+              forces you to sell a long-term asset at whatever price the market offers that week.
+            </p>
+            <div class="route-then stop">
+              <b>If no — stop here.</b> Build the reserve before committing capital to anything
+              with a timeframe attached.
+            </div>
+            <div class="route-then">
+              <b>If yes —</b> continue. The remaining questions are about efficiency rather than
+              safety.
+            </div>
+          </div>
+        </div>
+
+        <div class="route">
+          <span class="num">03</span>
+          <div>
+            <p class="route-q">When do you need this money back?</p>
+            <p class="route-why">
+              This single answer eliminates more options than any other. Money needed inside three
+              years does not belong anywhere it can fall, and money you want before 60 does not
+              belong inside superannuation.
+            </p>
+            <div class="route-then">
+              <b>Within 0–3 years —</b> the question is cash, offset or a term deposit. Growth
+              assets introduce a risk the timeframe cannot absorb.
+            </div>
+            <div class="route-then">
+              <b>Before preservation age —</b> superannuation is out, however attractive the tax
+              treatment. See the Gap Years Map.
+            </div>
+            <div class="route-then">
+              <b>After preservation age —</b> every destination stays on the table. Continue.
+            </div>
+          </div>
+        </div>
+
+        <div class="route">
+          <span class="num">04</span>
+          <div>
+            <p class="route-q">What is your marginal tax rate, and does Division 293 apply to you?</p>
+            <p class="route-why">
+              The gap between your marginal rate and the rate inside super is the entire case for a
+              concessional contribution. That gap narrows sharply once Division 293 applies, which
+              changes — but does not necessarily remove — the argument.
+            </p>
+            <div class="route-then">
+              <b>The arithmetic —</b> see the table below. The wider the gap, the more a dollar is
+              worth inside super rather than outside it.
+            </div>
+          </div>
+        </div>
+
+        <div class="route">
+          <span class="num">05</span>
+          <div>
+            <p class="route-q">Is your mortgage deductible or non-deductible?</p>
+            <p class="route-why">
+              Repaying non-deductible debt produces a guaranteed, tax-free return equal to your loan
+              rate. Repaying deductible debt does not — the interest was reducing your taxable
+              income, so the real return is lower than the headline rate suggests.
+            </p>
+            <div class="route-then">
+              <b>Non-deductible (your home) —</b> a certain return with no volatility. It competes
+              seriously with growth assets, and wins outright for anyone who values certainty.
+            </div>
+            <div class="route-then">
+              <b>Deductible (investment) —</b> compare the after-tax cost of the debt, not the rate
+              on the statement.
+            </div>
+          </div>
+        </div>
+
+        <div class="route">
+          <span class="num">06</span>
+          <div>
+            <p class="route-q">Whose name, and in what structure?</p>
+            <p class="route-why">
+              The last question, and the one most often skipped. Ownership is decided once and lived
+              with for decades; unwinding it later can trigger the very tax it was meant to manage.
+            </p>
+            <div class="route-then">
+              <b>Before you transfer —</b> personal name, spouse, joint, trust, company, bond and
+              super each behave differently on income, on sale and on death. See
+              <em>Wealth Structures, Compared</em>.
+            </div>
+          </div>
+        </div>
+
+        <hr class="rule" />
+
+        <!-- ---------- The tax gap ---------- -->
+        <div class="sec-head">
+          <h2>The gap that drives question four</h2>
+          <p>
+            Resident rates for the 2026–27 year, plus the 2% Medicare levy. The right-hand column is
+            what makes a concessional contribution worth considering — and what shrinks it.
+          </p>
+        </div>
+
+        <table class="tbl rate-tbl">
+          <thead>
+            <tr>
+              <th>Taxable income</th>
+              <th>Marginal rate</th>
+              <th>With Medicare levy</th>
+              <th>Gap to the 15% super rate</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>$45,001 – $135,000</td>
+              <td class="n">30%</td>
+              <td class="n">32%</td>
+              <td class="n">17 points</td>
+            </tr>
+            <tr>
+              <td>$135,001 – $190,000</td>
+              <td class="n">37%</td>
+              <td class="n">39%</td>
+              <td class="n">24 points</td>
+            </tr>
+            <tr class="hl">
+              <td><b>$190,001 and above</b></td>
+              <td class="n">45%</td>
+              <td class="n">47%</td>
+              <td class="n">32 points</td>
+            </tr>
+            <tr>
+              <td>
+                <b>Above the $250,000 Division 293 threshold</b>
+                <span class="muted" style="display: block; font-size: 13px; margin-top: 3px">
+                  Income plus concessional contributions, combined
+                </span>
+              </td>
+              <td class="n">45%</td>
+              <td class="n">47%</td>
+              <td class="n">17 points<span class="muted" style="display: block; font-size: 12.5px">contributions taxed at 30%</span></td>
+            </tr>
+          </tbody>
+        </table>
+
+        <p class="small muted" style="margin-top: 16px">
+          Even at the narrowest, a 17-point gap is not nothing — it is the same gap that makes super
+          worth considering for someone on $135,000. The point of question four is not whether super
+          wins. It is knowing which number you are actually comparing.
+        </p>
+
+        <hr class="rule" />
+
+        <!-- ---------- Destinations ---------- -->
+        <div class="sec-head">
+          <h2>The four destinations</h2>
+          <p>
+            What each one is genuinely good at, and the thing people most often miss about it.
+            Green marks a strength; amber marks the catch.
+          </p>
+        </div>
+
+        <div class="grid g2">
+          <div class="dest">
+            <span class="num">A</span>
+            <h3>The mortgage</h3>
+            <p>A guaranteed, tax-free return equal to your loan rate, with no volatility.</p>
+            <ul>
+              <li>Certain. No market risk, no timing risk, no fees.</li>
+              <li>An offset keeps the money reachable while still saving interest.</li>
+              <li class="watch">Repaying directly may not be reachable again without refinancing.</li>
+              <li class="watch">Builds no income stream — only reduces an expense.</li>
+            </ul>
+            <div class="tag">Best when certainty matters and the debt is non-deductible</div>
+          </div>
+
+          <div class="dest">
+            <span class="num">B</span>
+            <h3>Superannuation</h3>
+            <p>The most tax-effective structure most people will ever have access to.</p>
+            <ul>
+              <li>Contributions and earnings taxed concessionally.</li>
+              <li>Unused concessional cap can be carried forward, within limits.</li>
+              <li class="watch">Locked until preservation age — 60 for everyone reaching it from 1 July 2024.</li>
+              <li class="watch">Caps are annual and largely use-it-or-lose-it.</li>
+            </ul>
+            <div class="tag">Best when the timeframe is beyond 60 and the tax gap is wide</div>
+          </div>
+
+          <div class="dest">
+            <span class="num">C</span>
+            <h3>Investments outside super</h3>
+            <p>The only pool that can fund the years before preservation age.</p>
+            <ul>
+              <li>Reachable at any age, for any purpose.</li>
+              <li>Ownership can be chosen to suit your tax position.</li>
+              <li class="watch">Earnings taxed at your marginal rate unless held elsewhere.</li>
+              <li class="watch">Selling to fund something else can trigger capital gains tax.</li>
+            </ul>
+            <div class="tag">Best when you want optionality before 60</div>
+          </div>
+
+          <div class="dest">
+            <span class="num">D</span>
+            <h3>Cash and the reserve</h3>
+            <p>Not an investment. The thing that stops you being forced to sell one.</p>
+            <ul>
+              <li>Immediate, certain, no sequencing risk.</li>
+              <li>Funds short-term goals without touching long-term assets.</li>
+              <li class="watch">Loses purchasing power to inflation over long holdings.</li>
+              <li class="watch">Interest is taxed at your marginal rate.</li>
+            </ul>
+            <div class="tag">Best for 0–3 year money and the emergency reserve</div>
+          </div>
+        </div>
+
+        <hr class="rule" />
+
+        <div class="card card-green">
+          <h3 class="step-h">What the map cannot tell you</h3>
+          <p class="muted" style="margin-top: 10px">
+            Where the balance sits between these four depends on your marginal rate, your existing
+            structures, your debt, your timeframe, your family circumstances and how much certainty
+            you want. This page gives you the questions in a sensible order. The weighting is
+            personal — and that is what a conversation is for.
+          </p>
+        </div>
+
+        <div class="disclaimer" style="margin-top: 32px">
+          <b>General information only.</b> Rates and thresholds shown are for the 2026–27 Australian
+          financial year and may change. Nothing here is a recommendation to repay debt, contribute
+          to superannuation, or invest in anything. The appropriate destination for any amount
+          depends on your objectives, financial situation and needs, none of which this page
+          considers. Confirm current rates and thresholds at
+          <a href="https://www.ato.gov.au" target="_blank" rel="noopener noreferrer"
+             style="color: var(--teal); font-weight: 600">ato.gov.au</a>
+          and seek personal advice before acting.
+        </div>
+
+        <div class="row no-print" style="margin-top: 26px">
+          <button class="btn btn-outline btn-sm" data-print>Print or save as PDF</button>
+          <a class="btn btn-ghost btn-sm" href="08-structures.html">
+            Next: Wealth Structures, Compared
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                 stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <path d="M5 12h14M12 5l7 7-7 7" />
+            </svg>
+          </a>
+        </div>
+      </div>
+
+      <div data-sheet-foot></div>
+    </article>
+
+    <script type="module">
+      import { mountSheet, wirePrint } from '../assets/sheet.js'
+      mountSheet({ no: '04', kind: 'Decision guide' })
+      wirePrint()
+    </script>
+  </body>
+</html>

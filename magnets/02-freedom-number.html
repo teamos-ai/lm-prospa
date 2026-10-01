@@ -1,0 +1,602 @@
+<!DOCTYPE html>
+<html lang="en-AU">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Your Financial Freedom Number — Prospa Financial</title>
+    <meta
+      name="description"
+      content="An illustrative calculator that frames the capital required for work to become optional, and the gap between that figure and your current trajectory."
+    />
+    <link rel="icon" type="image/svg+xml" href="../assets/favicon.svg" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="../assets/prospa.css" />
+    <style>
+      .calc {
+        display: grid;
+        grid-template-columns: 320px 1fr;
+        gap: 40px;
+        align-items: start;
+      }
+      .inputs {
+        background: var(--bg2);
+        border-radius: var(--r-lg);
+        padding: 30px;
+        position: sticky;
+        top: 24px;
+      }
+      .inputs .field + .field {
+        margin-top: 22px;
+      }
+      .inputs label {
+        display: flex;
+        justify-content: space-between;
+        align-items: baseline;
+        gap: 10px;
+      }
+      .inputs label .v {
+        font-family: 'JetBrains Mono', monospace;
+        font-size: 14px;
+        color: var(--teal);
+        font-weight: 500;
+        font-variant-numeric: tabular-nums;
+      }
+
+      .headline {
+        background: var(--teal);
+        border-radius: var(--r-xl);
+        padding: 40px 44px;
+        color: #fff;
+        margin-bottom: 22px;
+      }
+      .headline .k {
+        font-size: 11.5px;
+        font-weight: 600;
+        letter-spacing: 0.14em;
+        text-transform: uppercase;
+        color: #9fd8c4;
+        display: block;
+        margin-bottom: 10px;
+      }
+      .headline .big {
+        font-family: 'JetBrains Mono', monospace;
+        font-size: 50px;
+        font-weight: 500;
+        letter-spacing: -0.04em;
+        line-height: 1;
+        color: #fff;
+        font-variant-numeric: tabular-nums;
+      }
+      .headline p {
+        color: #cfe0e2;
+        font-size: 14.5px;
+        margin-top: 16px;
+        max-width: 52ch;
+      }
+
+      .gap-card {
+        border-radius: var(--r-lg);
+        padding: 28px 30px;
+      }
+      .gap-short {
+        background: var(--ember-soft);
+      }
+      .gap-ahead {
+        background: var(--bg1);
+      }
+      .gap-card .k {
+        font-size: 11.5px;
+        font-weight: 600;
+        letter-spacing: 0.14em;
+        text-transform: uppercase;
+        color: var(--gray);
+        display: block;
+        margin-bottom: 8px;
+      }
+      .gap-card .big {
+        font-family: 'JetBrains Mono', monospace;
+        font-size: 34px;
+        font-weight: 500;
+        letter-spacing: -0.03em;
+        font-variant-numeric: tabular-nums;
+      }
+      .gap-short .big {
+        color: var(--ember-strong);
+      }
+      .gap-ahead .big {
+        color: var(--green-600);
+      }
+
+      .track {
+        height: 10px;
+        border-radius: 5px;
+        background: var(--line);
+        overflow: hidden;
+        margin: 14px 0 10px;
+      }
+      .track i {
+        display: block;
+        height: 100%;
+        border-radius: 5px;
+        background: var(--green);
+        transform-origin: left center;
+        transition: transform var(--dur-reveal) var(--ease);
+      }
+
+      .chart {
+        width: 100%;
+        height: auto;
+        display: block;
+      }
+      .chart-legend {
+        display: flex;
+        gap: 22px;
+        flex-wrap: wrap;
+        font-size: 12.5px;
+        color: var(--gray);
+        margin-top: 14px;
+      }
+      .chart-legend span {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+      }
+      .chart-legend i {
+        width: 16px;
+        height: 3px;
+        border-radius: 2px;
+        flex: none;
+      }
+
+      .lever {
+        display: grid;
+        grid-template-columns: 1fr auto;
+        gap: 12px 18px;
+        align-items: center;
+        padding: 16px 0;
+        border-bottom: 1px solid var(--line-2);
+      }
+      .lever:last-child {
+        border-bottom: none;
+      }
+      .lever b {
+        font-size: 15px;
+        color: var(--ink);
+        font-weight: 600;
+      }
+      .lever span {
+        display: block;
+        font-size: 13px;
+        color: var(--gray);
+        margin-top: 2px;
+      }
+      .lever .d {
+        font-family: 'JetBrains Mono', monospace;
+        font-size: 16px;
+        color: var(--green-600);
+        font-weight: 500;
+        white-space: nowrap;
+        font-variant-numeric: tabular-nums;
+      }
+
+      @media (max-width: 900px) {
+        .calc {
+          grid-template-columns: 1fr;
+          gap: 28px;
+        }
+        .inputs {
+          position: static;
+        }
+      }
+      @media (max-width: 720px) {
+        .headline {
+          padding: 30px 26px;
+        }
+        .headline .big {
+          font-size: 36px;
+        }
+      }
+      @media print {
+        .calc {
+          grid-template-columns: 260px 1fr;
+          gap: 24px;
+        }
+        .inputs {
+          position: static;
+          background: #fff;
+          border: 1px solid var(--line);
+          padding: 16pt;
+        }
+        input[type='range'] {
+          display: none;
+        }
+        .headline {
+          background: var(--bg2);
+          color: var(--ink);
+        }
+        .headline .k {
+          color: var(--gray);
+        }
+        .headline .big {
+          color: var(--teal);
+        }
+        .headline p {
+          color: var(--gray);
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div data-sheet-back></div>
+
+    <article class="sheet sheet-wide">
+      <div data-sheet-masthead></div>
+
+      <div class="pad">
+        <div class="eyebrow">Session tool 02 · Calculator</div>
+        <h1 class="doc-title">Your Financial <em>Freedom Number</em></h1>
+        <p class="lede">
+          What would it take for work to become optional? This frames the size of the goal —
+          the capital your chosen lifestyle would call for, what your current trajectory produces,
+          and the distance between the two. Illustrative only.
+        </p>
+
+        <hr class="rule" />
+
+        <div class="calc">
+          <!-- ---------- Inputs ---------- -->
+          <form class="inputs no-print" id="inputs" autocomplete="off">
+            <div class="sub-h" style="margin-bottom: 20px">Your assumptions</div>
+
+            <div class="field">
+              <label for="i-age">Current age <span class="v" id="v-age">40</span></label>
+              <input type="range" id="i-age" min="25" max="70" step="1" value="40" />
+            </div>
+
+            <div class="field">
+              <label for="i-target">Work becomes optional at <span class="v" id="v-target">55</span></label>
+              <input type="range" id="i-target" min="40" max="75" step="1" value="55" />
+            </div>
+
+            <div class="field">
+              <label for="i-lifestyle">
+                Desired annual lifestyle <span class="v" id="v-lifestyle">$120,000</span>
+              </label>
+              <input type="range" id="i-lifestyle" min="40000" max="400000" step="5000" value="120000" />
+              <span class="hint">In today's dollars, before tax considerations.</span>
+            </div>
+
+            <div class="field">
+              <label for="i-current">
+                Accessible investments today <span class="v" id="v-current">$300,000</span>
+              </label>
+              <input type="range" id="i-current" min="0" max="3000000" step="25000" value="300000" />
+              <span class="hint">Outside super. Excludes the family home.</span>
+            </div>
+
+            <div class="field">
+              <label for="i-annual">Invested each year <span class="v" id="v-annual">$30,000</span></label>
+              <input type="range" id="i-annual" min="0" max="250000" step="2500" value="30000" />
+            </div>
+
+            <div class="field">
+              <label for="i-return">Assumed annual return <span class="v" id="v-return">6.0%</span></label>
+              <input type="range" id="i-return" min="0" max="12" step="0.25" value="6" />
+            </div>
+
+            <div class="field">
+              <label for="i-infl">Assumed inflation <span class="v" id="v-infl">2.5%</span></label>
+              <input type="range" id="i-infl" min="0" max="6" step="0.25" value="2.5" />
+            </div>
+
+            <div class="field">
+              <label for="i-draw">Illustrative withdrawal rate <span class="v" id="v-draw">4.0%</span></label>
+              <input type="range" id="i-draw" min="2" max="8" step="0.25" value="4" />
+              <span class="hint">A planning assumption, not a safe or guaranteed rate.</span>
+            </div>
+
+            <button type="button" class="btn btn-outline btn-sm" style="margin-top: 24px" data-reset>
+              Reset to defaults
+            </button>
+          </form>
+
+          <!-- ---------- Outputs ---------- -->
+          <div>
+            <div class="headline">
+              <span class="k">Illustrative capital target</span>
+              <span class="big" id="o-target">—</span>
+              <p id="o-target-note"></p>
+            </div>
+
+            <div class="grid g2" style="margin-bottom: 22px">
+              <div class="card card-tint">
+                <span class="k" style="font-size: 11.5px; font-weight: 600; letter-spacing: 0.14em; text-transform: uppercase; color: var(--gray)">
+                  Projected at target age
+                </span>
+                <div class="figure fig-lg" id="o-projected" style="margin-top: 8px">—</div>
+                <p class="small muted" style="margin-top: 8px" id="o-projected-note"></p>
+              </div>
+              <div class="gap-card gap-short" id="o-gap-card">
+                <span class="k" id="o-gap-label">Illustrative shortfall</span>
+                <div class="big" id="o-gap">—</div>
+                <p class="small muted" style="margin-top: 8px" id="o-gap-note"></p>
+              </div>
+            </div>
+
+            <div class="card" style="margin-bottom: 22px">
+              <div class="between" style="margin-bottom: 4px">
+                <b style="color: var(--ink)">Progress toward the target</b>
+                <span class="figure fig-md" id="o-pct">—</span>
+              </div>
+              <div class="track"><i id="o-track" style="transform: scaleX(0)"></i></div>
+              <p class="small muted" id="o-pct-note"></p>
+            </div>
+
+            <div class="card">
+              <div class="sub-h">Accessible capital, year by year</div>
+              <svg class="chart" id="chart" viewBox="0 0 640 240" role="img" aria-labelledby="chart-title">
+                <title id="chart-title">Projected accessible capital against the illustrative capital target</title>
+              </svg>
+              <div class="chart-legend">
+                <span><i style="background: var(--teal)"></i>Projected accessible capital</span>
+                <span><i style="background: var(--ember)"></i>Illustrative capital target</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <hr class="rule" />
+
+        <div class="sec-head">
+          <h2>What moves this number most</h2>
+          <p>
+            Each row changes one assumption and holds the rest. It is the fastest way to see which
+            lever is actually yours to pull.
+          </p>
+        </div>
+        <div id="levers"></div>
+
+        <hr class="rule" />
+
+        <div class="card card-green">
+          <h3 class="step-h">The question behind the number</h3>
+          <p class="muted" style="margin-top: 10px; font-size: 16px">
+            If your target age is earlier than the age you can access super, the issue is not only
+            <em>how much wealth do I need</em>. It is also <strong>where that wealth needs to sit,
+            and when it has to be reachable</strong>. A large balance behind a preservation date
+            does not fund the years before it.
+          </p>
+          <a class="btn btn-teal btn-sm no-print" style="margin-top: 20px" href="03-gap-years.html">
+            Map those years
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                 stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <path d="M5 12h14M12 5l7 7-7 7" />
+            </svg>
+          </a>
+        </div>
+
+        <div class="disclaimer" style="margin-top: 32px">
+          <b>Important limitations.</b> This is a simplified educational illustration, not a
+          retirement forecast. It ignores tax, fees, investment volatility, the order in which
+          returns arrive, changes in spending, superannuation, the age pension, other assets and
+          many further factors. The withdrawal rate is a planning assumption, not a recommendation
+          or a guarantee, and returns are not guaranteed. Moneysmart's retirement guidance notes
+          that what you need varies with the lifestyle you want, and that planning should consider
+          when super can be accessed and how any income gap is funded —
+          <a href="https://moneysmart.gov.au/plan-for-your-retirement" target="_blank"
+             rel="noopener noreferrer" style="color: var(--teal); font-weight: 600">moneysmart.gov.au</a>.
+        </div>
+
+        <div class="row no-print" style="margin-top: 26px">
+          <button class="btn btn-outline btn-sm" data-print>Print or save as PDF</button>
+        </div>
+      </div>
+
+      <div data-sheet-foot></div>
+    </article>
+
+    <script type="module">
+      import { mountSheet, wirePrint, money, store } from '../assets/sheet.js'
+
+      mountSheet({ no: '02', kind: 'Calculator', wide: true })
+      wirePrint()
+
+      const DEFAULTS = {
+        age: 40,
+        target: 55,
+        lifestyle: 120000,
+        current: 300000,
+        annual: 30000,
+        return: 6,
+        infl: 2.5,
+        draw: 4,
+      }
+      const saved = store('freedom-number')
+      const el = (id) => document.getElementById(id)
+      const ids = Object.keys(DEFAULTS)
+
+      function read() {
+        const v = {}
+        ids.forEach((k) => (v[k] = Number(el('i-' + k).value)))
+        return v
+      }
+
+      /* ---------- The model (identical to the supplied workbook) ----------
+         years      = max(target − age, 0)
+         futureNeed = lifestyle × (1 + inflation)^years
+         capital    = futureNeed ÷ withdrawalRate
+         projected  = current × (1+r)^years + annual × (((1+r)^years − 1) ÷ r)
+                      (with the annuity term falling back to annual × years when r = 0)
+      */
+      function model(v) {
+        const years = Math.max(v.target - v.age, 0)
+        const r = v.return / 100
+        const i = v.infl / 100
+        const w = v.draw / 100
+        const futureNeed = v.lifestyle * Math.pow(1 + i, years)
+        const capital = w > 0 ? futureNeed / w : 0
+        const grow = (n) =>
+          v.current * Math.pow(1 + r, n) + (r === 0 ? v.annual * n : (v.annual * (Math.pow(1 + r, n) - 1)) / r)
+        const projected = grow(years)
+        return { years, futureNeed, capital, projected, gap: projected - capital, grow, r, i, w }
+      }
+
+      function sync() {
+        const v = read()
+        // Keep the target age at or beyond the current age.
+        if (v.target < v.age) {
+          el('i-target').value = v.age
+          v.target = v.age
+        }
+
+        el('v-age').textContent = v.age
+        el('v-target').textContent = v.target
+        el('v-lifestyle').textContent = money(v.lifestyle)
+        el('v-current').textContent = money(v.current)
+        el('v-annual').textContent = money(v.annual)
+        el('v-return').textContent = v.return.toFixed(1) + '%'
+        el('v-infl').textContent = v.infl.toFixed(1) + '%'
+        el('v-draw').textContent = v.draw.toFixed(1) + '%'
+
+        const m = model(v)
+
+        el('o-target').textContent = money(m.capital)
+        el('o-target-note').textContent =
+          m.years === 0
+            ? `To support ${money(v.lifestyle)} a year from today at a ${v.draw.toFixed(1)}% withdrawal rate.`
+            : `To support ${money(m.futureNeed)} a year at age ${v.target} — your ${money(
+                v.lifestyle
+              )} lifestyle after ${m.years} ${m.years === 1 ? 'year' : 'years'} of ${v.infl.toFixed(
+                1
+              )}% inflation — drawn at ${v.draw.toFixed(1)}% a year.`
+
+        el('o-projected').textContent = money(m.projected)
+        el('o-projected-note').textContent =
+          m.years === 0
+            ? 'Your accessible investments as they stand today.'
+            : `${money(v.current)} today plus ${money(v.annual)} a year, compounding at ${v.return.toFixed(1)}%.`
+
+        const short = m.gap < 0
+        const card = el('o-gap-card')
+        card.className = 'gap-card ' + (short ? 'gap-short' : 'gap-ahead')
+        el('o-gap-label').textContent = short ? 'Illustrative shortfall' : 'Illustrative surplus'
+        el('o-gap').textContent = money(Math.abs(m.gap))
+        el('o-gap-note').textContent = short
+          ? 'The distance between the trajectory and the target, on these assumptions.'
+          : 'This trajectory exceeds the illustrative target on these assumptions.'
+
+        const pct = m.capital > 0 ? m.projected / m.capital : 0
+        el('o-pct').textContent = (pct * 100).toFixed(0) + '%'
+        el('o-track').style.transform = `scaleX(${Math.min(pct, 1).toFixed(3)})`
+        el('o-pct-note').textContent =
+          pct >= 1
+            ? 'On these assumptions the trajectory reaches the target by your chosen age.'
+            : `On these assumptions the trajectory reaches ${(pct * 100).toFixed(
+                0
+              )}% of the target by age ${v.target}.`
+
+        drawChart(v, m)
+        drawLevers(v, m)
+        saved.write(v)
+      }
+
+      /* ---------- Chart ---------- */
+      function drawChart(v, m) {
+        const svg = el('chart')
+        const W = 640
+        const H = 240
+        const pad = { t: 16, r: 14, b: 26, l: 14 }
+        const horizon = Math.max(m.years, 1)
+        const pts = []
+        for (let n = 0; n <= horizon; n++) pts.push({ n, y: m.grow(n) })
+
+        const yMax = Math.max(m.capital, ...pts.map((p) => p.y)) * 1.08 || 1
+        const x = (n) => pad.l + (n / horizon) * (W - pad.l - pad.r)
+        const y = (val) => H - pad.b - (val / yMax) * (H - pad.t - pad.b)
+
+        const line = pts.map((p, idx) => `${idx ? 'L' : 'M'}${x(p.n).toFixed(1)},${y(p.y).toFixed(1)}`).join(' ')
+        const area = `${line} L${x(horizon).toFixed(1)},${(H - pad.b).toFixed(1)} L${x(0).toFixed(1)},${(
+          H - pad.b
+        ).toFixed(1)} Z`
+
+        svg.innerHTML = `
+          <title id="chart-title">Projected accessible capital against the illustrative capital target</title>
+          <defs>
+            <linearGradient id="fill" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0%" stop-color="#135f69" stop-opacity="0.16" />
+              <stop offset="100%" stop-color="#135f69" stop-opacity="0.01" />
+            </linearGradient>
+          </defs>
+          <line x1="${pad.l}" y1="${H - pad.b}" x2="${W - pad.r}" y2="${H - pad.b}"
+                stroke="#e6ecec" stroke-width="1" />
+          <line x1="${pad.l}" y1="${y(m.capital).toFixed(1)}" x2="${W - pad.r}" y2="${y(m.capital).toFixed(1)}"
+                stroke="#c65a1e" stroke-width="1.6" stroke-dasharray="5 5" />
+          <path d="${area}" fill="url(#fill)" />
+          <path d="${line}" fill="none" stroke="#135f69" stroke-width="2.4"
+                stroke-linecap="round" stroke-linejoin="round" />
+          <circle cx="${x(horizon).toFixed(1)}" cy="${y(m.grow(horizon)).toFixed(1)}" r="5"
+                  fill="#fff" stroke="#135f69" stroke-width="2.6" />
+          <text x="${pad.l}" y="${H - 8}" font-family="JetBrains Mono, monospace" font-size="10"
+                fill="#616773">Age ${v.age}</text>
+          <text x="${W - pad.r}" y="${H - 8}" text-anchor="end" font-family="JetBrains Mono, monospace"
+                font-size="10" fill="#616773">Age ${v.target}</text>
+          <text x="${W - pad.r}" y="${Math.max(y(m.capital) - 8, 12).toFixed(1)}" text-anchor="end"
+                font-family="JetBrains Mono, monospace" font-size="10" fill="#a8481a">Target ${money(
+                  m.capital
+                )}</text>`
+      }
+
+      /* ---------- Sensitivity ---------- */
+      function drawLevers(v, m) {
+        const base = m.gap
+        const rows = [
+          {
+            b: 'Work one more year',
+            s: `Target age ${v.target + 1} instead of ${v.target}`,
+            v: { ...v, target: v.target + 1 },
+          },
+          {
+            b: 'Invest $10,000 more each year',
+            s: `${money(v.annual + 10000)} a year instead of ${money(v.annual)}`,
+            v: { ...v, annual: v.annual + 10000 },
+          },
+          {
+            b: 'Trim the lifestyle target by $10,000',
+            s: `${money(v.lifestyle - 10000)} a year instead of ${money(v.lifestyle)}`,
+            v: { ...v, lifestyle: Math.max(v.lifestyle - 10000, 0) },
+          },
+          {
+            b: 'Earn one percentage point more',
+            s: `${(v.return + 1).toFixed(1)}% instead of ${v.return.toFixed(1)}% — not a lever you control`,
+            v: { ...v, return: v.return + 1 },
+          },
+        ]
+        el('levers').innerHTML = rows
+          .map((r) => {
+            const d = model(r.v).gap - base
+            return `
+              <div class="lever">
+                <div><b>${r.b}</b><span>${r.s}</span></div>
+                <div class="d">${d >= 0 ? '+' : '−'}${money(Math.abs(d))}</div>
+              </div>`
+          })
+          .join('')
+      }
+
+      /* ---------- Wiring ---------- */
+      const prev = saved.read()
+      if (prev) ids.forEach((k) => prev[k] !== undefined && (el('i-' + k).value = prev[k]))
+      ids.forEach((k) => el('i-' + k).addEventListener('input', sync))
+      document.querySelector('[data-reset]').addEventListener('click', () => {
+        ids.forEach((k) => (el('i-' + k).value = DEFAULTS[k]))
+        sync()
+      })
+      sync()
+    </script>
+  </body>
+</html>

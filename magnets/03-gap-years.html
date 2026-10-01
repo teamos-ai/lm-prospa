@@ -1,0 +1,561 @@
+<!DOCTYPE html>
+<html lang="en-AU">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>The Gap Years Map — Prospa Financial</title>
+    <meta
+      name="description"
+      content="The years between the age you want work to become optional and the age super unlocks. What they cost, and what could fund them."
+    />
+    <link rel="icon" type="image/svg+xml" href="../assets/favicon.svg" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="../assets/prospa.css" />
+    <style>
+      /* ---- Timeline ---- */
+      .timeline {
+        margin: 34px 0 10px;
+      }
+      .tl-bar {
+        display: flex;
+        height: 58px;
+        border-radius: var(--r-sm);
+        overflow: hidden;
+        background: var(--line);
+      }
+      .tl-seg {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 12.5px;
+        font-weight: 600;
+        color: #fff;
+        text-align: center;
+        padding: 0 8px;
+        transition: flex-grow var(--dur-reveal) var(--ease);
+        overflow: hidden;
+        white-space: nowrap;
+      }
+      .tl-work {
+        background: var(--teal);
+      }
+      .tl-gap {
+        background: var(--ember);
+      }
+      .tl-super {
+        background: var(--green-600);
+      }
+      /* The axis mirrors the bar's flex ratios so each label sits on its own
+         segment boundary rather than at an arbitrary third of the width. */
+      .tl-axis {
+        display: flex;
+        margin-top: 9px;
+        font-family: 'JetBrains Mono', monospace;
+        font-size: 11.5px;
+        color: var(--gray);
+      }
+      .tl-axis > div {
+        position: relative;
+        min-width: 0;
+      }
+      .tl-axis .tick {
+        position: absolute;
+        right: 0;
+        transform: translateX(50%);
+        white-space: nowrap;
+        text-align: center;
+      }
+      .tl-axis .tick.start {
+        right: auto;
+        left: 0;
+        transform: none;
+      }
+      .tl-axis b {
+        color: var(--teal);
+        font-weight: 500;
+      }
+      .tl-axis .tick span {
+        display: block;
+        font-size: 10px;
+        color: var(--gray);
+      }
+
+      .big-stat {
+        background: var(--ember-soft);
+        border-radius: var(--r-xl);
+        padding: 38px 42px;
+      }
+      .big-stat .k {
+        font-size: 11.5px;
+        font-weight: 600;
+        letter-spacing: 0.14em;
+        text-transform: uppercase;
+        color: var(--ember-strong);
+        display: block;
+        margin-bottom: 10px;
+      }
+      .big-stat .big {
+        font-family: 'JetBrains Mono', monospace;
+        font-size: 48px;
+        font-weight: 500;
+        letter-spacing: -0.04em;
+        line-height: 1;
+        color: var(--ember-strong);
+        font-variant-numeric: tabular-nums;
+      }
+      .big-stat p {
+        color: var(--slate);
+        font-size: 15px;
+        margin-top: 16px;
+        max-width: 54ch;
+      }
+
+      .inputs-row {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 26px;
+        background: var(--bg2);
+        border-radius: var(--r-lg);
+        padding: 28px 30px;
+      }
+      .inputs-row label {
+        display: flex;
+        justify-content: space-between;
+        align-items: baseline;
+        gap: 10px;
+      }
+      .inputs-row label .v {
+        font-family: 'JetBrains Mono', monospace;
+        font-size: 14px;
+        color: var(--teal);
+        font-weight: 500;
+        font-variant-numeric: tabular-nums;
+      }
+
+      .source-row {
+        display: grid;
+        grid-template-columns: 1fr 160px;
+        gap: 14px 20px;
+        align-items: center;
+        padding: 16px 0;
+        border-bottom: 1px solid var(--line-2);
+      }
+      .source-row:last-of-type {
+        border-bottom: none;
+      }
+      .source-row b {
+        display: block;
+        font-size: 15.5px;
+        color: var(--ink);
+      }
+      .source-row span {
+        display: block;
+        font-size: 13px;
+        color: var(--gray);
+        margin-top: 2px;
+      }
+      .source-row input {
+        font-family: 'JetBrains Mono', monospace;
+        font-size: 15px;
+        text-align: right;
+        color: var(--ink);
+        background: #fff;
+        border: 1px solid var(--line);
+        border-radius: var(--r-sm);
+        padding: 11px 13px;
+        width: 100%;
+      }
+      .source-row input:focus {
+        outline: none;
+        border-color: var(--teal);
+        box-shadow: 0 0 0 4px rgba(19, 95, 105, 0.1);
+      }
+      .total-row {
+        display: grid;
+        grid-template-columns: 1fr 160px;
+        gap: 20px;
+        align-items: center;
+        padding: 22px 0 0;
+        margin-top: 8px;
+        border-top: 2px solid var(--teal);
+      }
+      .total-row b {
+        font-size: 17px;
+        color: var(--ink);
+      }
+      .total-row .t {
+        font-family: 'JetBrains Mono', monospace;
+        font-size: 22px;
+        text-align: right;
+        color: var(--teal);
+        font-weight: 500;
+        font-variant-numeric: tabular-nums;
+      }
+
+      .verdict {
+        border-radius: var(--r-lg);
+        padding: 28px 30px;
+        margin-top: 24px;
+      }
+      .verdict.short {
+        background: var(--ember-soft);
+      }
+      .verdict.ok {
+        background: var(--bg1);
+      }
+      .verdict h3 {
+        font-size: 20px;
+        margin-bottom: 10px;
+      }
+
+      @media (max-width: 760px) {
+        .inputs-row {
+          grid-template-columns: 1fr;
+          gap: 20px;
+          padding: 22px;
+        }
+        .source-row,
+        .total-row {
+          grid-template-columns: 1fr 120px;
+        }
+        .big-stat {
+          padding: 28px 24px;
+        }
+        .big-stat .big {
+          font-size: 36px;
+        }
+        .tl-seg {
+          font-size: 11px;
+        }
+      }
+      @media print {
+        input[type='range'] {
+          display: none;
+        }
+        .inputs-row {
+          background: #fff;
+          border: 1px solid var(--line);
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div data-sheet-back></div>
+
+    <article class="sheet">
+      <div data-sheet-masthead></div>
+
+      <div class="pad">
+        <div class="eyebrow">Session tool 03 · Calculator</div>
+        <h1 class="doc-title">The <em>Gap Years</em> Map</h1>
+        <p class="lede">
+          The most common blind spot among high earners is not how much they have. It is
+          <strong>when they can reach it</strong>. These are the years between the age you would
+          like work to become optional and the age superannuation unlocks — and nothing inside
+          super can fund them.
+        </p>
+
+        <div class="card card-tint" style="margin: 32px 0">
+          <p class="small">
+            <b style="color: var(--ink)">The rule that creates the gap.</b> From 1 July 2024,
+            preservation age is 60 for everyone who had not already reached it. If you want work to
+            become optional before 60, every one of those years is funded from capital held
+            <em>outside</em> superannuation.
+          </p>
+        </div>
+
+        <!-- ---------- Inputs ---------- -->
+        <div class="inputs-row no-print">
+          <div class="field">
+            <label for="i-target">Work optional at <span class="v" id="v-target">55</span></label>
+            <input type="range" id="i-target" min="40" max="70" step="1" value="55" />
+          </div>
+          <div class="field">
+            <label for="i-spend">Annual lifestyle <span class="v" id="v-spend">$120,000</span></label>
+            <input type="range" id="i-spend" min="40000" max="400000" step="5000" value="120000" />
+          </div>
+          <div class="field">
+            <label for="i-other">Other income in those years <span class="v" id="v-other">$0</span></label>
+            <input type="range" id="i-other" min="0" max="250000" step="5000" value="0" />
+            <span class="hint">Part-time work, rent, a business interest.</span>
+          </div>
+        </div>
+
+        <!-- ---------- Timeline ---------- -->
+        <div class="timeline">
+          <div class="tl-bar" id="tl">
+            <div class="tl-seg tl-work" id="seg-work" style="flex-grow: 15">Working</div>
+            <div class="tl-seg tl-gap" id="seg-gap" style="flex-grow: 5">The gap years</div>
+            <div class="tl-seg tl-super" id="seg-super" style="flex-grow: 25">Super accessible</div>
+          </div>
+          <div class="tl-axis" id="tl-axis" aria-hidden="true">
+            <div id="ax-work">
+              <i class="tick start" style="font-style: normal">Today</i>
+              <i class="tick" style="font-style: normal"><b id="ax-target">55</b></i>
+            </div>
+            <div id="ax-gap">
+              <i class="tick" style="font-style: normal"><b>60</b></i>
+            </div>
+            <div id="ax-super">
+              <i class="tick" style="font-style: normal">85</i>
+            </div>
+          </div>
+        </div>
+
+        <div class="big-stat" style="margin-top: 30px">
+          <span class="k" id="bs-k">Capital needed to bridge the gap</span>
+          <span class="big" id="bs-v">—</span>
+          <p id="bs-p"></p>
+        </div>
+
+        <div class="grid g3" style="margin-top: 22px">
+          <div class="card card-tint">
+            <div class="stat"><span class="k">Gap years</span><span class="figure fig-lg" id="o-years">—</span></div>
+          </div>
+          <div class="card card-tint">
+            <div class="stat"><span class="k">Net annual need</span><span class="figure fig-lg" id="o-need">—</span></div>
+          </div>
+          <div class="card card-tint">
+            <div class="stat"><span class="k">Per year, after other income</span><span class="figure fig-lg" id="o-rate">—</span></div>
+          </div>
+        </div>
+
+        <p class="small muted" style="margin-top: 16px">
+          The bridge figure above is the simple sum of the net annual need across the gap years, in
+          today's dollars. It makes no allowance for inflation, tax, investment returns earned
+          while the capital is being drawn down, or the order in which those returns arrive.
+        </p>
+
+        <hr class="rule" />
+
+        <!-- ---------- What could fund it ---------- -->
+        <div class="sec-head">
+          <h2>What could fund those years?</h2>
+          <p>
+            Enter what you expect to have available <em>outside</em> super by your target age. The
+            family home does not belong here unless you genuinely intend to sell or draw against it.
+          </p>
+        </div>
+
+        <div id="sources">
+          <div class="source-row">
+            <div>
+              <b>Cash and term deposits</b>
+              <span>Reserves you could spend without selling anything</span>
+            </div>
+            <input type="number" inputmode="numeric" data-src data-persist="src-cash" placeholder="0" />
+          </div>
+          <div class="source-row">
+            <div>
+              <b>Investments outside super</b>
+              <span>Shares, ETFs, managed funds held in your name or a trust</span>
+            </div>
+            <input type="number" inputmode="numeric" data-src data-persist="src-inv" placeholder="0" />
+          </div>
+          <div class="source-row">
+            <div>
+              <b>Investment property equity you would release</b>
+              <span>Only the portion you would actually convert to income</span>
+            </div>
+            <input type="number" inputmode="numeric" data-src data-persist="src-prop" placeholder="0" />
+          </div>
+          <div class="source-row">
+            <div>
+              <b>Investment bonds, company or trust assets</b>
+              <span>Capital held in a structure you can draw from before 60</span>
+            </div>
+            <input type="number" inputmode="numeric" data-src data-persist="src-struct" placeholder="0" />
+          </div>
+          <div class="source-row">
+            <div>
+              <b>Expected proceeds from a business or equity event</b>
+              <span>Only if the timing is reasonably certain</span>
+            </div>
+            <input type="number" inputmode="numeric" data-src data-persist="src-biz" placeholder="0" />
+          </div>
+          <div class="total-row">
+            <b>Available to bridge the gap</b>
+            <div class="t" id="o-avail">$0</div>
+          </div>
+        </div>
+
+        <div class="verdict short" id="verdict"></div>
+
+        <hr class="rule" />
+
+        <div class="sec-head">
+          <h2>The three ways this gap closes</h2>
+          <p>There are only so many levers. Most plans use some of each.</p>
+        </div>
+        <div class="grid g3">
+          <div class="card">
+            <span class="num num-green">1</span>
+            <h3 class="step-h" style="margin-top: 16px">Build outside super</h3>
+            <p class="small muted">
+              Direct more of the surplus into capital you can reach before 60. The trade-off is
+              giving up some of super's concessional treatment on the way in.
+            </p>
+          </div>
+          <div class="card">
+            <span class="num num-green">2</span>
+            <h3 class="step-h" style="margin-top: 16px">Move the date</h3>
+            <p class="small muted">
+              Every year later shortens the bridge and lengthens the accumulation. It is the
+              bluntest lever, and usually the one people reach for last.
+            </p>
+          </div>
+          <div class="card">
+            <span class="num num-green">3</span>
+            <h3 class="step-h" style="margin-top: 16px">Change the shape of the years</h3>
+            <p class="small muted">
+              Part-time work, consulting or a staged exit reduces the net annual need. A smaller
+              need across fewer years is a far smaller number.
+            </p>
+          </div>
+        </div>
+
+        <div class="card card-green" style="margin-top: 26px">
+          <h3 class="step-h">Take this to a conversation</h3>
+          <p class="muted" style="margin-top: 10px">
+            The bridge figure above is the question, not the answer. Which lever fits depends on
+            your marginal tax rate, your existing structures, your debt and what you want those
+            years to look like — and that is a conversation, not a calculator.
+          </p>
+        </div>
+
+        <div class="disclaimer" style="margin-top: 32px">
+          <b>Important limitations.</b> A simplified educational illustration. The bridge figure is
+          an undiscounted sum in today's dollars and does not account for inflation, tax, returns
+          earned during the drawdown, sequencing risk, the age pension, or any condition of release
+          that may apply to you. Preservation rules, access conditions and the treatment of each
+          asset type depend on your circumstances. General information only.
+        </div>
+
+        <div class="row no-print" style="margin-top: 26px">
+          <button class="btn btn-outline btn-sm" data-print>Print or save as PDF</button>
+          <button class="btn btn-ghost btn-sm" data-clear>Clear my figures</button>
+        </div>
+      </div>
+
+      <div data-sheet-foot></div>
+    </article>
+
+    <script type="module">
+      import { mountSheet, wirePrint, money, persistFields } from '../assets/sheet.js'
+
+      mountSheet({ no: '03', kind: 'Calculator' })
+      wirePrint()
+
+      const PRESERVATION_AGE = 60 // From 1 July 2024, for everyone reaching it from that date.
+      const el = (id) => document.getElementById(id)
+
+      function sync() {
+        const target = Number(el('i-target').value)
+        const spend = Number(el('i-spend').value)
+        const other = Number(el('i-other').value)
+
+        el('v-target').textContent = target
+        el('v-spend').textContent = money(spend)
+        el('v-other').textContent = money(other)
+        el('ax-target').textContent = target
+
+        const years = Math.max(PRESERVATION_AGE - target, 0)
+        const net = Math.max(spend - other, 0)
+        const bridge = years * net
+
+        // Timeline proportions, from today to 85. The axis row mirrors them so the
+        // age ticks land on the segment boundaries at any target age.
+        const gWork = Math.max(target - 40, 1)
+        const gGap = Math.max(years, 0.001)
+        const gSuper = 85 - PRESERVATION_AGE
+        el('seg-work').style.flexGrow = String(gWork)
+        el('seg-gap').style.flexGrow = String(gGap)
+        el('seg-super').style.flexGrow = String(gSuper)
+        el('ax-work').style.flexGrow = String(gWork)
+        el('ax-gap').style.flexGrow = String(gGap)
+        el('ax-super').style.flexGrow = String(gSuper)
+        el('seg-gap').textContent = years > 0 ? `${years} gap ${years === 1 ? 'year' : 'years'}` : ''
+        el('seg-gap').style.display = years > 0 ? 'flex' : 'none'
+        el('ax-gap').style.display = years > 0 ? 'block' : 'none'
+
+        el('o-years').textContent = years
+        el('o-need').textContent = money(spend)
+        el('o-rate').textContent = money(net)
+
+        if (years === 0) {
+          el('bs-k').textContent = 'No bridge required'
+          el('bs-v').textContent = money(0)
+          el('bs-p').textContent =
+            `You have nominated age ${target}, at or after preservation age. Superannuation can form part of your income from the start, so the planning question shifts from access to longevity: how long the capital needs to last and how it is drawn.`
+        } else {
+          el('bs-k').textContent = 'Capital needed to bridge the gap'
+          el('bs-v').textContent = money(bridge)
+          el('bs-p').textContent =
+            `${years} ${years === 1 ? 'year' : 'years'} between age ${target} and preservation age ${PRESERVATION_AGE}, at ${money(
+              net
+            )} a year after other income. Every dollar of this has to come from outside superannuation.`
+        }
+
+        tally(bridge, years)
+      }
+
+      function tally(bridge, years) {
+        const avail = Array.from(document.querySelectorAll('[data-src]')).reduce(
+          (a, i) => a + (Number(i.value) || 0),
+          0
+        )
+        el('o-avail').textContent = money(avail)
+
+        const v = el('verdict')
+        if (years === 0) {
+          v.className = 'verdict ok'
+          v.innerHTML = `<h3>Nothing to bridge</h3><p class="muted">On your chosen age there is no pre-preservation period to fund. The capital above becomes part of the longer retirement question instead.</p>`
+          return
+        }
+        if (avail === 0) {
+          v.className = 'verdict'
+          v.style.background = 'var(--bg2)'
+          v.innerHTML = `<h3>Add your figures above</h3><p class="muted">Enter what you expect to hold outside super by age ${el(
+            'i-target'
+          ).value} to see how the bridge compares.</p>`
+          return
+        }
+        v.style.background = ''
+        const short = bridge - avail
+        if (short > 0) {
+          const covered = bridge > 0 ? avail / bridge : 0
+          const fundedYears = Math.floor(avail / Math.max(bridge / years, 1))
+          v.className = 'verdict short'
+          v.innerHTML = `
+            <h3>${money(short)} short of the bridge</h3>
+            <p class="muted">
+              What you have listed covers about ${(covered * 100).toFixed(0)}% of the gap —
+              roughly ${fundedYears} of the ${years} ${years === 1 ? 'year' : 'years'}.
+              On these figures, work becoming optional at ${el('i-target').value} would depend on
+              closing that distance, moving the date, or reducing the net annual need.
+            </p>`
+        } else {
+          v.className = 'verdict ok'
+          v.innerHTML = `
+            <h3>The bridge is covered, with ${money(-short)} over</h3>
+            <p class="muted">
+              On these figures the capital you hold outside super would cover the ${years}
+              ${years === 1 ? 'year' : 'years'} before preservation age. The next questions are
+              about tax on the way out, what the drawdown does to the remaining balance, and
+              whether super alone carries the years after 60.
+            </p>`
+        }
+      }
+
+      ;['i-target', 'i-spend', 'i-other'].forEach((id) => el(id).addEventListener('input', sync))
+      document.querySelectorAll('[data-src]').forEach((i) => i.addEventListener('input', sync))
+      persistFields('gap-years')
+      sync()
+    </script>
+  </body>
+</html>

@@ -1,0 +1,475 @@
+<!DOCTYPE html>
+<html lang="en-AU">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>The Income Protection Audit — Prospa Financial</title>
+    <meta
+      name="description"
+      content="While you are still accumulating, your future income is the largest asset you own. Eleven questions to test whether the cover around it still matches the life it is insuring."
+    />
+    <link rel="icon" type="image/svg+xml" href="../assets/favicon.svg" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="../assets/prospa.css" />
+    <style>
+      .asset-panel {
+        background: var(--teal);
+        border-radius: var(--r-xl);
+        padding: 40px 44px;
+        color: #fff;
+      }
+      .asset-panel .k {
+        font-size: 11.5px;
+        font-weight: 600;
+        letter-spacing: 0.14em;
+        text-transform: uppercase;
+        color: #9fd8c4;
+        display: block;
+        margin-bottom: 10px;
+      }
+      .asset-panel .big {
+        font-family: 'JetBrains Mono', monospace;
+        font-size: 46px;
+        font-weight: 500;
+        letter-spacing: -0.04em;
+        line-height: 1;
+        font-variant-numeric: tabular-nums;
+      }
+      .asset-panel p {
+        color: #cfe0e2;
+        font-size: 15px;
+        margin-top: 16px;
+        max-width: 54ch;
+      }
+      .asset-inputs {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 24px;
+        margin-bottom: 24px;
+      }
+
+      .audit-q {
+        display: grid;
+        grid-template-columns: 34px 1fr;
+        gap: 16px;
+        padding: 22px 0;
+        border-bottom: 1px solid var(--line-2);
+      }
+      .audit-q:last-of-type {
+        border-bottom: none;
+      }
+      .audit-q b {
+        display: block;
+        color: var(--ink);
+        font-size: 16.5px;
+        margin-bottom: 7px;
+        line-height: 1.4;
+      }
+      .audit-q p {
+        color: var(--gray);
+        font-size: 14.5px;
+      }
+      .audit-q .hd {
+        display: flex;
+        gap: 10px;
+        align-items: center;
+        margin-top: 12px;
+      }
+      .audit-q .hd input[type='checkbox'] {
+        appearance: none;
+        -webkit-appearance: none;
+        width: 19px;
+        height: 19px;
+        border: 2px solid var(--line);
+        border-radius: 6px;
+        flex: none;
+        cursor: pointer;
+        position: relative;
+        transition: background var(--dur-snap) var(--ease),
+          border-color var(--dur-snap) var(--ease);
+      }
+      .audit-q .hd input[type='checkbox']:checked {
+        background: var(--green);
+        border-color: var(--green);
+      }
+      .audit-q .hd input[type='checkbox']:checked::after {
+        content: '';
+        position: absolute;
+        left: 5px;
+        top: 1.5px;
+        width: 4.5px;
+        height: 9px;
+        border: solid #fff;
+        border-width: 0 2.4px 2.4px 0;
+        transform: rotate(45deg);
+      }
+      .audit-q .hd label {
+        font-size: 13.5px;
+        color: var(--gray);
+        cursor: pointer;
+      }
+
+      .vs {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 20px;
+      }
+      .vs .side {
+        border-radius: var(--r-lg);
+        padding: 26px;
+        background: var(--bg2);
+      }
+      .vs .side h4 {
+        font-size: 17px;
+        margin-bottom: 10px;
+      }
+      .vs .side p {
+        font-size: 14.5px;
+        color: var(--gray);
+      }
+      .vs .side ul {
+        margin: 14px 0 0;
+        padding-left: 18px;
+      }
+      .vs .side li {
+        font-size: 14px;
+        color: var(--slate);
+        margin-bottom: 7px;
+      }
+
+      .score-out {
+        border-radius: var(--r-lg);
+        padding: 26px 30px;
+        margin-top: 24px;
+        background: var(--bg2);
+      }
+      .score-out.flag {
+        background: var(--ember-soft);
+      }
+      .score-out h3 {
+        font-size: 19px;
+        margin-bottom: 10px;
+      }
+
+      @media (max-width: 760px) {
+        .asset-panel {
+          padding: 28px 24px;
+        }
+        .asset-panel .big {
+          font-size: 34px;
+        }
+        .asset-inputs,
+        .vs {
+          grid-template-columns: 1fr;
+        }
+      }
+      @media print {
+        .asset-panel {
+          background: var(--bg2);
+          color: var(--ink);
+        }
+        .asset-panel .k {
+          color: var(--gray);
+        }
+        .asset-panel .big {
+          color: var(--teal);
+        }
+        .asset-panel p {
+          color: var(--gray);
+        }
+        .audit-q {
+          break-inside: avoid;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div data-sheet-back></div>
+
+    <article class="sheet">
+      <div data-sheet-masthead></div>
+
+      <div class="pad">
+        <div class="eyebrow">Session tool 09 · Audit</div>
+        <h1 class="doc-title">The <em>Income Protection</em> Audit</h1>
+        <p class="lede">
+          Everything on your balance sheet was bought with income you have not earned yet. While you
+          are still accumulating, <strong>your future earnings are the largest asset you own</strong>
+          — and the one most likely to be insured against the wrong figure, under terms agreed years
+          ago.
+        </p>
+
+        <hr class="rule" />
+
+        <!-- ---------- The asset ---------- -->
+        <div class="sec-head">
+          <h2>First, size the asset</h2>
+          <p>Not a valuation — a sense of scale. Most people have never put a number on it.</p>
+        </div>
+
+        <div class="asset-inputs">
+          <div class="field">
+            <label for="i-income">Current annual income, before tax</label>
+            <div class="input-wrap">
+              <span class="affix">$</span>
+              <input type="number" id="i-income" inputmode="numeric" value="250000" data-persist="ip-income" />
+            </div>
+          </div>
+          <div class="field">
+            <label for="i-years">Years you expect to keep earning</label>
+            <div class="input-wrap">
+              <input type="number" id="i-years" inputmode="numeric" value="15" data-persist="ip-years" />
+              <span class="affix suf">yrs</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="asset-panel">
+          <span class="k">Gross income still ahead of you</span>
+          <span class="big" id="o-asset">—</span>
+          <p id="o-asset-note"></p>
+        </div>
+
+        <p class="small muted" style="margin-top: 14px">
+          A simple multiplication — no pay rises, no promotions, no inflation, no discounting to
+          today's value. It is here to make the scale visible, nothing more. Compare it against the
+          home you insure every year without hesitating.
+        </p>
+
+        <hr class="rule" />
+
+        <!-- ---------- What changed ---------- -->
+        <div class="sec-head">
+          <h2>What changed, and why old policies are different</h2>
+          <p>
+            If your cover was arranged before 2021, it may not resemble what is available now — in
+            ways that can favour you.
+          </p>
+        </div>
+
+        <div class="vs">
+          <div class="side">
+            <h4>Before the changes</h4>
+            <p>Policies written under the earlier market.</p>
+            <ul>
+              <li><b>Agreed value</b> cover was available: the benefit was fixed when the policy was issued, regardless of what your income did afterwards.</li>
+              <li>Insurers expected to no longer offer agreed value contracts from 31 March 2020.</li>
+              <li>Older contracts generally keep their original terms while they remain in force.</li>
+            </ul>
+          </div>
+          <div class="side">
+            <h4>From 1 July 2021</h4>
+            <p>The terms applying to newer individual cover.</p>
+            <ul>
+              <li><b>Indemnity</b> basis: benefits are based on your income over the preceding twelve months, assessed at claim time.</li>
+              <li>Benefits plus other earned income are limited to 100% of income for the first six months.</li>
+              <li>Beyond six months, that limit reduces to 75% of income.</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="card card-tint" style="margin-top: 22px">
+          <p class="small">
+            <b style="color: var(--ink)">Why this matters before you cancel anything.</b> An older
+            agreed-value policy may offer terms no longer available for purchase. It is also more
+            expensive, and may be insuring an income you have long since exceeded. Neither fact
+            settles the question on its own — but replacing cover is a one-way door, and the new
+            policy is underwritten against your health today, not your health when the old one was
+            written.
+          </p>
+        </div>
+
+        <hr class="rule" />
+
+        <!-- ---------- The audit ---------- -->
+        <div class="sec-head">
+          <h2>Eleven questions</h2>
+          <p>
+            Tick the ones you can answer with certainty. The ones you leave blank are the agenda.
+          </p>
+        </div>
+
+        <div id="audit">
+          <div class="audit-q">
+            <span class="num">01</span>
+            <div>
+              <b>What monthly benefit would actually be paid, and against which income figure?</b>
+              <p>Most cover pays a percentage of income. The figure it is measured against — and when it is measured — is what decides the cheque.</p>
+              <div class="hd"><input type="checkbox" data-audit data-persist="a1" id="a1" /><label for="a1">I know this</label></div>
+            </div>
+          </div>
+
+          <div class="audit-q">
+            <span class="num">02</span>
+            <div>
+              <b>Is my cover agreed value or indemnity?</b>
+              <p>It determines whether the benefit was fixed at the start or will be assessed against your recent earnings at claim time.</p>
+              <div class="hd"><input type="checkbox" data-audit data-persist="a2" id="a2" /><label for="a2">I know this</label></div>
+            </div>
+          </div>
+
+          <div class="audit-q">
+            <span class="num">03</span>
+            <div>
+              <b>How long is the waiting period, and who funds it?</b>
+              <p>Thirty, sixty or ninety days of no benefit. That gap is funded by your reserve, your leave entitlements, or by selling something.</p>
+              <div class="hd"><input type="checkbox" data-audit data-persist="a3" id="a3" /><label for="a3">I know this</label></div>
+            </div>
+          </div>
+
+          <div class="audit-q">
+            <span class="num">04</span>
+            <div>
+              <b>How long is the benefit period — two years, five, or to 65?</b>
+              <p>A two-year benefit period and a to-65 benefit period are different products at different prices. Many people hold the first while assuming the second.</p>
+              <div class="hd"><input type="checkbox" data-audit data-persist="a4" id="a4" /><label for="a4">I know this</label></div>
+            </div>
+          </div>
+
+          <div class="audit-q">
+            <span class="num">05</span>
+            <div>
+              <b>Is my cover inside super, outside it, or both?</b>
+              <p>Inside super the premium comes from the balance rather than cash flow, but definitions can be narrower and benefits must satisfy a condition of release to be paid out.</p>
+              <div class="hd"><input type="checkbox" data-audit data-persist="a5" id="a5" /><label for="a5">I know this</label></div>
+            </div>
+          </div>
+
+          <div class="audit-q">
+            <span class="num">06</span>
+            <div>
+              <b>Does my income protection cover bonuses and incentives, or only base salary?</b>
+              <p>For a senior executive, the variable component can be a large share of total earnings — and the part most often excluded from the definition.</p>
+              <div class="hd"><input type="checkbox" data-audit data-persist="a6" id="a6" /><label for="a6">I know this</label></div>
+            </div>
+          </div>
+
+          <div class="audit-q">
+            <span class="num">07</span>
+            <div>
+              <b>Are my TPD definitions "own occupation" or "any occupation"?</b>
+              <p>The difference is whether you must be unable to do your job, or unable to do almost any job. It is the difference between a claim paid and a claim declined.</p>
+              <div class="hd"><input type="checkbox" data-audit data-persist="a7" id="a7" /><label for="a7">I know this</label></div>
+            </div>
+          </div>
+
+          <div class="audit-q">
+            <span class="num">08</span>
+            <div>
+              <b>Are my premiums stepped or level?</b>
+              <p>Stepped premiums rise each year with age; level premiums start higher and rise more slowly. Which is cheaper depends entirely on how long you hold the policy.</p>
+              <div class="hd"><input type="checkbox" data-audit data-persist="a8" id="a8" /><label for="a8">I know this</label></div>
+            </div>
+          </div>
+
+          <div class="audit-q">
+            <span class="num">09</span>
+            <div>
+              <b>Would my life cover clear the debts and support the family, not just repay the mortgage?</b>
+              <p>Clearing the loan and replacing two decades of income are very different sums.</p>
+              <div class="hd"><input type="checkbox" data-audit data-persist="a9" id="a9" /><label for="a9">I know this</label></div>
+            </div>
+          </div>
+
+          <div class="audit-q">
+            <span class="num">10</span>
+            <div>
+              <b>When was this last reviewed against my current income and debt?</b>
+              <p>Cover arranged against an earlier salary rarely matches a later one. The gap widens quietly, every year you are promoted.</p>
+              <div class="hd"><input type="checkbox" data-audit data-persist="a10" id="a10" /><label for="a10">I know this</label></div>
+            </div>
+          </div>
+
+          <div class="audit-q">
+            <span class="num">11</span>
+            <div>
+              <b>Who receives any benefit paid, and would it reach them without delay?</b>
+              <p>Ownership, nomination and structure decide where the money lands and how fast. See the Estate &amp; Beneficiary Checklist.</p>
+              <div class="hd"><input type="checkbox" data-audit data-persist="a11" id="a11" /><label for="a11">I know this</label></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="score-out" id="score-out"></div>
+
+        <hr class="rule" />
+
+        <div class="card card-green">
+          <h3 class="step-h">The sequence that matters</h3>
+          <p class="muted" style="margin-top: 10px">
+            Review before you replace. Never cancel existing cover until replacement cover has been
+            issued and accepted — underwriting is assessed against your health now, and a condition
+            that has appeared since the original policy was written can change what is available to
+            you, or make it unavailable entirely.
+          </p>
+        </div>
+
+        <div class="disclaimer" style="margin-top: 32px">
+          <b>General information only.</b> This is an educational checklist about personal insurance
+          concepts in Australia. It is not a recommendation to acquire, vary, replace or cancel any
+          insurance policy, and it does not consider your objectives, financial situation or needs.
+          Policy terms, definitions, exclusions, eligibility and pricing vary between insurers and
+          between individual contracts — only your own policy documents and Product Disclosure
+          Statement state what you are covered for. Insurance advice is personal advice: speak with
+          a licensed adviser before making any change.
+        </div>
+
+        <div class="row no-print" style="margin-top: 26px">
+          <button class="btn btn-outline btn-sm" data-print>Print or save as PDF</button>
+          <button class="btn btn-ghost btn-sm" data-clear>Clear my answers</button>
+        </div>
+      </div>
+
+      <div data-sheet-foot></div>
+    </article>
+
+    <script type="module">
+      import { mountSheet, wirePrint, money, persistFields } from '../assets/sheet.js'
+
+      mountSheet({ no: '09', kind: 'Audit' })
+      wirePrint()
+
+      const el = (id) => document.getElementById(id)
+
+      function syncAsset() {
+        const income = Number(el('i-income').value) || 0
+        const years = Number(el('i-years').value) || 0
+        const total = income * years
+        el('o-asset').textContent = money(total)
+        el('o-asset-note').textContent = total
+          ? `${money(income)} a year for ${years} more ${years === 1 ? 'year' : 'years'}. That is the asset your income protection is standing in front of — and it is almost certainly larger than anything else you insure.`
+          : 'Enter your income and the years ahead to size the asset.'
+      }
+
+      function syncAudit() {
+        const boxes = Array.from(document.querySelectorAll('[data-audit]'))
+        const known = boxes.filter((b) => b.checked).length
+        const out = el('score-out')
+        const unknown = boxes.length - known
+
+        if (known === boxes.length) {
+          out.className = 'score-out'
+          out.innerHTML = `<h3>All eleven answered</h3><p class="muted">That is unusual. The remaining question is whether the answers still suit the income and the responsibilities you have now, rather than the ones you had when the cover was arranged.</p>`
+        } else if (known === 0) {
+          out.className = 'score-out flag'
+          out.innerHTML = `<h3>Eleven questions open</h3><p class="muted">Nothing ticked yet. Work down the list — the ones you cannot answer from memory are exactly the ones worth putting in front of someone who can read the policy with you.</p>`
+        } else {
+          out.className = 'score-out flag'
+          out.innerHTML = `<h3>${known} of ${boxes.length} answered with certainty</h3>
+            <p class="muted">${unknown} ${unknown === 1 ? 'question remains' : 'questions remain'} open. Each one is a term already written into a contract you hold — the answer exists, it is simply not yet known to you. Take the unticked list to a review.</p>`
+        }
+      }
+
+      ;['i-income', 'i-years'].forEach((id) => el(id).addEventListener('input', syncAsset))
+      document.querySelectorAll('[data-audit]').forEach((b) => b.addEventListener('change', syncAudit))
+      persistFields('income-protection')
+      syncAsset()
+      syncAudit()
+    </script>
+  </body>
+</html>

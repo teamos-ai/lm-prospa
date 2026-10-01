@@ -1,0 +1,518 @@
+<!DOCTYPE html>
+<html lang="en-AU">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>The Bonus &amp; Surplus Playbook — Prospa Financial</title>
+    <meta
+      name="description"
+      content="Irregular income is where the biggest financial decisions get made fastest. Set the rule before the money arrives."
+    />
+    <link rel="icon" type="image/svg+xml" href="../assets/favicon.svg" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="../assets/prospa.css" />
+    <style>
+      .split-row {
+        display: grid;
+        grid-template-columns: 1fr 76px 150px;
+        gap: 12px 20px;
+        align-items: center;
+        padding: 18px 0;
+        border-bottom: 1px solid var(--line-2);
+      }
+      .split-row:last-of-type {
+        border-bottom: none;
+      }
+      .split-row b {
+        display: block;
+        font-size: 15.5px;
+        color: var(--ink);
+      }
+      .split-row span.s {
+        display: block;
+        font-size: 13px;
+        color: var(--gray);
+        margin-top: 2px;
+      }
+      .split-row .pcell {
+        display: flex;
+        align-items: center;
+        gap: 4px;
+      }
+      .split-row input[type='number'] {
+        width: 100%;
+        font-family: 'JetBrains Mono', monospace;
+        font-size: 15px;
+        text-align: right;
+        color: var(--ink);
+        background: #fff;
+        border: 1px solid var(--line);
+        border-radius: var(--r-sm);
+        padding: 10px 11px;
+        font-variant-numeric: tabular-nums;
+      }
+      .split-row input:focus {
+        outline: none;
+        border-color: var(--teal);
+        box-shadow: 0 0 0 4px rgba(19, 95, 105, 0.1);
+      }
+      .split-row .amt {
+        font-family: 'JetBrains Mono', monospace;
+        font-size: 17px;
+        text-align: right;
+        color: var(--teal);
+        font-weight: 500;
+        font-variant-numeric: tabular-nums;
+      }
+      .split-total {
+        display: grid;
+        grid-template-columns: 1fr 76px 150px;
+        gap: 20px;
+        align-items: center;
+        padding: 20px 0 0;
+        margin-top: 6px;
+        border-top: 2px solid var(--teal);
+      }
+      .split-total b {
+        font-size: 16.5px;
+        color: var(--ink);
+      }
+      .split-total .p,
+      .split-total .amt {
+        font-family: 'JetBrains Mono', monospace;
+        font-size: 17px;
+        text-align: right;
+        font-weight: 500;
+        color: var(--teal);
+        font-variant-numeric: tabular-nums;
+      }
+      .split-total.over .p,
+      .split-total.over .amt {
+        color: var(--ember-strong);
+      }
+
+      .net-head {
+        background: var(--teal);
+        border-radius: var(--r-xl);
+        padding: 34px 40px;
+        color: #fff;
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 26px;
+      }
+      .net-head .k {
+        font-size: 11px;
+        font-weight: 600;
+        letter-spacing: 0.14em;
+        text-transform: uppercase;
+        color: #9fd8c4;
+        display: block;
+        margin-bottom: 7px;
+      }
+      .net-head .v {
+        font-family: 'JetBrains Mono', monospace;
+        font-size: 28px;
+        font-weight: 500;
+        letter-spacing: -0.03em;
+        font-variant-numeric: tabular-nums;
+      }
+
+      .trap {
+        display: grid;
+        grid-template-columns: 34px 1fr;
+        gap: 16px;
+        padding: 20px 0;
+        border-bottom: 1px solid var(--line-2);
+      }
+      .trap:last-child {
+        border-bottom: none;
+      }
+      .trap b {
+        display: block;
+        color: var(--ink);
+        font-size: 16px;
+        margin-bottom: 5px;
+      }
+      .trap p {
+        color: var(--gray);
+        font-size: 14.5px;
+      }
+      .trap .x {
+        width: 30px;
+        height: 30px;
+        border-radius: 50%;
+        background: var(--ember-soft);
+        color: var(--ember-strong);
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        flex: none;
+      }
+
+      @media (max-width: 760px) {
+        .split-row,
+        .split-total {
+          grid-template-columns: 1fr 70px 110px;
+          gap: 10px 12px;
+        }
+        .net-head {
+          grid-template-columns: 1fr;
+          padding: 26px 24px;
+          gap: 18px;
+        }
+      }
+      @media print {
+        .net-head {
+          background: var(--bg2);
+          color: var(--ink);
+        }
+        .net-head .k {
+          color: var(--gray);
+        }
+        .net-head .v {
+          color: var(--teal);
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div data-sheet-back></div>
+
+    <article class="sheet">
+      <div data-sheet-masthead></div>
+
+      <div class="pad">
+        <div class="eyebrow">Session tool 06 · Planner</div>
+        <h1 class="doc-title">The Bonus &amp; <em>Surplus</em> Playbook</h1>
+        <p class="lede">
+          Irregular income is where the largest single decisions get made fastest and with the least
+          thought. A bonus, a vesting parcel, a distribution, the month a loan finally clears.
+          <strong>Decide the rule before the money arrives</strong> — because the decision made in
+          the moment is almost never the one you would have chosen in advance.
+        </p>
+
+        <div class="card card-tint" style="margin: 32px 0 0">
+          <p class="small">
+            <b style="color: var(--ink)">Why a rule beats a decision.</b> A bonus arrives alongside a
+            reason to celebrate, a renovation quote and a car that is three years old. Every one of
+            those is reasonable. A rule set in a calm month is not competing with any of them.
+          </p>
+        </div>
+
+        <hr class="rule" />
+
+        <!-- ---------- Step 1 ---------- -->
+        <div class="sec-head">
+          <h2>Step one · Start from the net, never the gross</h2>
+          <p>
+            A bonus is announced in gross and spent in net. At a 47% marginal rate including the
+            Medicare levy, roughly half of the headline figure was never yours to allocate.
+          </p>
+        </div>
+
+        <div class="grid g2" style="margin-bottom: 24px">
+          <div class="field">
+            <label for="i-gross">Gross amount</label>
+            <div class="input-wrap">
+              <span class="affix">$</span>
+              <input type="number" id="i-gross" inputmode="numeric" value="50000"
+                     data-persist="bonus-gross" />
+            </div>
+          </div>
+          <div class="field">
+            <label for="i-rate">Your marginal rate, including Medicare levy</label>
+            <select id="i-rate" data-persist="bonus-rate">
+              <option value="0.32">32% — taxable income $45,001 to $135,000</option>
+              <option value="0.39">39% — taxable income $135,001 to $190,000</option>
+              <option value="0.47" selected>47% — taxable income above $190,000</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="net-head">
+          <div>
+            <span class="k">Gross</span>
+            <span class="v" id="o-gross">—</span>
+          </div>
+          <div>
+            <span class="k">Approximate tax</span>
+            <span class="v" id="o-tax">—</span>
+          </div>
+          <div>
+            <span class="k">Net — what you allocate</span>
+            <span class="v" id="o-net" style="color: #a8e88f">—</span>
+          </div>
+        </div>
+        <p class="small muted" style="margin-top: 14px">
+          A simplification: it applies one marginal rate to the whole amount and ignores any
+          pre-tax arrangement, offsets, HELP repayments or the possibility that the bonus pushes you
+          into a higher bracket. It is here to make the gap between gross and net visible, not to
+          calculate your tax.
+        </p>
+
+        <hr class="rule" />
+
+        <!-- ---------- Step 2 ---------- -->
+        <div class="sec-head">
+          <h2>Step two · Set the split in advance</h2>
+          <p>
+            Adjust the percentages to a rule you would be willing to apply automatically, every
+            time, without re-deciding. The illustrative split below is a starting point to argue
+            with, not a recommendation.
+          </p>
+        </div>
+
+        <div id="split">
+          <div class="split-row">
+            <div>
+              <b>Enjoy it</b>
+              <span class="s">The part that makes the rule survivable. A rule with no joy in it gets abandoned.</span>
+            </div>
+            <div class="pcell">
+              <input type="number" data-split="enjoy" data-persist="sp-enjoy" value="10" min="0" max="100" />
+              <span class="muted">%</span>
+            </div>
+            <div class="amt" data-amt="enjoy">—</div>
+          </div>
+
+          <div class="split-row">
+            <div>
+              <b>Top up the reserve</b>
+              <span class="s">Until it reaches the number you decided it should be — then this drops to zero.</span>
+            </div>
+            <div class="pcell">
+              <input type="number" data-split="reserve" data-persist="sp-reserve" value="15" min="0" max="100" />
+              <span class="muted">%</span>
+            </div>
+            <div class="amt" data-amt="reserve">—</div>
+          </div>
+
+          <div class="split-row">
+            <div>
+              <b>Non-deductible debt</b>
+              <span class="s">The home loan. A certain, tax-free return equal to the loan rate.</span>
+            </div>
+            <div class="pcell">
+              <input type="number" data-split="debt" data-persist="sp-debt" value="25" min="0" max="100" />
+              <span class="muted">%</span>
+            </div>
+            <div class="amt" data-amt="debt">—</div>
+          </div>
+
+          <div class="split-row">
+            <div>
+              <b>Accessible investments</b>
+              <span class="s">The only bucket that can fund the years before preservation age.</span>
+            </div>
+            <div class="pcell">
+              <input type="number" data-split="invest" data-persist="sp-invest" value="35" min="0" max="100" />
+              <span class="muted">%</span>
+            </div>
+            <div class="amt" data-amt="invest">—</div>
+          </div>
+
+          <div class="split-row">
+            <div>
+              <b>Superannuation</b>
+              <span class="s">Subject to the annual caps, and locked until preservation age.</span>
+            </div>
+            <div class="pcell">
+              <input type="number" data-split="super" data-persist="sp-super" value="15" min="0" max="100" />
+              <span class="muted">%</span>
+            </div>
+            <div class="amt" data-amt="super">—</div>
+          </div>
+
+          <div class="split-total" id="split-total">
+            <b>Total</b>
+            <div class="p" id="o-pct">—</div>
+            <div class="amt" id="o-alloc">—</div>
+          </div>
+        </div>
+
+        <p class="small" id="split-note" style="margin-top: 14px"></p>
+
+        <hr class="rule" />
+
+        <!-- ---------- Step 3 ---------- -->
+        <div class="sec-head">
+          <h2>Step three · Write the rule down</h2>
+          <p>A rule you cannot state in one sentence is not a rule.</p>
+        </div>
+
+        <div class="card card-green">
+          <p style="font-size: 16px; color: var(--ink); margin-bottom: 18px">
+            <b>My rule:</b> whenever irregular income arrives, I will…
+          </p>
+          <input class="writeline" type="text" data-persist="rule"
+                 placeholder="e.g. take 10% for something enjoyable within a week, then split the rest 25/35/15…"
+                 style="font-size: 16px; padding: 14px 2px; background: transparent" />
+          <div class="grid g2" style="margin-top: 24px">
+            <div>
+              <div class="sub-h" style="margin-bottom: 10px">The rule applies to</div>
+              <input class="writeline" type="text" data-persist="applies"
+                     placeholder="Annual bonus, vested equity, distributions…" />
+            </div>
+            <div>
+              <div class="sub-h" style="margin-bottom: 10px">I will act within</div>
+              <input class="writeline" type="text" data-persist="window"
+                     placeholder="14 days of it landing" />
+            </div>
+          </div>
+        </div>
+
+        <hr class="rule" />
+
+        <!-- ---------- Traps ---------- -->
+        <div class="sec-head">
+          <h2>Four ways this goes wrong</h2>
+          <p>Every one of these is something sensible people do.</p>
+        </div>
+
+        <div class="trap">
+          <span class="x">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                 stroke-width="2.6" stroke-linecap="round" aria-hidden="true">
+              <path d="M18 6 6 18M6 6l12 12" />
+            </svg>
+          </span>
+          <div>
+            <b>Letting it sit "until I decide"</b>
+            <p>
+              Money parked in a transaction account pending a decision is money being spent in
+              instalments. The decision is usually made by attrition rather than by choice.
+            </p>
+          </div>
+        </div>
+
+        <div class="trap">
+          <span class="x">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                 stroke-width="2.6" stroke-linecap="round" aria-hidden="true">
+              <path d="M18 6 6 18M6 6l12 12" />
+            </svg>
+          </span>
+          <div>
+            <b>Treating the gross figure as the budget</b>
+            <p>
+              Commitments get made against the announced number, and the net arrives months later
+              roughly half the size. The shortfall is then funded by the surplus that was supposed
+              to be invested.
+            </p>
+          </div>
+        </div>
+
+        <div class="trap">
+          <span class="x">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                 stroke-width="2.6" stroke-linecap="round" aria-hidden="true">
+              <path d="M18 6 6 18M6 6l12 12" />
+            </svg>
+          </span>
+          <div>
+            <b>Contributing to super without checking the cap</b>
+            <p>
+              Concessional contributions include what your employer already pays. Exceeding the cap
+              has tax consequences, and the carry-forward rules that might have helped depend on
+              your total super balance. Check before, not after.
+            </p>
+          </div>
+        </div>
+
+        <div class="trap">
+          <span class="x">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                 stroke-width="2.6" stroke-linecap="round" aria-hidden="true">
+              <path d="M18 6 6 18M6 6l12 12" />
+            </svg>
+          </span>
+          <div>
+            <b>Allocating 100% to the sensible option</b>
+            <p>
+              A rule with no enjoyment in it does not survive its second year. A deliberate small
+              share for something you actually want is what makes the other 90% automatic.
+            </p>
+          </div>
+        </div>
+
+        <div class="disclaimer" style="margin-top: 32px">
+          <b>General information only.</b> The tax figure is a simplified illustration using a single
+          marginal rate and is not a tax calculation. The split is an example to discuss, not a
+          recommendation; the right allocation depends on your objectives, financial situation and
+          needs, including your contribution caps, debt position and timeframes. Confirm current
+          rates, thresholds and caps at
+          <a href="https://www.ato.gov.au" target="_blank" rel="noopener noreferrer"
+             style="color: var(--teal); font-weight: 600">ato.gov.au</a>
+          and seek personal tax and financial advice before acting.
+        </div>
+
+        <div class="row no-print" style="margin-top: 26px">
+          <button class="btn btn-outline btn-sm" data-print>Print or save as PDF</button>
+          <button class="btn btn-ghost btn-sm" data-clear>Clear my figures</button>
+        </div>
+      </div>
+
+      <div data-sheet-foot></div>
+    </article>
+
+    <script type="module">
+      import { mountSheet, wirePrint, money, persistFields } from '../assets/sheet.js'
+
+      mountSheet({ no: '06', kind: 'Planner' })
+      wirePrint()
+
+      const el = (id) => document.getElementById(id)
+
+      function sync() {
+        const gross = Number(el('i-gross').value) || 0
+        const rate = Number(el('i-rate').value) || 0
+        const tax = gross * rate
+        const net = gross - tax
+
+        el('o-gross').textContent = money(gross)
+        el('o-tax').textContent = money(tax)
+        el('o-net').textContent = money(net)
+
+        let pct = 0
+        document.querySelectorAll('[data-split]').forEach((i) => {
+          const k = i.dataset.split
+          const p = Number(i.value) || 0
+          pct += p
+          document.querySelector(`[data-amt="${k}"]`).textContent = money((net * p) / 100)
+        })
+
+        el('o-pct').textContent = pct.toFixed(0) + '%'
+        el('o-alloc').textContent = money((net * pct) / 100)
+        el('split-total').classList.toggle('over', Math.round(pct) !== 100)
+
+        const note = el('split-note')
+        if (Math.round(pct) === 100) {
+          note.innerHTML = `<span class="muted">The split accounts for all of the net amount.</span>`
+        } else if (pct > 100) {
+          note.innerHTML = `<b style="color: var(--ember-strong)">That is ${(pct - 100).toFixed(
+            0
+          )}% more than you have.</b> <span class="muted">Reduce a line before the rule leaves the page.</span>`
+        } else {
+          note.innerHTML = `<b style="color: var(--ember-strong)">${(100 - pct).toFixed(
+            0
+          )}% is unallocated — ${money(
+            (net * (100 - pct)) / 100
+          )}.</b> <span class="muted">Unallocated is the category that quietly becomes "enjoy it".</span>`
+        }
+      }
+
+      ;['i-gross', 'i-rate'].forEach((id) => {
+        el(id).addEventListener('input', sync)
+        el(id).addEventListener('change', sync)
+      })
+      document.querySelectorAll('[data-split]').forEach((i) => i.addEventListener('input', sync))
+      persistFields('bonus-playbook')
+      sync()
+    </script>
+  </body>
+</html>

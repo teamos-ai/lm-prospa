@@ -1,0 +1,352 @@
+<!DOCTYPE html>
+<html lang="en-AU">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Wealth Structures, Compared — Prospa Financial</title>
+    <meta
+      name="description"
+      content="Personal name, spouse, family trust, company, investment bond or super — how each behaves on income, on access, on sale and on death."
+    />
+    <link rel="icon" type="image/svg+xml" href="../assets/favicon.svg" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="../assets/prospa.css" />
+    <style>
+      .matrix-scroll {
+        overflow-x: auto;
+        margin: 0 -4px;
+        padding: 0 4px 4px;
+      }
+      .matrix {
+        width: 100%;
+        min-width: 820px;
+        border-collapse: collapse;
+        font-size: 13.5px;
+      }
+      .matrix th {
+        text-align: left;
+        font-size: 11px;
+        font-weight: 600;
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+        color: var(--gray);
+        padding: 0 14px 12px 0;
+        border-bottom: 1.5px solid var(--teal);
+        vertical-align: bottom;
+      }
+      .matrix th:first-child {
+        width: 150px;
+      }
+      .matrix td {
+        padding: 16px 14px 16px 0;
+        border-bottom: 1px solid var(--line-2);
+        vertical-align: top;
+        color: var(--slate);
+        line-height: 1.5;
+      }
+      .matrix tr:last-child td {
+        border-bottom: none;
+      }
+      .matrix .name {
+        color: var(--ink);
+        font-weight: 700;
+        font-size: 15px;
+      }
+      .matrix .name span {
+        display: block;
+        font-weight: 400;
+        font-size: 12.5px;
+        color: var(--gray);
+        margin-top: 4px;
+      }
+      .scroll-hint {
+        font-size: 12px;
+        color: var(--gray);
+        margin-top: 10px;
+      }
+
+      .struct {
+        border: 1px solid var(--line);
+        border-radius: var(--r-lg);
+        padding: 28px;
+      }
+      .struct h3 {
+        font-size: 19px;
+        margin-bottom: 6px;
+      }
+      .struct .sub {
+        font-family: 'JetBrains Mono', monospace;
+        font-size: 11px;
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+        color: var(--gray);
+        display: block;
+        margin-bottom: 16px;
+      }
+      .struct dl {
+        margin: 0;
+      }
+      .struct dt {
+        font-size: 11px;
+        font-weight: 600;
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+        color: var(--teal);
+        margin-top: 16px;
+      }
+      .struct dt:first-child {
+        margin-top: 0;
+      }
+      .struct dd {
+        margin: 5px 0 0;
+        font-size: 14.5px;
+        color: var(--slate);
+      }
+      .struct dt.watch {
+        color: var(--ember-strong);
+      }
+
+      @media (max-width: 760px) {
+        .struct {
+          padding: 22px;
+        }
+      }
+      @media print {
+        .matrix-scroll {
+          overflow: visible;
+        }
+        .matrix {
+          min-width: 0;
+          font-size: 8.5pt;
+        }
+        .scroll-hint {
+          display: none;
+        }
+        .struct {
+          break-inside: avoid;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div data-sheet-back></div>
+
+    <article class="sheet sheet-wide">
+      <div data-sheet-masthead></div>
+
+      <div class="pad">
+        <div class="eyebrow">Session tool 08 · Comparison</div>
+        <h1 class="doc-title">Wealth Structures, <em>Compared</em></h1>
+        <p class="lede">
+          Where an asset is held changes what it earns you after tax, when you can reach it, what
+          happens when you sell it and where it goes when you die. Structure is decided once and
+          lived with for decades — <strong>and unwinding it later can trigger the very tax it was
+          meant to manage</strong>.
+        </p>
+
+        <div class="card card-tint" style="margin: 32px 0 0">
+          <p class="small">
+            <b style="color: var(--ink)">How to read this.</b> No structure wins. Each one is good at
+            something and costs you something else. The question is never "which is best" — it is
+            "which trade-off suits my marginal rate, my timeframe, my family and my tolerance for
+            complexity". This page is a map of the trade-offs, not a recommendation of any of them.
+          </p>
+        </div>
+
+        <hr class="rule" />
+
+        <!-- ---------- Matrix ---------- -->
+        <div class="sec-head">
+          <h2>The six at a glance</h2>
+        </div>
+
+        <div class="matrix-scroll">
+          <table class="matrix">
+            <thead>
+              <tr>
+                <th>Structure</th>
+                <th>How income is taxed</th>
+                <th>When you can reach it</th>
+                <th>Commonly considered when</th>
+                <th>The usual catch</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td class="name">Personal name<span>The default</span></td>
+                <td>At your marginal rate, so up to 47% with the Medicare levy.</td>
+                <td>Any time.</td>
+                <td>Simplicity matters, amounts are modest, or the asset produces little income.</td>
+                <td>The most expensive place for income to land if you are a high earner.</td>
+              </tr>
+              <tr>
+                <td class="name">Spouse or joint<span>Splitting the rate</span></td>
+                <td>At each owner's marginal rate, on their share.</td>
+                <td>Any time.</td>
+                <td>There is a genuine and durable difference between two marginal rates.</td>
+                <td>Rates converge over time. Transferring later can trigger capital gains tax and duty.</td>
+              </tr>
+              <tr>
+                <td class="name">Family trust<span>Discretionary</span></td>
+                <td>Distributed each year to beneficiaries, who are taxed at their own rates.</td>
+                <td>Any time, subject to the deed and the trustee.</td>
+                <td>Income can usefully be directed among adult family members, and asset protection matters.</td>
+                <td>Setup and annual costs, strict distribution rules, and losses are trapped inside the trust.</td>
+              </tr>
+              <tr>
+                <td class="name">Company<span>A flat rate</span></td>
+                <td>At the company tax rate, with franking credits attaching to dividends paid out.</td>
+                <td>Any time, but getting money out personally is a taxable event.</td>
+                <td>Retaining and reinvesting profits, often alongside a business.</td>
+                <td>No capital gains tax discount for companies. Getting funds out is where the tax arrives.</td>
+              </tr>
+              <tr>
+                <td class="name">Investment bond<span>Tax paid inside</span></td>
+                <td>Inside the bond at the company tax rate. No annual return obligation for you.</td>
+                <td>Any time, though the tax treatment improves once held for ten years.</td>
+                <td>A long horizon, a high marginal rate, and a preference for simplicity over flexibility.</td>
+                <td>Contribution rules apply year to year, and withdrawing early changes the outcome.</td>
+              </tr>
+              <tr>
+                <td class="name">Superannuation<span>The concession</span></td>
+                <td>Concessionally inside the fund, and generally tax-free on withdrawal after 60.</td>
+                <td>Preservation age — 60 for everyone reaching it from 1 July 2024.</td>
+                <td>The timeframe is genuinely beyond 60 and the gap to your marginal rate is wide.</td>
+                <td>Locked. Annual caps. And from 1 July 2026, an extra tax on earnings above $3 million.</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <p class="scroll-hint no-print">Scroll the table sideways to see every column.</p>
+
+        <hr class="rule" />
+
+        <!-- ---------- Detail cards ---------- -->
+        <div class="sec-head">
+          <h2>The trade-off in each</h2>
+          <p>What you gain, what it costs, and the question that decides it.</p>
+        </div>
+
+        <div class="grid g2">
+          <div class="struct">
+            <h3>Personal name</h3>
+            <span class="sub">Simplest · Least efficient at high rates</span>
+            <dl>
+              <dt>Gains you</dt>
+              <dd>No setup cost, no annual compliance, complete control, and the 50% capital gains tax discount on assets held over twelve months.</dd>
+              <dt class="watch">Costs you</dt>
+              <dd>Every dollar of income is taxed at your rate. At 47%, an investment yielding 4% delivers barely over 2% after tax.</dd>
+              <dt>The deciding question</dt>
+              <dd>Is the income meaningful enough to justify the cost and complexity of holding it elsewhere?</dd>
+            </dl>
+          </div>
+
+          <div class="struct">
+            <h3>Spouse or joint ownership</h3>
+            <span class="sub">Simple · Depends on a rate difference lasting</span>
+            <dl>
+              <dt>Gains you</dt>
+              <dd>Income taxed where the rate is lower. No structure to establish, and nothing to administer each year.</dd>
+              <dt class="watch">Costs you</dt>
+              <dd>It stops working when the rates converge, and moving assets between names later is usually a capital gains tax event — sometimes a duty event too.</dd>
+              <dt>The deciding question</dt>
+              <dd>Is the difference between the two marginal rates both large and likely to persist?</dd>
+            </dl>
+          </div>
+
+          <div class="struct">
+            <h3>Family trust</h3>
+            <span class="sub">Flexible · Ongoing obligations</span>
+            <dl>
+              <dt>Gains you</dt>
+              <dd>Income can be directed each year among eligible beneficiaries, so the destination can change as circumstances do. A degree of asset protection, and the capital gains tax discount can flow through to individuals.</dd>
+              <dt class="watch">Costs you</dt>
+              <dd>Establishment and annual accounting costs, strict rules about valid distributions and their timing, close regulatory attention to distributions to adult children, and losses that cannot leave the trust.</dd>
+              <dt>The deciding question</dt>
+              <dd>Are there genuinely other adults whose rates make distributions worthwhile, year after year?</dd>
+            </dl>
+          </div>
+
+          <div class="struct">
+            <h3>Company</h3>
+            <span class="sub">Flat rate while retained · Taxed on the way out</span>
+            <dl>
+              <dt>Gains you</dt>
+              <dd>Profits retained and reinvested at the company rate rather than your marginal rate, with franking credits attaching to dividends when they are eventually paid.</dd>
+              <dt class="watch">Costs you</dt>
+              <dd>No capital gains tax discount at the company level, compliance obligations, and rules governing loans and payments to shareholders. The tax is deferred, not avoided.</dd>
+              <dt>The deciding question</dt>
+              <dd>Will the profits genuinely stay inside and be reinvested, or will you need them personally?</dd>
+            </dl>
+          </div>
+
+          <div class="struct">
+            <h3>Investment bond</h3>
+            <span class="sub">Low maintenance · Rules reward patience</span>
+            <dl>
+              <dt>Gains you</dt>
+              <dd>Tax is paid inside the bond, so there is no annual income to declare. Nothing to administer, no distributions to decide, and a defined beneficiary on death.</dd>
+              <dt class="watch">Costs you</dt>
+              <dd>Flexibility. Contributions are limited year to year, and withdrawing before the ten-year mark changes the treatment. Fees and the underlying investment menu matter.</dd>
+              <dt>The deciding question</dt>
+              <dd>Is the horizon genuinely ten years or more, and is your rate high enough for the internal rate to be an improvement?</dd>
+            </dl>
+          </div>
+
+          <div class="struct">
+            <h3>Superannuation</h3>
+            <span class="sub">Most concessional · Least accessible</span>
+            <dl>
+              <dt>Gains you</dt>
+              <dd>Concessional tax on contributions and earnings, and generally tax-free withdrawals after 60. The single most favourable treatment available to most people.</dd>
+              <dt class="watch">Costs you</dt>
+              <dd>Access. Annual caps limit how fast you can use it, Division 293 narrows the benefit above $250,000 of combined income, and from 1 July 2026 an additional tax applies to earnings on balances above $3 million.</dd>
+              <dt>The deciding question</dt>
+              <dd>Do you need any of this money before 60? If yes, the concession is irrelevant for that portion.</dd>
+            </dl>
+          </div>
+        </div>
+
+        <hr class="rule" />
+
+        <div class="card card-green">
+          <h3 class="step-h">What usually decides it</h3>
+          <p class="muted" style="margin-top: 10px">
+            In practice the answer is rarely one structure. It is a small number of them, each
+            holding the assets it suits, sized against when you want the money. The common mistake
+            is not choosing the wrong structure — it is choosing one, and then putting everything in
+            it out of habit.
+          </p>
+        </div>
+
+        <div class="disclaimer" style="margin-top: 32px">
+          <b>General information only.</b> This is an educational comparison of how different
+          ownership structures are generally treated in Australia. It is not a recommendation of any
+          structure, it is not tax or legal advice, and it does not consider your objectives,
+          financial situation or needs. Tax treatment, eligibility, establishment requirements and
+          ongoing obligations vary with your circumstances and change over time. Structures carry
+          legal, tax and administrative consequences that should be considered with a qualified
+          adviser, accountant and, where relevant, a lawyer before anything is established or
+          transferred.
+        </div>
+
+        <div class="row no-print" style="margin-top: 26px">
+          <button class="btn btn-outline btn-sm" data-print>Print or save as PDF</button>
+        </div>
+      </div>
+
+      <div data-sheet-foot></div>
+    </article>
+
+    <script type="module">
+      import { mountSheet, wirePrint } from '../assets/sheet.js'
+      mountSheet({ no: '08', kind: 'Comparison', wide: true })
+      wirePrint()
+    </script>
+  </body>
+</html>

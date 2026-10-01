@@ -1,0 +1,542 @@
+<!DOCTYPE html>
+<html lang="en-AU">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Session Tools — Prospa Financial</title>
+    <meta
+      name="description"
+      content="Ten tools for the Executive Financial Wellbeing Workshop, led by the Executive Wealth Score. General information only."
+    />
+    <link rel="icon" type="image/svg+xml" href="assets/favicon.svg" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="assets/prospa.css" />
+    <style>
+      body {
+        background: var(--bg2);
+      }
+
+      /* ---- Hero ---- */
+      .hero {
+        background: #fff;
+        padding: 70px 0 64px;
+        border-bottom: 1px solid var(--line);
+      }
+      .wrap {
+        max-width: var(--maxw);
+        margin: 0 auto;
+        padding: 0 48px;
+      }
+      .hero h1 {
+        font-size: 50px;
+        letter-spacing: -0.03em;
+        margin-bottom: 18px;
+        max-width: 16ch;
+      }
+      .hero h1 em {
+        font-style: normal;
+        color: var(--green-600);
+      }
+      .hero .lede {
+        font-size: 18px;
+        color: var(--gray);
+        max-width: 60ch;
+      }
+      .hero-top {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 24px;
+        flex-wrap: wrap;
+        margin-bottom: 46px;
+      }
+      .hero-meta {
+        display: flex;
+        gap: 34px;
+        flex-wrap: wrap;
+        margin-top: 38px;
+        padding-top: 30px;
+        border-top: 1px solid var(--line);
+      }
+      .hero-meta .m b {
+        display: block;
+        font-family: 'JetBrains Mono', monospace;
+        font-size: 19px;
+        color: var(--teal);
+        font-weight: 500;
+      }
+      .hero-meta .m span {
+        display: block;
+        font-size: 12px;
+        font-weight: 600;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+        color: var(--gray);
+        margin-top: 5px;
+      }
+
+      /* ---- Featured ---- */
+      .feature {
+        display: grid;
+        grid-template-columns: 1.15fr 1fr;
+        gap: 0;
+        background: var(--teal);
+        border-radius: var(--r-xl);
+        overflow: hidden;
+        color: #fff;
+        margin-bottom: 44px;
+      }
+      .feature-copy {
+        padding: 52px 52px 48px;
+      }
+      .feature .tag {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        font-size: 11.5px;
+        font-weight: 600;
+        letter-spacing: 0.16em;
+        text-transform: uppercase;
+        color: #a8e88f;
+        margin-bottom: 18px;
+      }
+      .feature .tag::before {
+        content: '';
+        width: 22px;
+        height: 2px;
+        background: var(--green);
+        border-radius: 2px;
+      }
+      .feature h2 {
+        color: #fff;
+        font-size: 36px;
+        letter-spacing: -0.025em;
+        margin-bottom: 16px;
+      }
+      .feature p {
+        color: #cfe0e2;
+        font-size: 16px;
+        max-width: 48ch;
+      }
+      .feature-stats {
+        display: flex;
+        gap: 30px;
+        flex-wrap: wrap;
+        margin: 30px 0 32px;
+      }
+      .feature-stats b {
+        display: block;
+        font-family: 'JetBrains Mono', monospace;
+        font-size: 20px;
+        color: #fff;
+        font-weight: 500;
+      }
+      .feature-stats span {
+        display: block;
+        font-size: 11px;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+        color: #9fbdc0;
+        margin-top: 4px;
+      }
+      .feature-visual {
+        background: var(--teal-900);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 48px 40px;
+      }
+      .ring-demo {
+        text-align: center;
+      }
+      .ring-demo svg {
+        display: block;
+        margin: 0 auto 18px;
+      }
+      .ring-demo .n {
+        font-family: 'JetBrains Mono', monospace;
+        font-size: 13px;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+        color: #9fbdc0;
+      }
+      .ring-arc {
+        stroke-dasharray: 452;
+        stroke-dashoffset: 452;
+        animation: draw 1.6s var(--ease) 0.3s forwards;
+      }
+      @keyframes draw {
+        to {
+          stroke-dashoffset: 154;
+        }
+      }
+      .ring-label {
+        font-family: 'JetBrains Mono', monospace;
+        font-size: 42px;
+        font-weight: 500;
+        fill: #fff;
+        letter-spacing: -0.04em;
+      }
+      .ring-sub {
+        font-family: 'JetBrains Mono', monospace;
+        font-size: 10px;
+        fill: #9fbdc0;
+        letter-spacing: 0.14em;
+      }
+
+      /* ---- Grid ---- */
+      .tools {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 20px;
+        margin-bottom: 20px;
+      }
+      .tool {
+        display: flex;
+        flex-direction: column;
+        background: #fff;
+        border-radius: var(--r-lg);
+        padding: 30px 32px;
+        box-shadow: var(--sh-card);
+        transition: transform var(--dur-base) var(--ease),
+          box-shadow var(--dur-base) var(--ease);
+      }
+      .tool:hover {
+        transform: translateY(-3px);
+        box-shadow: var(--sh-raise);
+      }
+      .tool:focus-visible {
+        outline: 2px solid var(--teal);
+        outline-offset: 3px;
+      }
+      .tool-top {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        margin-bottom: 18px;
+      }
+      .tool-no {
+        font-family: 'JetBrains Mono', monospace;
+        font-size: 12px;
+        color: #fff;
+        background: var(--teal);
+        border-radius: var(--r-pill);
+        padding: 4px 11px;
+        letter-spacing: 0.06em;
+      }
+      .tool-kind {
+        font-family: 'JetBrains Mono', monospace;
+        font-size: 10.5px;
+        letter-spacing: 0.13em;
+        text-transform: uppercase;
+        color: var(--gray);
+      }
+      .tool h3 {
+        font-size: 21px;
+        letter-spacing: -0.015em;
+        margin-bottom: 10px;
+      }
+      .tool p {
+        color: var(--gray);
+        font-size: 14.5px;
+        flex: 1;
+      }
+      .tool-foot {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 14px;
+        margin-top: 22px;
+        padding-top: 18px;
+        border-top: 1px solid var(--line-2);
+      }
+      .tool-agenda {
+        font-size: 12.5px;
+        color: var(--gray);
+      }
+      .tool-go {
+        display: inline-flex;
+        align-items: center;
+        gap: 7px;
+        font-size: 13.5px;
+        font-weight: 700;
+        color: var(--teal);
+        transition: gap var(--dur-base) var(--ease);
+      }
+      .tool:hover .tool-go {
+        gap: 11px;
+      }
+
+      .foot {
+        background: var(--teal-900);
+        color: #cfe0e2;
+        padding: 46px 0 40px;
+        margin-top: 56px;
+        font-size: 13.5px;
+        line-height: 1.65;
+      }
+      .foot b {
+        color: #fff;
+      }
+      .foot a {
+        color: var(--green);
+        font-weight: 600;
+      }
+      .foot .afsl {
+        margin-top: 24px;
+        padding-top: 20px;
+        border-top: 1px solid rgba(255, 255, 255, 0.14);
+        font-size: 12px;
+        color: #9fbdc0;
+      }
+
+      @media (max-width: 900px) {
+        .feature {
+          grid-template-columns: 1fr;
+        }
+        .feature-visual {
+          padding: 40px;
+        }
+      }
+      @media (max-width: 720px) {
+        .wrap {
+          padding: 0 22px;
+        }
+        .hero {
+          padding: 44px 0 40px;
+        }
+        .hero h1 {
+          font-size: 33px;
+        }
+        .feature-copy {
+          padding: 34px 26px 30px;
+        }
+        .feature h2 {
+          font-size: 27px;
+        }
+        .tools {
+          grid-template-columns: 1fr;
+        }
+        .tool {
+          padding: 26px 24px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <header class="hero">
+      <div class="wrap">
+        <div class="hero-top">
+          <a class="lockup" href="https://www.prospafinancial.com.au" target="_blank" rel="noopener noreferrer">
+            <img src="assets/prospa-logo.png" alt="" width="42" height="42" />
+            <span class="lockup-name">
+              <b>PROSPA</b>
+              <span>Plan · Grow · Prosper</span>
+            </span>
+          </a>
+          <span class="badge badge-green"><i class="d"></i>People. Advice. Progress.</span>
+        </div>
+
+        <div class="eyebrow">Executive Financial Wellbeing Workshop</div>
+        <h1>Your session <em>tools</em></h1>
+        <p class="lede">
+          Ten instruments built for the workshop — one per agenda item, so each lands at the moment
+          it is useful. They are yours to keep. Everything you type stays in your own browser.
+        </p>
+
+        <div class="hero-meta">
+          <div class="m"><b>10</b><span>Tools</span></div>
+          <div class="m"><b>6</b><span>Interactive</span></div>
+          <div class="m"><b>0</b><span>Data collected</span></div>
+          <div class="m"><b>2026–27</b><span>Figures current</span></div>
+        </div>
+      </div>
+    </header>
+
+    <main class="wrap" style="padding-top: 48px">
+      <!-- ---------- Featured ---------- -->
+      <a class="feature" href="magnets/01-wealth-score.html">
+        <div class="feature-copy">
+          <span class="tag">Start here</span>
+          <h2>The Executive Wealth Score</h2>
+          <p>
+            Eighteen questions across the six areas that decide whether a strong income becomes
+            lasting wealth. You get a score out of 100, a weighted profile, the pattern in your
+            answers and your two widest gaps — in about three minutes.
+          </p>
+          <div class="feature-stats">
+            <div><b>18</b><span>Questions</span></div>
+            <div><b>6</b><span>Weighted areas</span></div>
+            <div><b>3 min</b><span>To complete</span></div>
+          </div>
+          <span class="btn btn-primary">
+            Take the assessment
+            <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                 stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <path d="M5 12h14M12 5l7 7-7 7" />
+            </svg>
+          </span>
+        </div>
+        <div class="feature-visual">
+          <div class="ring-demo">
+            <svg width="176" height="176" viewBox="0 0 176 176" aria-hidden="true">
+              <circle cx="88" cy="88" r="72" fill="none" stroke="rgba(255,255,255,.14)" stroke-width="11" />
+              <circle class="ring-arc" cx="88" cy="88" r="72" fill="none" stroke="#5dce38"
+                      stroke-width="11" stroke-linecap="round" transform="rotate(-90 88 88)" />
+              <text class="ring-label" x="88" y="94" text-anchor="middle">66</text>
+              <text class="ring-sub" x="88" y="113" text-anchor="middle">OUT OF 100</text>
+            </svg>
+            <span class="n">An example result</span>
+          </div>
+        </div>
+      </a>
+
+      <!-- ---------- The rest ---------- -->
+      <div class="sec-head" style="margin-bottom: 26px">
+        <h2 style="font-size: 26px">The other nine</h2>
+        <p>Each maps to a point in the session. Use them live, or keep them for afterwards.</p>
+      </div>
+
+      <div class="tools" id="tools"></div>
+
+      <div class="disclaimer" style="margin-top: 32px">
+        <b>General information only.</b> These tools are educational. They do not consider your
+        personal objectives, financial situation or needs, and none of them is a recommendation of
+        any financial product, strategy or structure. Figures shown are for the 2026–27 Australian
+        financial year and change over time. Seek personal advice before acting on anything here.
+      </div>
+    </main>
+
+    <footer class="foot">
+      <div class="wrap">
+        <div class="between">
+          <div>
+            <b>Prospa Financial</b> · People. Advice. Progress.<br />
+            Level 1, 36 Mills Street, Albert Park VIC 3206 · 03 8807 8000
+          </div>
+          <a href="https://www.prospafinancial.com.au" target="_blank" rel="noopener noreferrer">
+            prospafinancial.com.au
+          </a>
+        </div>
+        <div class="afsl" id="afsl"></div>
+      </div>
+    </footer>
+
+    <script type="module">
+      import { PROSPA } from './assets/sheet.js'
+
+      document.getElementById('afsl').textContent = PROSPA.afsl
+
+      // The nine that follow the Wealth Score, each tied to its agenda item.
+      const TOOLS = [
+        {
+          no: '02',
+          slug: '02-freedom-number',
+          kind: 'Calculator',
+          title: 'Your Financial Freedom Number',
+          blurb:
+            'The capital your chosen lifestyle would call for, what your current trajectory produces, and the distance between them. Plus which lever closes it fastest.',
+          agenda: 'Agenda 5 · Making Work Optional',
+        },
+        {
+          no: '03',
+          slug: '03-gap-years',
+          kind: 'Calculator',
+          title: 'The Gap Years Map',
+          blurb:
+            'The years between the age you want work to become optional and the age super unlocks. What they cost, and what you hold that could fund them.',
+          agenda: 'Agenda 5 · Making Work Optional',
+        },
+        {
+          no: '04',
+          slug: '04-next-dollar',
+          kind: 'Decision guide',
+          title: 'The Next Dollar Decision Map',
+          blurb:
+            'Mortgage, super, or investments outside super? Six questions in the order that answers them, plus the tax gap that drives the whole decision.',
+          agenda: 'Agenda 3 · Building Wealth Outside Super',
+        },
+        {
+          no: '05',
+          slug: '05-three-buckets',
+          kind: 'Worksheet',
+          title: 'The Three Wealth Buckets',
+          blurb:
+            'Map your wealth across today, freedom and retirement — then see the shape of your balance sheet and whether it points where you want to go.',
+          agenda: 'Agenda 3 · Building Wealth Outside Super',
+        },
+        {
+          no: '06',
+          slug: '06-bonus-playbook',
+          kind: 'Planner',
+          title: 'The Bonus & Surplus Playbook',
+          blurb:
+            'Irregular income is where the biggest decisions get made fastest. Start from the net, set the split in advance, and write the rule down.',
+          agenda: 'Agenda 1 · The Financial Freedom Gap',
+        },
+        {
+          no: '07',
+          slug: '07-super-cheatsheet',
+          kind: 'Cheatsheet',
+          title: 'The Executive Super Cheatsheet',
+          blurb:
+            'The 2026–27 numbers that actually change decisions on a high income — caps, Division 293, carry-forward, bring-forward, and what arrived on 1 July 2026.',
+          agenda: 'Agenda 2 · Make Super Work Harder',
+        },
+        {
+          no: '08',
+          slug: '08-structures',
+          kind: 'Comparison',
+          title: 'Wealth Structures, Compared',
+          blurb:
+            'Personal name, spouse, family trust, company, investment bond and super — how each behaves on income, on access and on the way out.',
+          agenda: 'Agenda 4 · Tax-Effective Wealth Structures',
+        },
+        {
+          no: '09',
+          slug: '09-income-protection',
+          kind: 'Audit',
+          title: 'The Income Protection Audit',
+          blurb:
+            'Size the largest asset you own, then eleven questions to test whether the cover around it still matches the life it is insuring.',
+          agenda: 'Agenda 6 · Protecting What You Have Built',
+        },
+        {
+          no: '10',
+          slug: '10-estate-checklist',
+          kind: 'Checklist',
+          title: 'The Estate & Beneficiary Checklist',
+          blurb:
+            'Your will does not control your super, and may not control your house. Seventeen checks on what actually decides where your assets land.',
+          agenda: 'Agenda 7 · Passing on Wealth',
+        },
+      ]
+
+      document.getElementById('tools').innerHTML = TOOLS.map(
+        (t) => `
+          <a class="tool" href="magnets/${t.slug}.html">
+            <div class="tool-top">
+              <span class="tool-no">${t.no}</span>
+              <span class="tool-kind">${t.kind}</span>
+            </div>
+            <h3>${t.title}</h3>
+            <p>${t.blurb}</p>
+            <div class="tool-foot">
+              <span class="tool-agenda">${t.agenda}</span>
+              <span class="tool-go">Open
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                     stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                  <path d="M5 12h14M12 5l7 7-7 7" />
+                </svg>
+              </span>
+            </div>
+          </a>`
+      ).join('')
+    </script>
+  </body>
+</html>

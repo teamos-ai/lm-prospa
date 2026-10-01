@@ -1,0 +1,450 @@
+<!DOCTYPE html>
+<html lang="en-AU">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>The Three Wealth Buckets — Prospa Financial</title>
+    <meta
+      name="description"
+      content="Map where your wealth sits today across three timeframes, and see whether it is available when you actually want to use it."
+    />
+    <link rel="icon" type="image/svg+xml" href="../assets/favicon.svg" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="../assets/prospa.css" />
+    <style>
+      .bucket {
+        border-radius: var(--r-lg);
+        border: 1px solid var(--line);
+        overflow: hidden;
+        margin-bottom: 22px;
+      }
+      .bucket-head {
+        padding: 24px 28px;
+        display: flex;
+        align-items: flex-start;
+        gap: 18px;
+        border-bottom: 1px solid var(--line);
+      }
+      .bucket-head .num {
+        margin-top: 2px;
+      }
+      .bucket-head h3 {
+        font-size: 21px;
+        margin-bottom: 5px;
+      }
+      .bucket-head .when {
+        font-family: 'JetBrains Mono', monospace;
+        font-size: 11px;
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+        color: var(--gray);
+        display: block;
+        margin-bottom: 8px;
+      }
+      .bucket-head p {
+        color: var(--gray);
+        font-size: 14.5px;
+      }
+      .bucket-body {
+        padding: 26px 28px;
+      }
+      .bucket-q {
+        background: var(--bg2);
+        border-radius: var(--r-md);
+        padding: 15px 20px;
+        font-size: 14.5px;
+        color: var(--slate);
+        margin-bottom: 24px;
+      }
+      .bucket-q b {
+        color: var(--teal);
+      }
+      .examples {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+        margin-bottom: 24px;
+      }
+
+      .lines {
+        display: grid;
+        grid-template-columns: 1.3fr 150px 1.3fr;
+        gap: 10px 20px;
+        align-items: end;
+      }
+      .lines .lbl {
+        font-size: 11.5px;
+        font-weight: 600;
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+        color: var(--gray);
+      }
+      .lines input[type='number'] {
+        text-align: right;
+        font-family: 'JetBrains Mono', monospace;
+        font-variant-numeric: tabular-nums;
+      }
+
+      /* Allocation bar */
+      .alloc {
+        display: flex;
+        height: 48px;
+        border-radius: var(--r-sm);
+        overflow: hidden;
+        background: var(--line);
+      }
+      .alloc div {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: #fff;
+        font-family: 'JetBrains Mono', monospace;
+        font-size: 12.5px;
+        font-weight: 500;
+        transition: flex-grow var(--dur-reveal) var(--ease);
+        overflow: hidden;
+        white-space: nowrap;
+      }
+      .a-today {
+        background: var(--teal);
+      }
+      .a-freedom {
+        background: var(--green-600);
+      }
+      .a-retire {
+        background: var(--teal-900);
+      }
+      .alloc-key {
+        display: flex;
+        gap: 22px;
+        flex-wrap: wrap;
+        margin-top: 14px;
+        font-size: 13px;
+        color: var(--gray);
+      }
+      .alloc-key span {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+      }
+      .alloc-key i {
+        width: 11px;
+        height: 11px;
+        border-radius: 3px;
+        flex: none;
+      }
+
+      .read {
+        border-radius: var(--r-lg);
+        padding: 26px 30px;
+        background: var(--bg2);
+        margin-top: 22px;
+      }
+      .read.flag {
+        background: var(--ember-soft);
+      }
+      .read h3 {
+        font-size: 19px;
+        margin-bottom: 10px;
+      }
+
+      @media (max-width: 760px) {
+        .lines {
+          grid-template-columns: 1fr;
+          gap: 6px;
+        }
+        .lines .lbl {
+          margin-top: 14px;
+        }
+        .bucket-head,
+        .bucket-body {
+          padding: 20px;
+        }
+      }
+      @media print {
+        .bucket {
+          break-inside: avoid;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div data-sheet-back></div>
+
+    <article class="sheet">
+      <div data-sheet-masthead></div>
+
+      <div class="pad">
+        <div class="eyebrow">Session tool 05 · Worksheet</div>
+        <h1 class="doc-title">The Three <em>Wealth Buckets</em></h1>
+        <p class="lede">
+          The goal is not simply to accumulate more. It is to hold the right assets for the right
+          timeframe. Map where your wealth sits today, and the question answers itself:
+          <strong>is it available when you actually want to use it?</strong>
+        </p>
+
+        <hr class="rule" />
+
+        <!-- ---------- Bucket 1 ---------- -->
+        <div class="bucket">
+          <div class="bucket-head">
+            <span class="num">1</span>
+            <div>
+              <span class="when">Now — 0 to 3 years</span>
+              <h3>Today · Liquidity &amp; Lifestyle</h3>
+              <p>Money designed to be available now or in the near term.</p>
+            </div>
+          </div>
+          <div class="bucket-body">
+            <div class="examples">
+              <span class="badge badge-teal">Cash</span>
+              <span class="badge badge-teal">Offset</span>
+              <span class="badge badge-teal">Emergency reserve</span>
+              <span class="badge badge-teal">Near-term goals</span>
+            </div>
+            <div class="bucket-q">
+              <b>Question to consider:</b> what must this money allow me to do over the next
+              0–3 years?
+            </div>
+            <div class="lines">
+              <div>
+                <span class="lbl">What I have here</span>
+                <input class="writeline" type="text" data-persist="b1-what" placeholder="Cash, offset balance…" />
+              </div>
+              <div>
+                <span class="lbl">Approximate value</span>
+                <input class="writeline" type="number" inputmode="numeric" data-bucket="today"
+                       data-persist="b1-val" placeholder="0" />
+              </div>
+              <div>
+                <span class="lbl">What I want it to achieve</span>
+                <input class="writeline" type="text" data-persist="b1-goal" placeholder="Cover 9 months…" />
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- ---------- Bucket 2 ---------- -->
+        <div class="bucket">
+          <div class="bucket-head">
+            <span class="num">2</span>
+            <div>
+              <span class="when">Before preservation age</span>
+              <h3>Freedom · Pre-Retirement Flexibility</h3>
+              <p>Capital that may fund choices before superannuation becomes accessible.</p>
+            </div>
+          </div>
+          <div class="bucket-body">
+            <div class="examples">
+              <span class="badge badge-green">Investments outside super</span>
+              <span class="badge badge-green">Property equity</span>
+              <span class="badge badge-green">Other accessible assets</span>
+            </div>
+            <div class="bucket-q">
+              <b>Question to consider:</b> if I wanted work to become optional earlier, what would
+              fund the gap?
+            </div>
+            <div class="lines">
+              <div>
+                <span class="lbl">What I have here</span>
+                <input class="writeline" type="text" data-persist="b2-what" placeholder="Share portfolio, trust…" />
+              </div>
+              <div>
+                <span class="lbl">Approximate value</span>
+                <input class="writeline" type="number" inputmode="numeric" data-bucket="freedom"
+                       data-persist="b2-val" placeholder="0" />
+              </div>
+              <div>
+                <span class="lbl">What I want it to achieve</span>
+                <input class="writeline" type="text" data-persist="b2-goal" placeholder="Fund ages 55–60…" />
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- ---------- Bucket 3 ---------- -->
+        <div class="bucket">
+          <div class="bucket-head">
+            <span class="num">3</span>
+            <div>
+              <span class="when">60 and beyond</span>
+              <h3>Retirement · Long-Term Capital</h3>
+              <p>Assets designed primarily to support life after work.</p>
+            </div>
+          </div>
+          <div class="bucket-body">
+            <div class="examples">
+              <span class="badge badge-teal">Superannuation</span>
+              <span class="badge badge-teal">Long-term retirement assets</span>
+            </div>
+            <div class="bucket-q">
+              <b>Question to consider:</b> is this pool on track for the lifestyle I want later?
+            </div>
+            <div class="lines">
+              <div>
+                <span class="lbl">What I have here</span>
+                <input class="writeline" type="text" data-persist="b3-what" placeholder="Super balance, SMSF…" />
+              </div>
+              <div>
+                <span class="lbl">Approximate value</span>
+                <input class="writeline" type="number" inputmode="numeric" data-bucket="retire"
+                       data-persist="b3-val" placeholder="0" />
+              </div>
+              <div>
+                <span class="lbl">What I want it to achieve</span>
+                <input class="writeline" type="text" data-persist="b3-goal" placeholder="Replace income from 60…" />
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <hr class="rule" />
+
+        <!-- ---------- Shape ---------- -->
+        <div class="sec-head">
+          <h2>The shape of your balance sheet</h2>
+          <p>
+            Not how much, but where. A strong balance sheet can still be poorly aligned to what you
+            want it to do.
+          </p>
+        </div>
+
+        <div class="alloc" id="alloc">
+          <div class="a-today" id="a-today" style="flex-grow: 1"></div>
+          <div class="a-freedom" id="a-freedom" style="flex-grow: 1"></div>
+          <div class="a-retire" id="a-retire" style="flex-grow: 1"></div>
+        </div>
+        <div class="alloc-key">
+          <span><i style="background: var(--teal)"></i>Today</span>
+          <span><i style="background: var(--green-600)"></i>Freedom</span>
+          <span><i style="background: var(--teal-900)"></i>Retirement</span>
+          <span style="margin-left: auto" class="figure" id="a-total"></span>
+        </div>
+
+        <div class="read" id="read"></div>
+
+        <hr class="rule" />
+
+        <div class="card card-tint">
+          <h3 class="step-h">The gap to look for</h3>
+          <p class="muted" style="margin-top: 10px">
+            Someone may have significant wealth in their home and their super, and very little
+            accessible capital to fund an earlier exit. Nothing is wrong with those assets — they
+            are simply all pointed at the same timeframe. The purpose of the three-bucket view is
+            to expose timing and access gaps, not to prescribe a particular investment.
+          </p>
+        </div>
+
+        <div style="margin-top: 32px">
+          <div class="sub-h">My next question</div>
+          <input class="writeline" type="text" data-persist="next-q"
+                 placeholder="The one thing I want to understand about this picture…"
+                 style="font-size: 16px; padding: 14px 2px" />
+        </div>
+
+        <div class="disclaimer" style="margin-top: 32px">
+          <b>General information only.</b> The appropriate mix between accessible assets,
+          superannuation, debt and other structures depends on your personal circumstances, tax
+          position, goals and risk tolerance. This worksheet records your own figures to support a
+          discussion; it is not a recommendation, an asset allocation, or a review of your financial
+          position. Personal advice may be required before acting.
+        </div>
+
+        <div class="row no-print" style="margin-top: 26px">
+          <button class="btn btn-outline btn-sm" data-print>Print or save as PDF</button>
+          <button class="btn btn-ghost btn-sm" data-clear>Clear my figures</button>
+        </div>
+        <p class="tiny muted no-print" style="margin-top: 12px">
+          Your entries stay in this browser. Nothing is sent anywhere.
+        </p>
+      </div>
+
+      <div data-sheet-foot></div>
+    </article>
+
+    <script type="module">
+      import { mountSheet, wirePrint, money, persistFields } from '../assets/sheet.js'
+
+      mountSheet({ no: '05', kind: 'Worksheet' })
+      wirePrint()
+
+      const el = (id) => document.getElementById(id)
+      const val = (k) => Number(document.querySelector(`[data-bucket="${k}"]`).value) || 0
+
+      function sync() {
+        const t = val('today')
+        const f = val('freedom')
+        const r = val('retire')
+        const total = t + f + r
+
+        const pct = (n) => (total > 0 ? n / total : 0)
+        ;[
+          ['a-today', t],
+          ['a-freedom', f],
+          ['a-retire', r],
+        ].forEach(([id, n]) => {
+          const node = el(id)
+          node.style.flexGrow = String(total > 0 ? Math.max(n, 0.0001) : 1)
+          node.textContent = total > 0 && pct(n) > 0.07 ? (pct(n) * 100).toFixed(0) + '%' : ''
+        })
+
+        el('a-total').textContent = total > 0 ? 'Total mapped · ' + money(total) : ''
+
+        const read = el('read')
+        if (total === 0) {
+          read.className = 'read'
+          read.innerHTML = `<h3>Add your approximate values</h3>
+            <p class="muted">Enter a figure in each bucket above and the shape of your balance sheet appears here, with what it suggests.</p>`
+          return
+        }
+
+        const freedomShare = pct(f)
+        const retireShare = pct(r)
+        const todayShare = pct(t)
+
+        let title, body
+        if (freedomShare < 0.2 && retireShare > 0.5) {
+          title = 'Weighted to the far horizon'
+          body = `${(retireShare * 100).toFixed(
+            0
+          )}% of what you have mapped sits in the retirement bucket, and only ${(freedomShare * 100).toFixed(
+            0
+          )}% in the freedom bucket. That is wealth working hard for the years after 60 and contributing very little to the years before it. If an earlier exit matters to you, this is the shape that would need to change.`
+          read.className = 'read flag'
+        } else if (todayShare > 0.4) {
+          title = 'Weighted to the near term'
+          body = `${(todayShare * 100).toFixed(
+            0
+          )}% sits in the today bucket. A substantial reserve is a genuine strength and buys you the right to wait — but beyond what the reserve needs to be, cash loses purchasing power every year it waits. The question is how much of this is reserve, and how much is undeployed.`
+          read.className = 'read flag'
+        } else if (freedomShare >= 0.25 && retireShare >= 0.25 && todayShare >= 0.05) {
+          title = 'Spread across all three timeframes'
+          body = `Today ${(todayShare * 100).toFixed(0)}%, freedom ${(freedomShare * 100).toFixed(
+            0
+          )}%, retirement ${(retireShare * 100).toFixed(
+            0
+          )}%. Each timeframe has capital pointed at it, which is uncommon. The useful questions now are about sizing rather than shape: is each bucket big enough for the job you have given it?`
+          read.className = 'read'
+        } else {
+          title = 'A shape worth examining'
+          body = `Today ${(todayShare * 100).toFixed(0)}%, freedom ${(freedomShare * 100).toFixed(
+            0
+          )}%, retirement ${(retireShare * 100).toFixed(
+            0
+          )}%. Compare that against when you actually want to use the money. Where the two disagree is where the conversation starts.`
+          read.className = 'read'
+        }
+        read.innerHTML = `<h3>${title}</h3><p class="muted">${body}</p>`
+      }
+
+      document.querySelectorAll('[data-bucket]').forEach((i) => i.addEventListener('input', sync))
+      persistFields('three-buckets')
+      sync()
+    </script>
+  </body>
+</html>

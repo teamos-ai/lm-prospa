@@ -1,0 +1,536 @@
+<!DOCTYPE html>
+<html lang="en-AU">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>The Estate &amp; Beneficiary Checklist — Prospa Financial</title>
+    <meta
+      name="description"
+      content="Your will does not control your super, and may not control your property. A checklist of what actually decides where your assets land."
+    />
+    <link rel="icon" type="image/svg+xml" href="../assets/favicon.svg" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="../assets/prospa.css" />
+    <style>
+      .myth {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 0;
+        border-radius: var(--r-lg);
+        overflow: hidden;
+        border: 1px solid var(--line);
+        margin-bottom: 16px;
+      }
+      .myth > div {
+        padding: 24px 26px;
+      }
+      .myth .assume {
+        background: var(--bg2);
+      }
+      .myth .actual {
+        background: #fff;
+        border-left: 1px solid var(--line);
+      }
+      .myth .tag {
+        font-family: 'JetBrains Mono', monospace;
+        font-size: 10.5px;
+        letter-spacing: 0.13em;
+        text-transform: uppercase;
+        display: block;
+        margin-bottom: 10px;
+      }
+      .myth .assume .tag {
+        color: var(--gray);
+      }
+      .myth .actual .tag {
+        color: var(--ember-strong);
+      }
+      .myth p {
+        font-size: 15px;
+        color: var(--slate);
+        line-height: 1.55;
+      }
+      .myth .assume p {
+        color: var(--gray);
+      }
+
+      .block {
+        border: 1px solid var(--line);
+        border-radius: var(--r-lg);
+        overflow: hidden;
+        margin-bottom: 20px;
+      }
+      .block-head {
+        padding: 20px 26px;
+        background: var(--bg2);
+        display: flex;
+        align-items: center;
+        gap: 14px;
+        border-bottom: 1px solid var(--line);
+      }
+      .block-head h3 {
+        font-size: 18px;
+      }
+      .block-head .cnt {
+        margin-left: auto;
+        font-family: 'JetBrains Mono', monospace;
+        font-size: 12px;
+        color: var(--teal);
+        white-space: nowrap;
+      }
+      .block-body {
+        padding: 10px 26px 20px;
+      }
+      .check .sub {
+        display: block;
+        font-size: 13px;
+        color: var(--gray);
+        margin-top: 4px;
+      }
+
+      .nom-tbl td b {
+        color: var(--ink);
+      }
+
+      .progress-wrap {
+        background: var(--teal);
+        border-radius: var(--r-xl);
+        padding: 34px 40px;
+        color: #fff;
+      }
+      .progress-wrap .k {
+        font-size: 11.5px;
+        font-weight: 600;
+        letter-spacing: 0.14em;
+        text-transform: uppercase;
+        color: #9fd8c4;
+        display: block;
+        margin-bottom: 10px;
+      }
+      .progress-wrap .big {
+        font-family: 'JetBrains Mono', monospace;
+        font-size: 40px;
+        font-weight: 500;
+        letter-spacing: -0.04em;
+        line-height: 1;
+        font-variant-numeric: tabular-nums;
+      }
+      .progress-wrap .track {
+        height: 8px;
+        border-radius: 4px;
+        background: rgba(255, 255, 255, 0.18);
+        overflow: hidden;
+        margin: 20px 0 14px;
+      }
+      .progress-wrap .track i {
+        display: block;
+        height: 100%;
+        border-radius: 4px;
+        background: var(--green);
+        transform-origin: left center;
+        transform: scaleX(0);
+        transition: transform var(--dur-reveal) var(--ease);
+      }
+      .progress-wrap p {
+        color: #cfe0e2;
+        font-size: 14.5px;
+        max-width: 56ch;
+      }
+
+      @media (max-width: 760px) {
+        .myth {
+          grid-template-columns: 1fr;
+        }
+        .myth .actual {
+          border-left: none;
+          border-top: 1px solid var(--line);
+        }
+        .block-head,
+        .block-body {
+          padding-left: 20px;
+          padding-right: 20px;
+        }
+        .progress-wrap {
+          padding: 26px 24px;
+        }
+      }
+      @media print {
+        .myth,
+        .block {
+          break-inside: avoid;
+        }
+        .progress-wrap {
+          background: var(--bg2);
+          color: var(--ink);
+        }
+        .progress-wrap .k,
+        .progress-wrap p {
+          color: var(--gray);
+        }
+        .progress-wrap .big {
+          color: var(--teal);
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div data-sheet-back></div>
+
+    <article class="sheet">
+      <div data-sheet-masthead></div>
+
+      <div class="pad">
+        <div class="eyebrow">Session tool 10 · Checklist</div>
+        <h1 class="doc-title">The Estate &amp; <em>Beneficiary</em> Checklist</h1>
+        <p class="lede">
+          This is the one area where the cost of leaving it is paid entirely by other people — and
+          where the documents most often contradict each other without anyone noticing.
+          <strong>Your will does not control everything you own.</strong>
+        </p>
+
+        <hr class="rule" />
+
+        <!-- ---------- Myths ---------- -->
+        <div class="sec-head">
+          <h2>Three things people reasonably assume</h2>
+          <p>And what is generally the case instead.</p>
+        </div>
+
+        <div class="myth">
+          <div class="assume">
+            <span class="tag">The assumption</span>
+            <p>"My will covers my superannuation."</p>
+          </div>
+          <div class="actual">
+            <span class="tag">Generally</span>
+            <p>
+              Superannuation is held in trust and is not automatically an estate asset. Where it
+              goes is usually decided by your beneficiary nomination, or by the trustee if there is
+              no valid one — not by your will.
+            </p>
+          </div>
+        </div>
+
+        <div class="myth">
+          <div class="assume">
+            <span class="tag">The assumption</span>
+            <p>"My will covers the house."</p>
+          </div>
+          <div class="actual">
+            <span class="tag">Generally</span>
+            <p>
+              Property held as joint tenants typically passes directly to the surviving joint owner
+              by survivorship, outside the will. Property held as tenants in common does pass
+              through the estate. The difference is on the title.
+            </p>
+          </div>
+        </div>
+
+        <div class="myth">
+          <div class="assume">
+            <span class="tag">The assumption</span>
+            <p>"My children will receive my super tax-free."</p>
+          </div>
+          <div class="actual">
+            <span class="tag">Generally</span>
+            <p>
+              Only if they are tax dependants. Financially independent adult children usually are
+              not, and tax can apply to the taxable component of a lump sum death benefit paid to
+              them.
+            </p>
+          </div>
+        </div>
+
+        <hr class="rule" />
+
+        <!-- ---------- Nominations ---------- -->
+        <div class="sec-head">
+          <h2>The four kinds of super nomination</h2>
+          <p>
+            Not all of them bind the trustee, and not all funds offer all of them. Check which one
+            you actually have.
+          </p>
+        </div>
+
+        <table class="tbl nom-tbl">
+          <thead>
+            <tr>
+              <th>Type</th>
+              <th>Binds the trustee?</th>
+              <th>What to watch</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><b>Non-binding</b></td>
+              <td>No — a preference only</td>
+              <td>The trustee considers your wishes but decides. The most common nomination, and the least certain.</td>
+            </tr>
+            <tr>
+              <td><b>Binding lapsing</b></td>
+              <td>Yes, while valid</td>
+              <td>Typically expires after three years. An expired nomination reverts to trustee discretion, and expiry is silent.</td>
+            </tr>
+            <tr>
+              <td><b>Binding non-lapsing</b></td>
+              <td>Yes, while valid</td>
+              <td>Does not expire by time, but must still be valid and is only offered by some funds. Review it after any life change.</td>
+            </tr>
+            <tr>
+              <td><b>Reversionary pension</b></td>
+              <td>Yes — the income stream continues</td>
+              <td>An existing pension continues to a nominated person rather than paying a lump sum. Interacts with their transfer balance cap.</td>
+            </tr>
+          </tbody>
+        </table>
+
+        <div class="card card-tint" style="margin-top: 22px">
+          <p class="small">
+            <b style="color: var(--ink)">Who can be nominated.</b> Generally a spouse, a child, a
+            financial dependant, someone in an interdependency relationship, or your legal personal
+            representative — your estate. Nominating anyone outside those categories usually makes
+            the nomination invalid, which returns the decision to the trustee.
+          </p>
+        </div>
+
+        <hr class="rule" />
+
+        <!-- ---------- Death benefit tax ---------- -->
+        <div class="sec-head">
+          <h2>Who receives it changes what is paid</h2>
+          <p>Broadly, for a lump sum death benefit from a taxed source.</p>
+        </div>
+
+        <table class="tbl">
+          <thead>
+            <tr>
+              <th>Recipient</th>
+              <th>Tax-free component</th>
+              <th>Taxable component (taxed element)</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><b>Tax dependant</b><span class="muted" style="display:block;font-size:13px;margin-top:3px">Spouse, child under 18, financial dependant, interdependency</span></td>
+              <td class="n">Nil</td>
+              <td class="n">Nil</td>
+            </tr>
+            <tr>
+              <td><b>Non-tax dependant</b><span class="muted" style="display:block;font-size:13px;margin-top:3px">Most commonly a financially independent adult child</span></td>
+              <td class="n">Nil</td>
+              <td class="n">Up to 15%<span class="muted" style="display:block;font-size:12.5px">plus Medicare levy where paid directly to an individual</span></td>
+            </tr>
+          </tbody>
+        </table>
+
+        <p class="small muted" style="margin-top: 16px">
+          An untaxed element — which can arise in some schemes and where life cover forms part of the
+          benefit — is taxed at a higher rate again. Where a benefit is paid through the estate
+          rather than directly, the Medicare levy generally does not apply, though the underlying tax
+          treatment still follows who ultimately benefits. This is a simplified summary of a genuinely
+          technical area.
+        </p>
+
+        <hr class="rule" />
+
+        <!-- ---------- Checklist ---------- -->
+        <div class="sec-head">
+          <h2>The checklist</h2>
+          <p>
+            Tick what is genuinely current — not what exists somewhere. A document that has not been
+            looked at since a marriage, a birth, a separation or a business sale is not current.
+          </p>
+        </div>
+
+        <div class="block">
+          <div class="block-head">
+            <span class="num">1</span>
+            <h3>The documents</h3>
+            <span class="cnt" data-count="docs"></span>
+          </div>
+          <div class="block-body" data-block="docs">
+            <div class="check">
+              <input type="checkbox" id="d1" data-est data-persist="d1" />
+              <label for="d1">I have a current will<span class="sub">Reviewed since my most recent major life or financial change</span></label>
+            </div>
+            <div class="check">
+              <input type="checkbox" id="d2" data-est data-persist="d2" />
+              <label for="d2">I have an enduring power of attorney for financial matters<span class="sub">It operates while I am alive but unable to act — a will does nothing here</span></label>
+            </div>
+            <div class="check">
+              <input type="checkbox" id="d3" data-est data-persist="d3" />
+              <label for="d3">I have an appointment for medical or personal decisions<span class="sub">Naming and form varies by state or territory</span></label>
+            </div>
+            <div class="check">
+              <input type="checkbox" id="d4" data-est data-persist="d4" />
+              <label for="d4">My executor knows they are my executor, and where the documents are</label>
+            </div>
+          </div>
+        </div>
+
+        <div class="block">
+          <div class="block-head">
+            <span class="num">2</span>
+            <h3>Superannuation and insurance</h3>
+            <span class="cnt" data-count="super"></span>
+          </div>
+          <div class="block-body" data-block="super">
+            <div class="check">
+              <input type="checkbox" id="s1" data-est data-persist="s1" />
+              <label for="s1">I know which type of nomination is on each super account<span class="sub">Including any older or inactive accounts</span></label>
+            </div>
+            <div class="check">
+              <input type="checkbox" id="s2" data-est data-persist="s2" />
+              <label for="s2">Every binding nomination is current and has not lapsed<span class="sub">Lapsing nominations typically expire after three years, silently</span></label>
+            </div>
+            <div class="check">
+              <input type="checkbox" id="s3" data-est data-persist="s3" />
+              <label for="s3">My nominations agree with my will<span class="sub">Rather than quietly contradicting it</span></label>
+            </div>
+            <div class="check">
+              <input type="checkbox" id="s4" data-est data-persist="s4" />
+              <label for="s4">I know whether my intended beneficiaries are tax dependants<span class="sub">It changes what they receive after tax</span></label>
+            </div>
+            <div class="check">
+              <input type="checkbox" id="s5" data-est data-persist="s5" />
+              <label for="s5">I know who owns each life insurance policy and who it pays<span class="sub">Inside super, outside super, or through a company or trust</span></label>
+            </div>
+          </div>
+        </div>
+
+        <div class="block">
+          <div class="block-head">
+            <span class="num">3</span>
+            <h3>Assets that pass outside the will</h3>
+            <span class="cnt" data-count="outside"></span>
+          </div>
+          <div class="block-body" data-block="outside">
+            <div class="check">
+              <input type="checkbox" id="o1" data-est data-persist="o1" />
+              <label for="o1">I know how each property is held<span class="sub">Joint tenants or tenants in common — it is on the title, and it decides whether the will applies</span></label>
+            </div>
+            <div class="check">
+              <input type="checkbox" id="o2" data-est data-persist="o2" />
+              <label for="o2">I know what happens to assets held in a trust or company<span class="sub">A trust does not die with you. Control passes under the deed, not the will</span></label>
+            </div>
+            <div class="check">
+              <input type="checkbox" id="o3" data-est data-persist="o3" />
+              <label for="o3">I know who would control any family trust, and how that is decided<span class="sub">Succession of the appointor role is the question most deeds answer badly</span></label>
+            </div>
+            <div class="check">
+              <input type="checkbox" id="o4" data-est data-persist="o4" />
+              <label for="o4">Any investment bond or similar product has a current nominated beneficiary</label>
+            </div>
+          </div>
+        </div>
+
+        <div class="block">
+          <div class="block-head">
+            <span class="num">4</span>
+            <h3>Intent and practicalities</h3>
+            <span class="cnt" data-count="intent"></span>
+          </div>
+          <div class="block-body" data-block="intent">
+            <div class="check">
+              <input type="checkbox" id="i1" data-est data-persist="i1" />
+              <label for="i1">I have considered whether beneficiaries should receive capital directly or through a structure<span class="sub">Timing and structure change what an inheritance does</span></label>
+            </div>
+            <div class="check">
+              <input type="checkbox" id="i2" data-est data-persist="i2" />
+              <label for="i2">There is enough liquidity for the estate to meet costs and tax without forcing a sale</label>
+            </div>
+            <div class="check">
+              <input type="checkbox" id="i3" data-est data-persist="i3" />
+              <label for="i3">Someone could find the accounts, policies and passwords<span class="sub">An asset nobody knows about is an asset nobody claims</span></label>
+            </div>
+            <div class="check">
+              <input type="checkbox" id="i4" data-est data-persist="i4" />
+              <label for="i4">I have told the people affected what to expect<span class="sub">Most disputes are about surprise, not about the amount</span></label>
+            </div>
+          </div>
+        </div>
+
+        <div class="progress-wrap" style="margin-top: 26px">
+          <span class="k">Checklist complete</span>
+          <span class="big" id="o-count">0 of 17</span>
+          <div class="track"><i id="o-track"></i></div>
+          <p id="o-note"></p>
+        </div>
+
+        <hr class="rule" />
+
+        <div class="card card-green">
+          <h3 class="step-h">The one test worth applying</h3>
+          <p class="muted" style="margin-top: 10px">
+            Take your largest three assets. For each, name the document that decides where it goes —
+            the will, a nomination, the title, or a deed. If you cannot name it for all three, that
+            is the gap, and it is usually resolved in a single conversation between your adviser and
+            your estate lawyer.
+          </p>
+        </div>
+
+        <div class="disclaimer" style="margin-top: 32px">
+          <b>General information only, and not legal advice.</b> Estate planning involves succession
+          law, which differs between Australian states and territories, as well as tax and
+          superannuation law. The descriptions here are general, simplified and subject to exceptions
+          — the treatment of any particular asset depends on how it is held, the terms of the
+          relevant trust deed or policy, and your personal circumstances. Wills, powers of attorney,
+          binding nominations and trust succession should be prepared or reviewed by a qualified
+          estate lawyer, with tax and superannuation input where relevant. Nothing here is a
+          recommendation about any product, nomination or structure.
+        </div>
+
+        <div class="row no-print" style="margin-top: 26px">
+          <button class="btn btn-outline btn-sm" data-print>Print or save as PDF</button>
+          <button class="btn btn-ghost btn-sm" data-clear>Clear my answers</button>
+        </div>
+      </div>
+
+      <div data-sheet-foot></div>
+    </article>
+
+    <script type="module">
+      import { mountSheet, wirePrint, persistFields } from '../assets/sheet.js'
+
+      mountSheet({ no: '10', kind: 'Checklist' })
+      wirePrint()
+
+      const boxes = Array.from(document.querySelectorAll('[data-est]'))
+
+      function sync() {
+        const done = boxes.filter((b) => b.checked).length
+        const total = boxes.length
+
+        document.querySelectorAll('[data-count]').forEach((c) => {
+          const body = document.querySelector(`[data-block="${c.dataset.count}"]`)
+          const b = Array.from(body.querySelectorAll('[data-est]'))
+          c.textContent = `${b.filter((x) => x.checked).length} / ${b.length}`
+        })
+
+        document.getElementById('o-count').textContent = `${done} of ${total}`
+        document.getElementById('o-track').style.transform = `scaleX(${(done / total).toFixed(3)})`
+
+        const note = document.getElementById('o-note')
+        if (done === total) {
+          note.textContent =
+            'Everything on this list is current. The remaining work is a review date — most of these go out of date through life events rather than through time.'
+        } else if (done === 0) {
+          note.textContent =
+            'Nothing ticked yet. Start with section two: beneficiary nominations are the single most common gap, and usually the fastest to close.'
+        } else {
+          const left = total - done
+          note.textContent = `${left} ${left === 1 ? 'item' : 'items'} still open. Print this page and bring the unticked ones — every one of them is a question with a definite answer that simply has not been checked.`
+        }
+      }
+
+      boxes.forEach((b) => b.addEventListener('change', sync))
+      persistFields('estate-checklist')
+      sync()
+    </script>
+  </body>
+</html>

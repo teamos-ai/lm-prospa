@@ -1,0 +1,1310 @@
+<!DOCTYPE html>
+<html lang="en-AU">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>The Executive Wealth Score — Prospa Financial</title>
+    <meta
+      name="description"
+      content="A three-minute, self-scored review of how deliberately your financial strategy is working across six areas. General information only."
+    />
+    <link rel="icon" type="image/svg+xml" href="../assets/favicon.svg" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="../assets/prospa.css" />
+    <style>
+      /* ---- Quiz shell ---- */
+      .quiz-top {
+        padding: 44px 64px 0;
+      }
+      .progress {
+        margin: 28px 0 0;
+      }
+      .progress-track {
+        height: 5px;
+        border-radius: 3px;
+        background: var(--line);
+        overflow: hidden;
+      }
+      .progress-fill {
+        height: 100%;
+        background: var(--green);
+        border-radius: 3px;
+        transform-origin: left center;
+        transform: scaleX(0);
+        transition: transform var(--dur-reveal) var(--ease);
+      }
+      .progress-meta {
+        display: flex;
+        justify-content: space-between;
+        align-items: baseline;
+        gap: 14px;
+        margin-bottom: 10px;
+        font-family: 'JetBrains Mono', monospace;
+        font-size: 11.5px;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        color: var(--gray);
+      }
+      .progress-meta b {
+        color: var(--teal);
+        font-weight: 500;
+      }
+
+      /* ---- Steps ---- */
+      .step {
+        display: none;
+        animation: rise var(--dur-reveal) var(--ease) both;
+      }
+      .step.on {
+        display: block;
+      }
+      @keyframes rise {
+        from {
+          opacity: 0;
+          transform: translateY(10px);
+        }
+        to {
+          opacity: 1;
+          transform: none;
+        }
+      }
+
+      .q {
+        padding: 30px 0;
+        border-bottom: 1px solid var(--line);
+      }
+      .q:last-of-type {
+        border-bottom: none;
+      }
+      .q-head {
+        display: flex;
+        gap: 14px;
+        align-items: flex-start;
+        margin-bottom: 18px;
+      }
+      .q-head p {
+        font-size: 17px;
+        font-weight: 600;
+        color: var(--ink);
+        line-height: 1.45;
+        padding-top: 4px;
+      }
+
+      /* ---- Option cards ---- */
+      .opts {
+        display: grid;
+        gap: 10px;
+        margin-left: 48px;
+      }
+      .opt {
+        display: flex;
+        align-items: center;
+        gap: 13px;
+        padding: 14px 18px;
+        border: 1.5px solid var(--line);
+        border-radius: var(--r-sm);
+        background: #fff;
+        cursor: pointer;
+        font-size: 15.5px;
+        color: var(--slate);
+        text-align: left;
+        font-family: 'Poppins', sans-serif;
+        line-height: 1.45;
+        transition: border-color var(--dur-snap) var(--ease),
+          background var(--dur-snap) var(--ease), transform var(--dur-snap) var(--ease);
+      }
+      .opt:hover {
+        border-color: var(--accent);
+        background: var(--bg2);
+      }
+      .opt .mark {
+        width: 11px;
+        height: 11px;
+        border-radius: 50%;
+        flex: none;
+        border: 2px solid var(--line);
+        transition: background var(--dur-snap) var(--ease),
+          border-color var(--dur-snap) var(--ease), box-shadow var(--dur-snap) var(--ease);
+      }
+      .opt[aria-pressed='true'] {
+        border-color: var(--teal);
+        background: var(--bg2);
+      }
+      .opt[aria-pressed='true'] .mark {
+        border-color: var(--teal);
+        background: var(--teal);
+        box-shadow: 0 0 0 3px rgba(19, 95, 105, 0.15);
+      }
+      .opt[data-v='1'][aria-pressed='true'] {
+        border-color: var(--green-600);
+      }
+      .opt[data-v='1'][aria-pressed='true'] .mark {
+        border-color: var(--green-600);
+        background: var(--green-600);
+        box-shadow: 0 0 0 3px rgba(93, 206, 56, 0.2);
+      }
+      .opt[data-v='0'][aria-pressed='true'] {
+        border-color: var(--ember);
+      }
+      .opt[data-v='0'][aria-pressed='true'] .mark {
+        border-color: var(--ember);
+        background: var(--ember);
+        box-shadow: 0 0 0 3px rgba(198, 90, 30, 0.18);
+      }
+      .opt:focus-visible {
+        outline: 2px solid var(--teal);
+        outline-offset: 2px;
+      }
+
+      .nav-row {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 16px;
+        padding: 34px 0 0;
+        margin-top: 8px;
+        border-top: 1px solid var(--line);
+      }
+      .nav-note {
+        font-size: 13px;
+        color: var(--gray);
+      }
+
+      /* ---- Horizon step ---- */
+      .horizon {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 26px;
+        margin-bottom: 8px;
+      }
+      .age-val {
+        font-family: 'JetBrains Mono', monospace;
+        font-size: 30px;
+        font-weight: 500;
+        color: var(--teal);
+        font-variant-numeric: tabular-nums;
+      }
+
+      /* ---- Result ---- */
+      .score-hero {
+        display: grid;
+        grid-template-columns: 220px 1fr;
+        gap: 44px;
+        align-items: center;
+      }
+      .dial {
+        position: relative;
+        width: 220px;
+        height: 220px;
+      }
+      .dial svg {
+        transform: rotate(-90deg);
+        display: block;
+      }
+      .dial-ring {
+        transition: stroke-dashoffset 1.1s var(--ease);
+      }
+      .dial-face {
+        position: absolute;
+        inset: 0;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        gap: 2px;
+      }
+      .dial-num {
+        font-family: 'JetBrains Mono', monospace;
+        font-size: 56px;
+        font-weight: 500;
+        color: var(--ink);
+        letter-spacing: -0.04em;
+        line-height: 1;
+        font-variant-numeric: tabular-nums;
+      }
+      .dial-of {
+        font-family: 'JetBrains Mono', monospace;
+        font-size: 11px;
+        letter-spacing: 0.14em;
+        text-transform: uppercase;
+        color: var(--gray);
+      }
+      .band-name {
+        font-size: 34px;
+        letter-spacing: -0.025em;
+        margin: 10px 0 12px;
+      }
+      .band-copy {
+        color: var(--gray);
+        font-size: 16.5px;
+      }
+
+      /* ---- Pillar bars ---- */
+      .pillar {
+        display: grid;
+        grid-template-columns: 1fr 64px;
+        gap: 10px 16px;
+        align-items: center;
+        padding: 15px 0;
+        border-bottom: 1px solid var(--line-2);
+      }
+      .pillar:last-child {
+        border-bottom: none;
+      }
+      .pillar-name {
+        font-size: 15.5px;
+        font-weight: 600;
+        color: var(--ink);
+      }
+      .pillar-name span {
+        display: block;
+        font-size: 12px;
+        font-weight: 400;
+        color: var(--gray);
+        margin-top: 2px;
+      }
+      .pillar-pts {
+        font-family: 'JetBrains Mono', monospace;
+        font-size: 14px;
+        color: var(--teal);
+        text-align: right;
+        font-variant-numeric: tabular-nums;
+      }
+      .pillar-track {
+        grid-column: 1 / -1;
+        height: 7px;
+        border-radius: 4px;
+        background: var(--line);
+        overflow: hidden;
+      }
+      .pillar-fill {
+        height: 100%;
+        border-radius: 4px;
+        transform-origin: left center;
+        transform: scaleX(0);
+        transition: transform 0.9s var(--ease);
+      }
+
+      /* ---- Pattern callout ---- */
+      .pattern {
+        border-radius: var(--r-lg);
+        padding: 30px 32px;
+        background: var(--bg2);
+        border-left: none;
+      }
+      .pattern-flag {
+        background: var(--ember-soft);
+      }
+      .pattern h3 {
+        font-size: 21px;
+        margin-bottom: 10px;
+      }
+      .pattern p {
+        color: var(--slate);
+        font-size: 15.5px;
+      }
+      .pattern p + p {
+        margin-top: 12px;
+      }
+
+      .gap-item {
+        display: flex;
+        gap: 16px;
+        align-items: flex-start;
+        padding: 20px 0;
+        border-bottom: 1px solid var(--line-2);
+      }
+      .gap-item:last-child {
+        border-bottom: none;
+      }
+      .gap-item b {
+        display: block;
+        color: var(--ink);
+        font-size: 16px;
+        margin-bottom: 5px;
+      }
+      .gap-item p {
+        color: var(--gray);
+        font-size: 14.5px;
+      }
+
+      .cta-panel {
+        background: var(--teal);
+        border-radius: var(--r-xl);
+        padding: 44px 48px;
+        color: #fff;
+      }
+      .cta-panel h3 {
+        color: #fff;
+        font-size: 26px;
+        letter-spacing: -0.02em;
+        margin-bottom: 12px;
+      }
+      .cta-panel p {
+        color: #cfe0e2;
+        font-size: 16px;
+        max-width: 56ch;
+      }
+
+      @media (max-width: 760px) {
+        .quiz-top {
+          padding: 28px 24px 0;
+        }
+        .opts {
+          margin-left: 0;
+        }
+        .q-head p {
+          font-size: 16px;
+        }
+        .score-hero {
+          grid-template-columns: 1fr;
+          gap: 26px;
+          justify-items: center;
+          text-align: center;
+        }
+        .horizon {
+          grid-template-columns: 1fr;
+        }
+        .cta-panel {
+          padding: 32px 26px;
+        }
+        .band-name {
+          font-size: 27px;
+        }
+      }
+
+      @media print {
+        .quiz-top {
+          padding: 0;
+        }
+        .step {
+          display: none !important;
+        }
+        .step.on {
+          display: block !important;
+        }
+        .score-hero {
+          grid-template-columns: 180px 1fr;
+          gap: 30px;
+        }
+        .dial,
+        .dial svg {
+          width: 180px;
+          height: 180px;
+        }
+        .cta-panel {
+          background: var(--bg2);
+          color: var(--slate);
+        }
+        .cta-panel h3 {
+          color: var(--ink);
+        }
+        .cta-panel p {
+          color: var(--gray);
+        }
+        .pillar-fill,
+        .dial-ring {
+          transition: none;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div data-sheet-back></div>
+
+    <article class="sheet">
+      <div data-sheet-masthead></div>
+
+      <!-- ============ INTRO ============ -->
+      <section class="step on" id="step-intro">
+        <div class="pad">
+          <div class="eyebrow">Session tool 01 · Self-assessment</div>
+          <h1 class="doc-title">The Executive <em>Wealth Score</em></h1>
+          <p class="lede">
+            Eighteen questions. About three minutes. It does not measure how much you have —
+            it measures how <strong>deliberately</strong> what you have is working, across the six
+            areas that decide whether a strong income becomes lasting wealth.
+          </p>
+
+          <div class="grid g3" style="margin: 38px 0 34px">
+            <div class="card card-tint">
+              <div class="stat">
+                <span class="k">Takes</span><span class="figure fig-lg">3 min</span>
+              </div>
+              <p class="small muted" style="margin-top: 10px">
+                18 questions across 6 areas, plus two about your horizon.
+              </p>
+            </div>
+            <div class="card card-tint">
+              <div class="stat">
+                <span class="k">You get</span><span class="figure fig-lg">/100</span>
+              </div>
+              <p class="small muted" style="margin-top: 10px">
+                A score, a six-part profile, your two widest gaps and the pattern behind them.
+              </p>
+            </div>
+            <div class="card card-tint">
+              <div class="stat">
+                <span class="k">Stays</span><span class="figure fig-lg">Private</span>
+              </div>
+              <p class="small muted" style="margin-top: 10px">
+                Scored in your browser. Nothing is sent anywhere, by us or to us.
+              </p>
+            </div>
+          </div>
+
+          <div class="card" style="margin-bottom: 30px">
+            <h3 class="step-h">How it is scored</h3>
+            <p class="small muted" style="margin-bottom: 18px">
+              Each question has three answers worth 1, ½ or 0. Each area carries a weight, because
+              they do not matter equally when you are in your peak earning years. The weights add to 100.
+            </p>
+            <div class="row" id="weights-preview"></div>
+          </div>
+
+          <div class="disclaimer" style="margin-bottom: 32px">
+            <b>What this is and is not.</b> This is an educational self-assessment. It records
+            your own view of your arrangements — not a review of your finances, not a measure of
+            financial health, and not personal advice. It does not consider your objectives,
+            financial situation or needs, and no answer leads to a product recommendation.
+            There is no good or bad score. The score exists to show you which questions deserve
+            a closer look.
+          </div>
+
+          <button class="btn btn-primary" data-go="0">
+            Start the assessment
+            <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                 stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <path d="M5 12h14M12 5l7 7-7 7" />
+            </svg>
+          </button>
+        </div>
+      </section>
+
+      <!-- ============ QUIZ (built by script) ============ -->
+      <div id="quiz"></div>
+
+      <!-- ============ RESULT ============ -->
+      <section class="step" id="step-result">
+        <div class="pad">
+          <div class="eyebrow">Your result</div>
+
+          <div class="score-hero">
+            <div class="dial">
+              <svg width="220" height="220" viewBox="0 0 220 220" aria-hidden="true">
+                <circle cx="110" cy="110" r="96" fill="none" stroke="#e6ecec" stroke-width="14" />
+                <circle
+                  id="dial-ring"
+                  class="dial-ring"
+                  cx="110" cy="110" r="96"
+                  fill="none" stroke="#135f69" stroke-width="14" stroke-linecap="round"
+                  stroke-dasharray="603.2" stroke-dashoffset="603.2"
+                />
+              </svg>
+              <div class="dial-face">
+                <span class="dial-num" id="dial-num">0</span>
+                <span class="dial-of">out of 100</span>
+              </div>
+            </div>
+            <div>
+              <span class="badge badge-teal" id="band-tag"><i class="d"></i><span></span></span>
+              <h2 class="band-name" id="band-name">—</h2>
+              <p class="band-copy" id="band-copy"></p>
+            </div>
+          </div>
+
+          <hr class="rule" />
+
+          <div class="sec-head">
+            <h2>Where the score came from</h2>
+            <p>
+              Six areas, weighted. The shape of this profile matters more than the total — a high
+              score in one area rarely compensates for a low one in another.
+            </p>
+          </div>
+          <div id="pillars"></div>
+
+          <hr class="rule" />
+
+          <div class="sec-head">
+            <h2>The pattern in your answers</h2>
+            <p>These read the relationship between your areas, not just the low ones.</p>
+          </div>
+          <div class="stack" id="patterns"></div>
+
+          <hr class="rule" />
+
+          <div class="sec-head">
+            <h2>Your two widest gaps</h2>
+            <p>The specific questions where you were least certain, and why each one matters.</p>
+          </div>
+          <div id="gaps"></div>
+
+          <hr class="rule" />
+
+          <div class="card card-green" id="horizon-note" hidden></div>
+
+          <div class="cta-panel" style="margin-top: 32px">
+            <h3>The one question worth taking further</h3>
+            <p id="one-question" style="margin-bottom: 24px"></p>
+            <div class="row no-print">
+              <a class="btn btn-primary" href="https://www.prospafinancial.com.au" target="_blank" rel="noopener noreferrer">
+                Book a complimentary consultation
+              </a>
+              <button class="btn btn-ghost" style="color: #fff" data-print>
+                Print or save as PDF
+              </button>
+            </div>
+            <p class="tiny" style="margin-top: 18px; color: #9fbdc0">
+              A confidential, no-obligation conversation. Bring this page — the gaps above are the agenda.
+            </p>
+          </div>
+
+          <div class="row no-print" style="margin-top: 28px">
+            <button class="btn btn-outline btn-sm" data-restart>Start again</button>
+            <a class="btn btn-ghost btn-sm" href="02-freedom-number.html">
+              Next: calculate your Financial Freedom Number
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                   stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <path d="M5 12h14M12 5l7 7-7 7" />
+              </svg>
+            </a>
+          </div>
+
+          <div class="disclaimer" style="margin-top: 32px">
+            <b>About this score.</b> It reflects what you reported about your own arrangements on
+            <span id="result-date"></span>. It is general information only, is not a review of your
+            financial position, and is not personal advice. The weightings are Prospa Financial's
+            educational judgement about what tends to matter during peak earning years — they are
+            not a regulatory, industry or statistical standard.
+          </div>
+        </div>
+      </section>
+
+      <div data-sheet-foot></div>
+    </article>
+
+    <script type="module">
+      import { mountSheet, wirePrint, store } from '../assets/sheet.js'
+
+      mountSheet({ no: '01', kind: 'Scored assessment' })
+
+      /* ==========================================================
+         THE MODEL
+         Six areas. Weights total 100. Three questions each,
+         answered 1 / 0.5 / 0. Area points = mean(answers) × weight.
+         The full specification lives in SCORING.md.
+         ========================================================== */
+
+      const PILLARS = [
+        {
+          id: 'cashflow',
+          name: 'Cash Flow & Surplus',
+          blurb: 'What your income actually leaves behind',
+          weight: 18,
+          why: 'Surplus is the raw material. Without it, every other area is theoretical.',
+          questions: [
+            {
+              q: 'Do you know how much surplus cash flow you create each year, after tax, lifestyle and debt commitments?',
+              opts: [
+                ['I know the number and I track it.', 1],
+                ['Roughly — I could estimate it within reason.', 0.5],
+                ['No. I would be guessing.', 0],
+              ],
+              gap: 'A surplus you cannot name is a surplus you cannot direct. This is usually the first number an adviser asks for, and the one most high earners cannot produce.',
+            },
+            {
+              q: 'Where does that surplus end up?',
+              opts: [
+                ['It is directed to wealth creation automatically, before I see it.', 1],
+                ['Some is invested; the rest varies month to month.', 0.5],
+                ['It tends to absorb into lifestyle.', 0],
+              ],
+              gap: 'Lifestyle expands to meet income unless something structural stops it. Automation is the difference between intending to invest and investing.',
+            },
+            {
+              q: 'Do you have a deliberate plan for bonuses, incentives or other irregular income?',
+              opts: [
+                ['Yes — it is decided before the money arrives.', 1],
+                ['I decide at the time, case by case.', 0.5],
+                ['No plan. It usually gets absorbed.', 0],
+              ],
+              gap: 'Irregular income is where the largest single decisions get made fastest and with the least thought. A rule set in advance removes the decision from the moment.',
+            },
+          ],
+        },
+        {
+          id: 'super',
+          name: 'Superannuation',
+          blurb: 'The most tax-effective structure you already own',
+          weight: 15,
+          why: 'For most high earners this is the largest asset outside the home — and the least examined.',
+          questions: [
+            {
+              q: 'Is your current contribution strategy making effective use of the opportunities available to you?',
+              opts: [
+                ['Yes — I have reviewed caps, salary sacrifice and carry-forward.', 1],
+                ['I contribute above the minimum, but have not reviewed it recently.', 0.5],
+                ['I receive employer contributions and nothing else.', 0],
+              ],
+              gap: 'Concessional caps are use-it-or-lose-it, with a limited carry-forward window. Unused capacity quietly expires each year.',
+            },
+            {
+              q: 'Do you know what your super is invested in, the level of risk you are taking and the fees you pay?',
+              opts: [
+                ['Yes — option, underlying asset mix and fees.', 1],
+                ['I know my option name, not the detail behind it.', 0.5],
+                ['I am in the default and have not looked.', 0],
+              ],
+              gap: 'A default option is a decision made by someone who has never met you. Over a 20-year horizon the difference compounds into real money.',
+            },
+            {
+              q: 'Do you know what tax applies to your super contributions at your income level?',
+              opts: [
+                ['Yes — including whether Division 293 applies to me.', 1],
+                ['I know contributions are taxed concessionally, but not the thresholds.', 0.5],
+                ['No.', 0],
+              ],
+              gap: 'Above a combined-income threshold, concessional contributions are taxed at a higher rate. It changes the arithmetic of salary sacrifice, and most people on high incomes have never checked where they sit.',
+            },
+          ],
+        },
+        {
+          id: 'structure',
+          name: 'Investments & Structure',
+          blurb: 'Not what you own — where it is held, and why',
+          weight: 20,
+          why: 'At high marginal rates, the ownership structure can matter as much as the investment itself.',
+          questions: [
+            {
+              q: 'Are your investments held in structures chosen deliberately for your goals, tax position, access needs and family circumstances?',
+              opts: [
+                ['Yes — each holding sits where it does for a reason.', 1],
+                ['Partly. Some were deliberate; some simply happened.', 0.5],
+                ['They are wherever they ended up.', 0],
+              ],
+              gap: 'Structure is decided once and lived with for decades. Unwinding it later can trigger the very tax it was meant to manage.',
+            },
+            {
+              q: 'Do you have a documented investment strategy, rather than a collection of unrelated assets?',
+              opts: [
+                ['Yes — written down, with a target allocation.', 1],
+                ['It is in my head, loosely.', 0.5],
+                ['No — I hold a collection of unrelated assets.', 0],
+              ],
+              gap: 'Without a written strategy there is nothing to measure a new opportunity against, so the portfolio becomes a record of past enthusiasms.',
+            },
+            {
+              q: 'Do you understand the tax consequence of where your next investment dollar goes?',
+              opts: [
+                ['Yes — I compare the options before committing.', 1],
+                ['Broadly, but I would want it checked.', 0.5],
+                ['No — I default to whatever is easiest.', 0],
+              ],
+              gap: 'The same dollar into the mortgage, super, or an investment outside super produces materially different after-tax outcomes. The easiest option is rarely the most efficient one.',
+            },
+          ],
+        },
+        {
+          id: 'freedom',
+          name: 'Financial Independence',
+          blurb: 'The number, the date, and the years in between',
+          weight: 20,
+          why: 'Without a destination, there is no way to know whether the strategy is working.',
+          questions: [
+            {
+              q: 'Have you calculated the annual lifestyle income you would want if work became optional?',
+              opts: [
+                ['Yes — a specific annual figure.', 1],
+                ['A rough range.', 0.5],
+                ['I have never put a number on it.', 0],
+              ],
+              gap: 'Everything else is arithmetic once this number exists. Without it, "enough" stays permanently undefined — and therefore never reached.',
+            },
+            {
+              q: 'Do you know approximately how much investable capital that lifestyle would require?',
+              opts: [
+                ['Yes — I know my target capital figure.', 1],
+                ['I have seen rules of thumb, but have not run my own.', 0.5],
+                ['No idea.', 0],
+              ],
+              gap: 'The capital figure is usually larger than people expect, and the earlier it is known the more options remain for closing the distance.',
+            },
+            {
+              q: 'Do you have a plan for the years between your preferred work-optional age and the age you can access super?',
+              opts: [
+                ['Yes — I know what funds that period.', 1],
+                ['I have thought about it, but not planned it.', 0.5],
+                ['I had not considered that gap.', 0],
+              ],
+              gap: 'This is the single most common blind spot among high earners. Wealth concentrated in super and the family home can leave someone asset-rich and still unable to stop working.',
+            },
+          ],
+        },
+        {
+          id: 'protection',
+          name: 'Protection & Resilience',
+          blurb: 'What happens if the income stops',
+          weight: 15,
+          why: 'For a high earner still accumulating, future income is the largest asset on the balance sheet.',
+          questions: [
+            {
+              q: 'If your income stopped unexpectedly, how long could your current lifestyle and commitments continue?',
+              opts: [
+                ['Twelve months or more, without selling long-term assets.', 1],
+                ['A few months.', 0.5],
+                ['Not long — or I do not know.', 0],
+              ],
+              gap: 'The gap between income stopping and a benefit starting is funded from somewhere. If it is not planned, it is funded by selling something at the worst possible time.',
+            },
+            {
+              q: 'Have you reviewed life, TPD, trauma and income protection against your current income, debt and family responsibilities?',
+              opts: [
+                ['Yes — reviewed within the last two years.', 1],
+                ['I have cover, but it has been years since I checked it.', 0.5],
+                ['I rely on whatever sits inside my super.', 0],
+              ],
+              gap: 'Cover arranged against an earlier income rarely matches a later one, and the terms available in the market have changed materially since 2021.',
+            },
+            {
+              q: 'Is there enough liquidity for an unexpected event without selling long-term assets at the wrong time?',
+              opts: [
+                ['Yes — a defined reserve.', 1],
+                ['Some, but I would be stretched.', 0.5],
+                ['No — I would have to sell or borrow.', 0],
+              ],
+              gap: 'Forced selling converts a temporary problem into a permanent loss. Liquidity is what buys the right to wait.',
+            },
+          ],
+        },
+        {
+          id: 'estate',
+          name: 'Estate & Legacy',
+          blurb: 'Where it all actually lands',
+          weight: 12,
+          why: 'The least urgent area, and the one where mistakes are discovered by someone else.',
+          questions: [
+            {
+              q: 'Are your will, powers of attorney and super beneficiary nominations current and aligned with each other?',
+              opts: [
+                ['Yes — all three, reviewed recently.', 1],
+                ['A will exists, but the rest is unclear or out of date.', 0.5],
+                ['No, or I am not sure.', 0],
+              ],
+              gap: 'These three documents can contradict one another, and the contradiction only surfaces when nobody is left to resolve it.',
+            },
+            {
+              q: 'Do you understand how your major assets would actually pass to your intended beneficiaries?',
+              opts: [
+                ['Yes — including that super is dealt with outside my will.', 1],
+                ['I assume my will covers everything.', 0.5],
+                ['I have not thought it through.', 0],
+              ],
+              gap: 'Superannuation is not automatically an estate asset, and jointly held property can pass outside a will entirely. A will alone often does not control the largest assets.',
+            },
+            {
+              q: 'Have you considered how you want wealth to support the next generation, rather than simply what they may inherit?',
+              opts: [
+                ['Yes — the intent is clear and documented.', 1],
+                ['I have views, but nothing is set up.', 0.5],
+                ['Not yet.', 0],
+              ],
+              gap: 'Timing and structure change what an inheritance does. Intent that is never documented becomes someone else’s interpretation.',
+            },
+          ],
+        },
+      ]
+
+      const BANDS = [
+        {
+          min: 0,
+          max: 39,
+          name: 'Income Rich, Structure Poor',
+          copy:
+            'Your income is doing the heavy lifting; the structure around it has not caught up. That is a very common position for someone whose earnings grew faster than their planning — and it is the position where small structural changes make the largest difference.',
+        },
+        {
+          min: 40,
+          max: 59,
+          name: 'Accumulating by Default',
+          copy:
+            'You are building assets, but largely through momentum rather than design. The pieces exist; what is missing is the thread that connects them to a defined outcome.',
+        },
+        {
+          min: 60,
+          max: 74,
+          name: 'Building Deliberately',
+          copy:
+            'Most of your decisions are considered ones. The remaining value is concentrated in the one or two areas below — and in making sure the areas work together rather than in parallel.',
+        },
+        {
+          min: 75,
+          max: 89,
+          name: 'Coordinated Strategy',
+          copy:
+            'Your arrangements are deliberate and broadly joined up. From here the questions shift from building to refining: tax efficiency, sequencing, access timing and what happens after you.',
+        },
+        {
+          min: 90,
+          max: 100,
+          name: 'Independent by Design',
+          copy:
+            'By your own account, very little is accidental. The useful questions now are stress tests: what the plan does in a bad decade, and whether it still holds if circumstances change.',
+        },
+      ]
+
+      /* Pattern rules read relationships between areas, in priority order.
+         f = each area's fraction (0–1). Up to two fire. */
+      const PATTERNS = [
+        {
+          id: 'preservation-trap',
+          flag: true,
+          test: (f, ctx) => f.super >= 0.66 && f.freedom <= 0.5 && ctx.targetAge < 60,
+          title: 'The preservation age trap',
+          body: [
+            'Your superannuation is in better shape than your plan for independence — and you would like work to become optional before you can touch it.',
+            'That combination produces a specific problem: the wealth exists, but not in a form you can use when you want to use it. The question is not how much you have. It is where it sits, and when it unlocks.',
+          ],
+        },
+        {
+          id: 'structure-poor',
+          flag: true,
+          test: (f) => f.cashflow <= 0.5 && f.structure <= 0.5,
+          title: 'Surplus without a destination',
+          body: [
+            'Two areas are low together: what your income leaves behind, and where that money is directed.',
+            'When neither the surplus nor its destination is defined, strong earnings produce a comfortable lifestyle rather than a growing balance sheet. This is the most reversible pattern on this page — it is a structural fix, not a sacrifice.',
+          ],
+        },
+        {
+          id: 'undefended',
+          flag: true,
+          test: (f) => f.protection <= 0.5 && (f.cashflow >= 0.66 || f.structure >= 0.66),
+          title: 'A well-built, lightly defended balance sheet',
+          body: [
+            'You are building capably, but the protection around it has not kept pace.',
+            'While you are still accumulating, your future income is the largest asset you own, and it is the one most likely to be uninsured against the events that would actually stop it.',
+          ],
+        },
+        {
+          id: 'no-destination',
+          flag: false,
+          test: (f) => f.freedom <= 0.34,
+          title: 'No destination has been set',
+          body: [
+            'Independence is the lowest-scoring area, which means the strategy currently has no finish line to be measured against.',
+            'Until there is a number and a date, every financial decision is judged on whether it feels sensible rather than on whether it moves you closer to something.',
+          ],
+        },
+        {
+          id: 'collection',
+          flag: false,
+          test: (f) => f.structure <= 0.5 && f.super >= 0.66 && f.cashflow >= 0.66,
+          title: 'A collection, not a portfolio',
+          body: [
+            'You generate surplus and your super is considered, but the assets outside it were not assembled against a single strategy.',
+            'A portfolio has an intended shape; a collection is a record of individually reasonable decisions. The difference shows up in tax, in concentration risk, and in how easily you can change direction.',
+          ],
+        },
+        {
+          id: 'unfinished',
+          flag: false,
+          test: (f, ctx) => f.estate <= 0.34 && ctx.overall >= 0.6,
+          title: 'Coordinated everywhere except the end',
+          body: [
+            'Most of your arrangements are deliberate, but how it all lands is the exception.',
+            'Estate is the one area where the cost of leaving it is paid entirely by other people, and where the documents most often contradict one another without anyone noticing.',
+          ],
+        },
+        {
+          id: 'coordinated',
+          flag: false,
+          test: (f) => Object.values(f).every((v) => v >= 0.66),
+          title: 'Every area is working',
+          body: [
+            'No area falls behind the others, which is uncommon and worth acknowledging.',
+            'At this level the remaining value is rarely in doing more. It is in sequencing, tax efficiency, and testing whether the plan still holds under conditions you have not yet experienced.',
+          ],
+        },
+      ]
+
+      /* ========================= STATE ========================= */
+
+      // Every question, flattened, each carrying the keys needed to score it.
+      const FLAT = PILLARS.flatMap((p) =>
+        p.questions.map((q, qi) => ({ ...q, pid: p.id, pname: p.name, qi, w: p.weight }))
+      )
+      const saved = store('wealth-score')
+      const state = { answers: {}, currentAge: 45, targetAge: 58 }
+
+      /* ===================== BUILD THE QUIZ ==================== */
+
+      const quiz = document.getElementById('quiz')
+      const totalSteps = PILLARS.length + 1
+
+      const progressHTML = (label, n) => `
+        <div class="quiz-top no-print">
+          <div class="progress">
+            <div class="progress-meta">
+              <span>${label}</span>
+              <span>Step <b>${n}</b> of ${totalSteps}</span>
+            </div>
+            <div class="progress-track">
+              <div class="progress-fill" style="transform: scaleX(${n / totalSteps})"></div>
+            </div>
+          </div>
+        </div>`
+
+      // Step 0 — horizon
+      const horizon = document.createElement('section')
+      horizon.className = 'step'
+      horizon.id = 'step-0'
+      horizon.innerHTML = `
+        ${progressHTML('Your horizon', 1)}
+        <div class="pad">
+          <div class="eyebrow">First, two about timing</div>
+          <h2 class="sec-head" style="font-size: 30px; letter-spacing: -0.025em; margin-bottom: 14px">
+            When would you like work to become a choice?
+          </h2>
+          <p class="lede" style="margin-bottom: 36px">
+            These two answers are not scored. They set the context for the rest, because the
+            distance between these ages decides which questions matter most.
+          </p>
+          <div class="horizon">
+            <div class="field">
+              <label for="age-now">Your age today</label>
+              <span class="age-val" id="age-now-val">45</span>
+              <input type="range" id="age-now" min="25" max="70" step="1" value="45" />
+            </div>
+            <div class="field">
+              <label for="age-target">Age you would like work to become optional</label>
+              <span class="age-val" id="age-target-val">58</span>
+              <input type="range" id="age-target" min="40" max="75" step="1" value="58" />
+            </div>
+          </div>
+          <div class="card card-tint" style="margin-top: 26px">
+            <p class="small" id="horizon-live"></p>
+          </div>
+          <div class="nav-row">
+            <button class="btn btn-ghost btn-sm" data-go="-1">Back</button>
+            <button class="btn btn-primary" data-go="1">
+              Continue
+              <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                   stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <path d="M5 12h14M12 5l7 7-7 7" />
+              </svg>
+            </button>
+          </div>
+        </div>`
+      quiz.appendChild(horizon)
+
+      // Steps 1..6 — one per pillar
+      PILLARS.forEach((p, pi) => {
+        const sec = document.createElement('section')
+        sec.className = 'step'
+        sec.id = 'step-' + (pi + 1)
+        const qs = p.questions
+          .map((q, qi) => {
+            const n = pi * 3 + qi + 1
+            const opts = q.opts
+              .map(
+                ([label, v]) => `
+                  <button type="button" class="opt" role="button" aria-pressed="false"
+                          data-q="${p.id}:${qi}" data-v="${v}">
+                    <span class="mark" aria-hidden="true"></span>
+                    <span>${label}</span>
+                  </button>`
+              )
+              .join('')
+            return `
+              <div class="q">
+                <div class="q-head">
+                  <span class="num">${String(n).padStart(2, '0')}</span>
+                  <p>${q.q}</p>
+                </div>
+                <div class="opts" role="group" aria-label="Question ${n}">${opts}</div>
+              </div>`
+          })
+          .join('')
+
+        sec.innerHTML = `
+          ${progressHTML(p.name, pi + 2)}
+          <div class="pad">
+            <div class="eyebrow">Area ${pi + 1} of 6 · Weighted ${p.weight} of 100</div>
+            <h2 class="sec-head" style="font-size: 30px; letter-spacing: -0.025em; margin-bottom: 12px">
+              ${p.name}
+            </h2>
+            <p class="lede">${p.why}</p>
+            ${qs}
+            <div class="nav-row">
+              <button class="btn btn-ghost btn-sm" data-go="${pi}">Back</button>
+              <div class="row">
+                <span class="nav-note" data-remaining="${p.id}"></span>
+                <button class="btn btn-primary" data-go="${pi + 2}" data-next="${p.id}" disabled>
+                  ${pi === PILLARS.length - 1 ? 'See my score' : 'Continue'}
+                  <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                       stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                    <path d="M5 12h14M12 5l7 7-7 7" />
+                  </svg>
+                </button>
+              </div>
+            </div>
+          </div>`
+        quiz.appendChild(sec)
+      })
+
+      /* ===================== INTERACTION ====================== */
+
+      // Weight chips on the intro
+      document.getElementById('weights-preview').innerHTML = PILLARS.map(
+        (p) => `<span class="badge badge-teal"><i class="d"></i>${p.name} · ${p.weight}</span>`
+      ).join('')
+
+      const steps = () => Array.from(document.querySelectorAll('.step'))
+
+      function show(n) {
+        const id = n === -1 ? 'step-intro' : n === totalSteps ? 'step-result' : 'step-' + n
+        steps().forEach((s) => s.classList.toggle('on', s.id === id))
+        window.scrollTo({ top: 0, behavior: 'smooth' })
+      }
+
+      document.addEventListener('click', (e) => {
+        const go = e.target.closest('[data-go]')
+        if (go) {
+          const n = Number(go.dataset.go)
+          if (n === totalSteps) render()
+          show(n)
+          return
+        }
+        const opt = e.target.closest('.opt')
+        if (opt) {
+          const [pid, qi] = opt.dataset.q.split(':')
+          state.answers[`${pid}:${qi}`] = Number(opt.dataset.v)
+          opt.parentElement.querySelectorAll('.opt').forEach((o) => o.setAttribute('aria-pressed', 'false'))
+          opt.setAttribute('aria-pressed', 'true')
+          save()
+          refreshGate(pid)
+        }
+        if (e.target.closest('[data-restart]')) {
+          saved.clear()
+          location.reload()
+        }
+      })
+
+      function refreshGate(pid) {
+        const p = PILLARS.find((x) => x.id === pid)
+        const done = p.questions.filter((_, i) => state.answers[`${pid}:${i}`] !== undefined).length
+        const left = p.questions.length - done
+        const btn = document.querySelector(`[data-next="${pid}"]`)
+        const note = document.querySelector(`[data-remaining="${pid}"]`)
+        if (btn) btn.disabled = left > 0
+        if (note) note.textContent = left > 0 ? `${left} to go` : ''
+      }
+
+      // Horizon sliders
+      const ageNow = document.getElementById('age-now')
+      const ageTarget = document.getElementById('age-target')
+      function syncHorizon() {
+        state.currentAge = Number(ageNow.value)
+        state.targetAge = Number(ageTarget.value)
+        document.getElementById('age-now-val').textContent = state.currentAge
+        document.getElementById('age-target-val').textContent = state.targetAge
+        const years = Math.max(state.targetAge - state.currentAge, 0)
+        const gap = Math.max(60 - state.targetAge, 0)
+        document.getElementById('horizon-live').innerHTML =
+          years === 0
+            ? 'You are at or past the age you nominated. The questions that follow are about whether the arrangements support that choice today.'
+            : `That gives you <b>${years} ${years === 1 ? 'year' : 'years'}</b> of deliberate decisions before your target date.` +
+              (gap > 0
+                ? ` Preservation age is 60 for everyone reaching it from 1 July 2024, so you have also nominated <b>${gap} ${gap === 1 ? 'year' : 'years'}</b> that superannuation cannot fund.`
+                : ' Your target sits at or after preservation age, so super can form part of the income from day one.')
+        save()
+      }
+      ageNow.addEventListener('input', syncHorizon)
+      ageTarget.addEventListener('input', syncHorizon)
+
+      function save() {
+        saved.write({ answers: state.answers, currentAge: state.currentAge, targetAge: state.targetAge })
+      }
+
+      // Restore a part-finished assessment
+      const prev = saved.read()
+      if (prev && prev.answers) {
+        Object.assign(state.answers, prev.answers)
+        state.currentAge = prev.currentAge ?? state.currentAge
+        state.targetAge = prev.targetAge ?? state.targetAge
+        ageNow.value = state.currentAge
+        ageTarget.value = state.targetAge
+        Object.entries(state.answers).forEach(([k, v]) => {
+          const el = document.querySelector(`.opt[data-q="${k}"][data-v="${v}"]`)
+          if (el) el.setAttribute('aria-pressed', 'true')
+        })
+        PILLARS.forEach((p) => refreshGate(p.id))
+      }
+      syncHorizon()
+      PILLARS.forEach((p) => refreshGate(p.id))
+
+      /* ======================= SCORING ======================== */
+
+      function compute() {
+        const fractions = {}
+        let total = 0
+        PILLARS.forEach((p) => {
+          const vals = p.questions.map((_, i) => state.answers[`${p.id}:${i}`] ?? 0)
+          const f = vals.reduce((a, b) => a + b, 0) / vals.length
+          fractions[p.id] = f
+          total += f * p.weight
+        })
+        const overall = total / 100
+        return { fractions, score: Math.round(total), overall }
+      }
+
+      function barColour(f) {
+        if (f >= 0.75) return 'var(--green)'
+        if (f >= 0.5) return 'var(--teal)'
+        if (f >= 0.25) return 'var(--amber)'
+        return 'var(--ember)'
+      }
+
+      function render() {
+        const { fractions, score, overall } = compute()
+        const ctx = { overall, targetAge: state.targetAge, currentAge: state.currentAge }
+        const band = BANDS.find((b) => score >= b.min && score <= b.max) || BANDS[0]
+
+        // Dial
+        const C = 2 * Math.PI * 96
+        const ring = document.getElementById('dial-ring')
+        ring.setAttribute('stroke-dasharray', C.toFixed(1))
+        ring.setAttribute('stroke-dashoffset', C.toFixed(1))
+        ring.setAttribute('stroke', barColour(overall))
+        requestAnimationFrame(() =>
+          setTimeout(() => ring.setAttribute('stroke-dashoffset', (C * (1 - score / 100)).toFixed(1)), 60)
+        )
+
+        // Count the number up
+        const num = document.getElementById('dial-num')
+        const t0 = performance.now()
+        const tick = (t) => {
+          const k = Math.min((t - t0) / 1100, 1)
+          num.textContent = Math.round(score * (1 - Math.pow(1 - k, 3)))
+          if (k < 1) requestAnimationFrame(tick)
+        }
+        requestAnimationFrame(tick)
+
+        document.getElementById('band-name').textContent = band.name
+        document.getElementById('band-copy').textContent = band.copy
+        const tag = document.getElementById('band-tag')
+        tag.querySelector('span').textContent = `${score} of 100`
+
+        // Pillars, weakest first so the eye lands on the gap
+        const ordered = [...PILLARS].sort((a, b) => fractions[a.id] - fractions[b.id])
+        document.getElementById('pillars').innerHTML = ordered
+          .map((p) => {
+            const f = fractions[p.id]
+            const pts = (f * p.weight).toFixed(1).replace(/\.0$/, '')
+            return `
+              <div class="pillar">
+                <div class="pillar-name">${p.name}<span>${p.blurb}</span></div>
+                <div class="pillar-pts">${pts} / ${p.weight}</div>
+                <div class="pillar-track">
+                  <div class="pillar-fill" style="background:${barColour(f)}"
+                       data-scale="${f.toFixed(3)}"></div>
+                </div>
+              </div>`
+          })
+          .join('')
+        requestAnimationFrame(() =>
+          setTimeout(() => {
+            document.querySelectorAll('.pillar-fill').forEach((el) => {
+              el.style.transform = `scaleX(${el.dataset.scale})`
+            })
+          }, 80)
+        )
+
+        // Patterns — at most two
+        const fired = PATTERNS.filter((p) => p.test(fractions, ctx)).slice(0, 2)
+        document.getElementById('patterns').innerHTML = (fired.length
+          ? fired
+          : [
+              {
+                flag: false,
+                title: 'A balanced profile',
+                body: [
+                  'No single relationship between your areas stands out as a pattern.',
+                  'That usually means the most useful next step is the lowest-scoring area below, taken on its own.',
+                ],
+              },
+            ]
+        )
+          .map(
+            (p) => `
+              <div class="pattern${p.flag ? ' pattern-flag' : ''}">
+                <h3>${p.title}</h3>
+                ${p.body.map((b) => `<p>${b}</p>`).join('')}
+              </div>`
+          )
+          .join('')
+
+        // Two widest gaps — lowest-scoring individual questions, ties broken by area weight
+        const widest = FLAT.map((q, i) => ({ ...q, v: state.answers[`${q.pid}:${q.qi}`] ?? 0, i }))
+          .sort((a, b) => a.v - b.v || b.w - a.w || a.i - b.i)
+          .slice(0, 2)
+        document.getElementById('gaps').innerHTML = widest
+          .map(
+            (g, i) => `
+              <div class="gap-item">
+                <span class="num num-green">${i + 1}</span>
+                <div>
+                  <b>${g.q}</b>
+                  <p style="margin-bottom:8px"><span class="badge badge-teal" style="font-size:11px"><i class="d"></i>${g.pname}</span></p>
+                  <p>${g.gap}</p>
+                </div>
+              </div>`
+          )
+          .join('')
+
+        // Horizon note
+        const years = Math.max(state.targetAge - state.currentAge, 0)
+        const gapYears = Math.max(60 - state.targetAge, 0)
+        const note = document.getElementById('horizon-note')
+        note.hidden = false
+        note.innerHTML = `
+          <h3 class="step-h">Your horizon, in numbers</h3>
+          <div class="grid g3" style="margin-top:18px">
+            <div class="stat"><span class="k">Years to your target</span><span class="figure fig-lg">${years}</span></div>
+            <div class="stat"><span class="k">Years before super unlocks</span><span class="figure fig-lg">${gapYears}</span></div>
+            <div class="stat"><span class="k">Independence score</span><span class="figure fig-lg">${(fractions.freedom * 20).toFixed(1).replace(/\.0$/, '')} / 20</span></div>
+          </div>
+          <p class="small muted" style="margin-top:18px">
+            ${
+              gapYears > 0
+                ? `You would like work to become optional at ${state.targetAge}. Preservation age is 60 for everyone reaching it from 1 July 2024, so ${gapYears} ${gapYears === 1 ? 'year' : 'years'} of that period would need to be funded by capital held outside superannuation. That is the arithmetic behind the Gap Years Map.`
+                : `Your target sits at or after preservation age, so superannuation can form part of your income from the start. The question becomes how long it needs to last and how it is drawn.`
+            }
+          </p>`
+
+        // The one question — the weakest question inside the weakest area, so the
+        // sentence names one area and a question that actually belongs to it.
+        const lowest = ordered[0]
+        const lowestQ = FLAT.filter((q) => q.pid === lowest.id)
+          .map((q) => ({ ...q, v: state.answers[`${q.pid}:${q.qi}`] ?? 0 }))
+          .sort((a, b) => a.v - b.v || a.qi - b.qi)[0]
+        document.getElementById('one-question').textContent =
+          `Your lowest-scoring area is ${lowest.name}. The question to take into a conversation is: “${lowestQ.q.replace(/\?$/, '')}” — and what it would take to answer that with certainty.`
+
+        document.getElementById('result-date').textContent = new Date().toLocaleDateString('en-AU', {
+          day: 'numeric',
+          month: 'long',
+          year: 'numeric',
+        })
+      }
+
+      wirePrint()
+    </script>
+  </body>
+</html>
