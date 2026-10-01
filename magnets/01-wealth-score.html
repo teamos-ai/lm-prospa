@@ -1201,8 +1201,12 @@
         const tag = document.getElementById('band-tag')
         tag.querySelector('span').textContent = `${score} of 100`
 
-        // Pillars, weakest first so the eye lands on the gap
-        const ordered = [...PILLARS].sort((a, b) => fractions[a.id] - fractions[b.id])
+        // Pillars, weakest first so the eye lands on the gap. Equal fractions —
+        // including an all-green or all-red sheet — resolve to the heavier area,
+        // so a tie never surfaces an arbitrary one.
+        const ordered = [...PILLARS].sort(
+          (a, b) => fractions[a.id] - fractions[b.id] || b.weight - a.weight
+        )
         document.getElementById('pillars').innerHTML = ordered
           .map((p) => {
             const f = fractions[p.id]
@@ -1250,23 +1254,46 @@
           )
           .join('')
 
-        // Two widest gaps — lowest-scoring individual questions, ties broken by area weight
-        const widest = FLAT.map((q, i) => ({ ...q, v: state.answers[`${q.pid}:${q.qi}`] ?? 0, i }))
-          .sort((a, b) => a.v - b.v || b.w - a.w || a.i - b.i)
-          .slice(0, 2)
-        document.getElementById('gaps').innerHTML = widest
-          .map(
-            (g, i) => `
-              <div class="gap-item">
-                <span class="num num-green">${i + 1}</span>
-                <div>
-                  <b>${g.q}</b>
-                  <p style="margin-bottom:8px"><span class="badge badge-teal" style="font-size:11px"><i class="d"></i>${g.pname}</span></p>
-                  <p>${g.gap}</p>
-                </div>
-              </div>`
-          )
-          .join('')
+        // Two widest gaps — lowest-scoring individual questions, ties broken by
+        // area weight. The second gap prefers a different area than the first:
+        // two gaps from one area read as the same note twice.
+        const ranked = FLAT.map((q, i) => ({ ...q, v: state.answers[`${q.pid}:${q.qi}`] ?? 0, i })).sort(
+          (a, b) => a.v - b.v || b.w - a.w || a.i - b.i
+        )
+        const widest = [ranked[0]]
+        widest.push(ranked.slice(1).find((q) => q.pid !== ranked[0].pid) || ranked[1])
+
+        const gapsEl = document.getElementById('gaps')
+        const gapsHead = gapsEl.previousElementSibling // the "Your two widest gaps" sec-head
+        if (ranked[0].v === 1) {
+          // Nothing was answered below "I know this is covered" — there are no gaps
+          // to show, and inventing two would misrepresent the answers.
+          gapsHead.querySelector('h2').textContent = 'No gaps to show'
+          gapsHead.querySelector('p').textContent =
+            'You answered every question with certainty, so there is nothing here to single out.'
+          gapsEl.innerHTML = `
+            <div class="card card-tint">
+              <p class="muted">
+                A sheet with no uncertainty on it is worth testing rather than celebrating. The
+                useful questions become: when was each of these last reviewed, and would the
+                answers still hold if your income, your family or the rules changed?
+              </p>
+            </div>`
+        } else {
+          gapsEl.innerHTML = widest
+            .map(
+              (g, i) => `
+                <div class="gap-item">
+                  <span class="num num-green">${i + 1}</span>
+                  <div>
+                    <b>${g.q}</b>
+                    <p style="margin-bottom:8px"><span class="badge badge-teal" style="font-size:11px"><i class="d"></i>${g.pname}</span></p>
+                    <p>${g.gap}</p>
+                  </div>
+                </div>`
+            )
+            .join('')
+        }
 
         // Horizon note
         const years = Math.max(state.targetAge - state.currentAge, 0)
@@ -1295,7 +1322,15 @@
           .map((q) => ({ ...q, v: state.answers[`${q.pid}:${q.qi}`] ?? 0 }))
           .sort((a, b) => a.v - b.v || a.qi - b.qi)[0]
         document.getElementById('one-question').textContent =
-          `Your lowest-scoring area is ${lowest.name}. The question to take into a conversation is: “${lowestQ.q.replace(/\?$/, '')}” — and what it would take to answer that with certainty.`
+          ranked[0].v === 1
+            ? `Nothing on this sheet is uncertain, so the question is not what to fix. It is this: “${lowestQ.q.replace(
+                /\?$/,
+                ''
+              )}” — and whether that answer would still hold under conditions you have not yet faced.`
+            : `Your lowest-scoring area is ${lowest.name}. The question to take into a conversation is: “${lowestQ.q.replace(
+                /\?$/,
+                ''
+              )}” — and what it would take to answer that with certainty.`
 
         document.getElementById('result-date').textContent = new Date().toLocaleDateString('en-AU', {
           day: 'numeric',
