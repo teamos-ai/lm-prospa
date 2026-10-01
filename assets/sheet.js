@@ -24,7 +24,7 @@ export const PROSPA = {
 /** The twelve magnets, in order. Single source for titles and routes. */
 export const MAGNETS = [
   { no: '01', slug: '01-wealth-score', title: 'The Executive Wealth Score', kind: 'Scored assessment', agenda: 8 },
-  { no: '02', slug: '02-freedom-number', title: 'Your Financial Freedom Number', kind: 'Calculator', agenda: 5 },
+  { no: '02', slug: '02-freedom-number', title: 'Your Work Optional Number', kind: 'Guided calculator', agenda: 5 },
   { no: '03', slug: '03-gap-years', title: 'The Gap Years Map', kind: 'Calculator', agenda: 5 },
   { no: '04', slug: '04-next-dollar', title: 'The Next Dollar Decision Map', kind: 'Decision guide', agenda: 3 },
   { no: '05', slug: '05-three-buckets', title: 'The Three Wealth Buckets', kind: 'Worksheet', agenda: 3 },

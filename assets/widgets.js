@@ -467,3 +467,147 @@ export function projection(el, { series, target, xFrom, xTo, targetLabel = 'Targ
     })
   })
 }
+
+/* ==========================================================
+   11 · LIFE PATH — the whole plan in one picture.
+
+   Accumulation rises to the work-optional age, the bridge
+   draws it down, superannuation steps in at the access age,
+   and the combined pool runs out somewhere. The step at the
+   access age is the point of the chart: it is the moment the
+   plan hands over.
+   ========================================================== */
+
+export function lifePath(el, {
+  accum,              // [{age, balance}] — building
+  bridge,             // [{age, balance}] — drawing down before super
+  post,               // [{age, balance}] — drawing down after super
+  workOptionalAge,
+  superAccessAge,
+  lifeExpectancy,
+  superAtAccess,      // the step up at the access age
+  exhaustedAtAge,     // null, or the age the bridge empties
+  lastsTo,            // null, or the age the combined pool empties
+}) {
+  const W = 760
+  const H = 320
+  const pad = { t: 26, r: 18, b: 46, l: 18 }
+
+  const all = [...accum, ...bridge, ...post]
+  if (!all.length) return
+  const a0 = accum[0].age
+  const a1 = all[all.length - 1].age
+  const yMax = Math.max(...all.map((p) => p.balance), superAtAccess || 0) * 1.12 || 1
+
+  const x = (age) => pad.l + ((age - a0) / Math.max(a1 - a0, 1)) * (W - pad.l - pad.r)
+  const y = (v) => H - pad.b - (Math.max(0, v) / yMax) * (H - pad.t - pad.b)
+  const base = H - pad.b
+
+  const path = (pts) => pts.map((p, i) => `${i ? 'L' : 'M'}${x(p.age).toFixed(1)},${y(p.balance).toFixed(1)}`).join(' ')
+  const area = (pts) =>
+    pts.length
+      ? `${path(pts)} L${x(pts[pts.length - 1].age).toFixed(1)},${base} L${x(pts[0].age).toFixed(1)},${base} Z`
+      : ''
+
+  // The three segments join end-to-end, and the join at the access age is a visible step.
+  const accumPts = accum
+  const bridgePts = [{ age: workOptionalAge, balance: accum[accum.length - 1].balance }, ...bridge]
+  const postPts = post.length ? [{ age: superAccessAge, balance: post[0].balance }, ...post] : []
+
+  const emptyEarly = exhaustedAtAge !== null
+  const bridgeColour = emptyEarly ? TONE.ember : TONE.teal
+
+  // The step: non-super remaining, then the same instant with super added.
+  const remaining = bridge.length ? bridge[bridge.length - 1].balance : accum[accum.length - 1].balance
+  const stepFrom = y(remaining)
+  const stepTo = y(remaining + (superAtAccess || 0))
+
+  const tick = (age, label, tone) => `
+    <line x1="${x(age).toFixed(1)}" y1="${pad.t - 6}" x2="${x(age).toFixed(1)}" y2="${base}"
+          stroke="${tone}" stroke-width="1.2" stroke-dasharray="3 4" opacity="0.75" />
+    <text x="${x(age).toFixed(1)}" y="${H - 26}" text-anchor="middle" class="w-lp-tick">${age}</text>
+    <text x="${x(age).toFixed(1)}" y="${H - 12}" text-anchor="middle" class="w-lp-ticklabel">${esc(label)}</text>`
+
+  el.classList.add('w-lifepath')
+  el.innerHTML = `
+    <svg viewBox="0 0 ${W} ${H}" role="img"
+         aria-label="Accessible capital from age ${a0}: building to ${workOptionalAge}, drawn down to ${superAccessAge}, then combined with superannuation${lastsTo ? ` until about age ${lastsTo}` : ''}">
+      <defs>
+        <linearGradient id="lp-build" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stop-color="${TONE.teal}" stop-opacity="0.2" />
+          <stop offset="100%" stop-color="${TONE.teal}" stop-opacity="0.015" />
+        </linearGradient>
+        <linearGradient id="lp-bridge" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stop-color="${bridgeColour}" stop-opacity="0.2" />
+          <stop offset="100%" stop-color="${bridgeColour}" stop-opacity="0.015" />
+        </linearGradient>
+        <linearGradient id="lp-post" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stop-color="${TONE.green}" stop-opacity="0.22" />
+          <stop offset="100%" stop-color="${TONE.green}" stop-opacity="0.015" />
+        </linearGradient>
+      </defs>
+
+      <line x1="${pad.l}" y1="${base}" x2="${W - pad.r}" y2="${base}" stroke="${TONE.track}" stroke-width="1" />
+
+      ${tick(workOptionalAge, 'work optional', TONE.tealSoft)}
+      ${tick(superAccessAge, 'super unlocks', TONE.green)}
+      ${lifeExpectancy > superAccessAge && lifeExpectancy <= a1 ? tick(lifeExpectancy, 'plan to', TONE.track) : ''}
+
+      <path d="${area(accumPts)}" fill="url(#lp-build)" />
+      <path d="${area(bridgePts)}" fill="url(#lp-bridge)" />
+      ${postPts.length ? `<path d="${area(postPts)}" fill="url(#lp-post)" />` : ''}
+
+      <path class="w-lp-line" d="${path(accumPts)}" fill="none" stroke="${TONE.teal}" stroke-width="2.6"
+            stroke-linecap="round" stroke-linejoin="round" />
+      <path class="w-lp-line" d="${path(bridgePts)}" fill="none" stroke="${bridgeColour}" stroke-width="2.6"
+            stroke-linecap="round" stroke-linejoin="round" />
+      ${
+        postPts.length
+          ? `<line x1="${x(superAccessAge).toFixed(1)}" y1="${stepFrom.toFixed(1)}"
+                   x2="${x(superAccessAge).toFixed(1)}" y2="${stepTo.toFixed(1)}"
+                   stroke="${TONE.green}" stroke-width="2.6" stroke-linecap="round" />
+             <path class="w-lp-line" d="${path(postPts)}" fill="none" stroke="${TONE.green}" stroke-width="2.6"
+                   stroke-linecap="round" stroke-linejoin="round" />`
+          : ''
+      }
+
+      <circle cx="${x(workOptionalAge).toFixed(1)}" cy="${y(accum[accum.length - 1].balance).toFixed(1)}" r="5"
+              fill="#fff" stroke="${TONE.teal}" stroke-width="2.6" />
+      ${
+        superAtAccess > 0
+          ? `<circle cx="${x(superAccessAge).toFixed(1)}" cy="${stepTo.toFixed(1)}" r="5"
+                     fill="#fff" stroke="${TONE.green}" stroke-width="2.6" />`
+          : ''
+      }
+      ${
+        emptyEarly
+          ? `<circle cx="${x(exhaustedAtAge).toFixed(1)}" cy="${base}" r="5.5" fill="${TONE.ember}" />
+             <text x="${x(exhaustedAtAge).toFixed(1)}" y="${base - 14}" text-anchor="middle" class="w-lp-warn">
+               empty at ${exhaustedAtAge}
+             </text>`
+          : ''
+      }
+
+      <text x="${pad.l}" y="${pad.t - 10}" class="w-lp-key">Accessible capital, today's dollars</text>
+    </svg>
+    <ul class="w-lp-legend">
+      <li><i style="background:${TONE.teal}"></i>Building</li>
+      <li><i style="background:${bridgeColour}"></i>${emptyEarly ? 'Drawing down — runs out' : 'Drawing down before super'}</li>
+      ${superAtAccess > 0 ? `<li><i style="background:${TONE.green}"></i>Super takes over</li>` : ''}
+    </ul>`
+
+  const lines = el.querySelectorAll('.w-lp-line')
+  onSeen(el, (instant) => {
+    if (instant) return
+    lines.forEach((p, i) => {
+      if (!p.getTotalLength) return
+      const L = p.getTotalLength()
+      p.style.strokeDasharray = `${L}`
+      p.style.strokeDashoffset = `${L}`
+      requestAnimationFrame(() => {
+        p.style.transition = `stroke-dashoffset 1.1s cubic-bezier(.22,.61,.36,1) ${i * 0.5}s`
+        p.style.strokeDashoffset = '0'
+      })
+    })
+  })
+}

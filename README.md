@@ -19,7 +19,7 @@ used rather than filed and forgotten.
 | # | Tool | Type | Agenda item |
 |---|---|---|---|
 | 01 | **The Executive Wealth Score** | Scored assessment | 8 · Your Executive Financial Health Check |
-| 02 | **Your Freedom Score** | Guided calculator | 5 · Making Work Optional |
+| 02 | **Your Work Optional Number** | Guided calculator | 5 · Making Work Optional |
 | 03 | The Gap Years Map | Calculator | 5 · Making Work Optional |
 | 04 | The Next Dollar Decision Map | Decision guide | 3 · Building Wealth Outside Super |
 | 05 | The Three Wealth Buckets | Worksheet | 3 · Building Wealth Outside Super |
@@ -51,7 +51,28 @@ moves until a conversation does; and the guide (12) is the session itself, as so
 
 ---
 
-## The Freedom Score — what the spreadsheet became
+## The Work Optional Number — what the spreadsheet became
+
+> Rebuilt a second time from Prospa's own notes (*Calculator workings*), which replaced the model
+> rather than tuning it. The analysis, the decisions and the gates are in
+> [`CALCULATOR-V2-PLAN.md`](CALCULATOR-V2-PLAN.md); the model lives in
+> [`assets/model.js`](assets/model.js) and is proven by [`tools/model.test.mjs`](tools/model.test.mjs)
+> — **67 assertions, run with `node tools/model.test.mjs`.**
+>
+> The number is no longer a portfolio that must last forever. It is the capital needed to carry you
+> from the day you stop work to the day superannuation unlocks — which took the headline from $4.3m
+> to about $691k, and the reader's position from despair to a gap they can close. **Every figure is
+> in today's dollars**, at the real return, which is both easier to feel and the basis ASIC
+> Instrument 2022/603 requires of superannuation calculators.
+>
+> One invariant in the test harness earned its keep: *a funded plan can never empty before super*.
+> It failed, and the cause was real — the Work Optional Number was priced as an annuity-immediate
+> while the drawdown spends at the start of each year. Fixing it to an annuity-due moved **every
+> figure materially closer to Prospa's own worked example** (gap $51,688 against their $55,000,
+> 93% funded against their 92%, supported income $74,016 against their $73,000), which suggests
+> they were modelling start-of-year drawdown all along.
+
+### The previous model, kept for reference
 
 The supplied workbook produced six figures in a grid. Nobody looks at a grid and feels anything.
 Magnet 02 now walks a reader through four questions and ends on a dashboard, and **every original

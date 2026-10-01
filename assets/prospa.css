@@ -2687,3 +2687,64 @@ input[type='range']::-moz-range-thumb {
     color: var(--teal);
   }
 }
+
+/* ---------- Life path chart ---------- */
+.w-lifepath svg {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+.w-lp-key {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  fill: #616773;
+}
+.w-lp-tick {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11.5px;
+  fill: #135f69;
+  font-weight: 500;
+}
+.w-lp-ticklabel {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 9px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  fill: #616773;
+}
+.w-lp-warn {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10.5px;
+  fill: #a8481a;
+  font-weight: 500;
+}
+.w-lp-legend {
+  list-style: none;
+  margin: 14px 0 0;
+  padding: 0;
+  display: flex;
+  gap: 20px;
+  flex-wrap: wrap;
+  font-size: 12.5px;
+  color: var(--gray);
+}
+.w-lp-legend li {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+.w-lp-legend i {
+  width: 14px;
+  height: 3px;
+  border-radius: 2px;
+  flex: none;
+}
+@media print {
+  .w-lp-line {
+    transition: none !important;
+    stroke-dasharray: none !important;
+    stroke-dashoffset: 0 !important;
+  }
+}
