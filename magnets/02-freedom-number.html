@@ -348,9 +348,11 @@
       const SCENARIOS = [
         { id: 'notes', n: 'Stop at 50', d: 'Age 40, $150,000 invested, $3,000 a month, wants $80,000 a year from 50.',
           t: '10 years to build · 10 to bridge', v: { ...DEFAULTS } },
-        { id: 'capital45', n: 'Capital at 45, retire at 55', d: 'A larger sum already deployed at 45, with ten years to run and a five-year bridge to super.',
+        // Clears the bridge comfortably, then runs out at 76 — the lesson being that
+        // funding the bridge and being set for life are two different questions.
+        { id: 'capital45', n: 'Capital at 45, retire at 55', d: 'Capital deployed at 45 with ten years to run. The bridge is easy; what happens after 60 is not.',
           t: '10 years to build · 5 to bridge',
-          v: { ...DEFAULTS, age: 45, workOptionalAge: 55, current: 600000, monthly: 4000, lifestyle: 100000, postIncome: 100000, superBalance: 450000, superContrib: 30000 } },
+          v: { ...DEFAULTS, age: 45, workOptionalAge: 55, current: 400000, monthly: 4000, lifestyle: 140000, postIncome: 140000, superBalance: 450000, superContrib: 30000 } },
         { id: 'early', n: 'The early exit', d: 'Stopping at 52 on a higher lifestyle, with part-time income carrying part of the bridge.',
           t: '12 years to build · 8 to bridge',
           v: { ...DEFAULTS, age: 40, workOptionalAge: 52, lifestyle: 120000, postIncome: 120000, current: 300000, monthly: 5000, partTime: 30000, partTimeUntil: 57, superBalance: 300000, superContrib: 30000 } },
