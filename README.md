@@ -176,12 +176,15 @@ assets/
   sheet.js              shared masthead and hero band, compliance footer, money, persistence
   widgets.js            the number and chart vocabulary — gauges, bars, donuts, life path
   components.js         shortcut tracker, strike lists, the swipe-file fan, the ebook
+  inputs.js             DATA ENTRY — typeable number fields, switches, radiogroups
   model.js              the Freedom Score arithmetic, pure and DOM-free
   img/art/              generated brand artwork — hero bands and the guide's chapter plates
   img/photo/            licensed lifestyle photography, from the design system library
   prospa-logo.png
   favicon.svg
 tools/model.test.mjs    67 assertions over model.js — `node tools/model.test.mjs`
+tools/inputs.test.mjs   the input parser, incl. fuzz — `node --test tools/inputs.test.mjs`
+tools/ui.test.mjs       52 browser checks over both calculators — `node tools/ui.test.mjs`
 SCORING.md              the Wealth Score model, in full
 CLAIMS.md               every figure on every sheet, with its source and check date
 CALCULATOR-V2-PLAN.md   the Freedom Score rebuild: analysis, decisions, open gates
@@ -305,3 +308,62 @@ licensee own.
 ---
 
 *Built by [Team OS](https://www.oscale.ai) for Prospa Financial · October 2026*
+
+
+---
+
+## Data entry
+
+Both calculators were, until 2 October 2026, driven entirely by
+`<input type="range">`. That is a browsing control, not a data-entry one, and it
+carries three defects that matter when the audience has real money:
+
+1. **You cannot type.** Nobody enters $437,000 on a slider with a 25,000 step.
+2. **It clamps in silence.** `el.value = 10000000` on a `max="3000000"` range
+   leaves 3,000,000 behind, with no signal — and the tool then reports a Freedom
+   Score computed from the wrong capital.
+3. **Junk becomes the midpoint.** `el.value = 'abc'` on a 0–3,000,000 range
+   leaves 1,500,000, which looks like a real answer.
+
+[`assets/inputs.js`](assets/inputs.js) replaces them. The contract is inverted:
+
+> **The typed box is authoritative. The slider is a coarse assist.**
+
+A figure above the slider's range is **kept and flagged**, never clamped away —
+the slider simply dims, because it can no longer represent the number. Anything
+unreadable keeps the last good value and says so. Nothing is ever changed in
+silence.
+
+`parseAmount` reads what people actually type — `$437,000`, `437k`, `1.2m`,
+`1,250,000`, `6%`, a stray space — and returns `null` rather than a guess when it
+cannot. It never returns `NaN` or `Infinity`. The box shows grouped digits
+because `$10000000` is unreadable, and the parser strips the separators again on
+the way back in.
+
+Money may exceed the slider; an **age or a percentage may not** — there the range
+is the whole domain, so 999 is refused rather than accepted.
+
+Also in this module, and reusable by any sheet:
+
+- `switchField` — a real `role="switch"`, replacing a 0/1 range nobody read as a toggle.
+- `mountRadioGroups` — arrow-key navigation for single-select sets. The Wealth
+  Score's eighteen questions were `aria-pressed` toggle buttons in a plain group:
+  no arrow keys, no exclusivity announced, and 90 tab stops. They are now proper
+  radiogroups with one tab stop each.
+
+Every control is at least 44 px, carries `inputmode="decimal"` so phones open the
+number pad, and prints without its steppers or slider.
+
+### The gate
+
+```bash
+node --test tools/inputs.test.mjs   # the parser, including fuzz and round-trip
+node tools/model.test.mjs           # the arithmetic
+node tools/ui.test.mjs              # 52 browser checks over both calculators
+```
+
+`tools/ui.test.mjs` starts its own static server and drives the globally
+installed Playwright, so the repo stays buildless. It covers every defect in the
+audit above plus eight corrupt-`localStorage` payloads per calculator and six
+adversarial figure sets, asserting that no `NaN`, `Infinity` or negative dollar
+amount ever reaches the screen.

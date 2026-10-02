@@ -3125,3 +3125,209 @@ input[type='range']::-moz-range-thumb {
     color: var(--gray);
   }
 }
+
+/* ============================================================
+   DATA ENTRY — the typeable number field (assets/inputs.js).
+
+   The typed box is authoritative; the slider underneath is a coarse assist.
+   A figure above the slider's range is kept and flagged, never clamped away.
+   ============================================================ */
+
+.nf {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.nf-label {
+  font-size: 13.5px;
+  font-weight: 600;
+  color: var(--ink-2);
+}
+
+.nf-row {
+  display: flex;
+  align-items: stretch;
+  gap: 8px;
+}
+
+/* 44px minimum, so a thumb can hit it */
+.nf-step {
+  flex: 0 0 auto;
+  width: 44px;
+  min-height: 44px;
+  font: 600 20px/1 'Poppins', sans-serif;
+  color: var(--teal);
+  background: var(--bg2, #f3f7f7);
+  border: 1px solid transparent;
+  border-radius: var(--r-sm);
+  cursor: pointer;
+  transition: background var(--dur-snap) var(--ease),
+    color var(--dur-snap) var(--ease);
+}
+
+.nf-step:hover {
+  background: var(--teal);
+  color: #fff;
+}
+
+.nf-step:active {
+  transform: translateY(1px);
+}
+
+.nf-box {
+  position: relative;
+  flex: 1 1 auto;
+  display: flex;
+  align-items: center;
+}
+
+.nf-affix {
+  position: absolute;
+  left: 14px;
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--gray);
+  pointer-events: none;
+}
+
+.nf-affix-end {
+  left: auto;
+  right: 14px;
+}
+
+.nf-input {
+  font-family: 'Poppins', sans-serif;
+  font-size: 17px;
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+  color: var(--ink);
+  background: #fff;
+  border: 1px solid var(--line);
+  border-radius: var(--r-sm);
+  padding: 12px 14px 12px 28px;
+  min-height: 44px;
+  width: 100%;
+  transition: border-color var(--dur-base) var(--ease),
+    box-shadow var(--dur-base) var(--ease);
+}
+
+.nf[data-kind='age'] .nf-input,
+.nf[data-kind='pct'] .nf-input {
+  padding-left: 14px;
+}
+
+.nf[data-kind='pct'] .nf-input {
+  padding-right: 30px;
+}
+
+.nf-input:focus {
+  outline: none;
+  border-color: var(--teal);
+  box-shadow: 0 0 0 4px rgba(19, 95, 105, 0.1);
+}
+
+.nf-flagged .nf-input {
+  border-color: var(--amber, #d79a27);
+}
+
+.nf-range {
+  width: 100%;
+  accent-color: var(--teal);
+  cursor: grab;
+}
+
+/* the slider can no longer represent the typed figure */
+.nf-range-pinned {
+  opacity: 0.45;
+}
+
+.nf-note:empty {
+  display: none;
+}
+
+.nf-note {
+  margin: 0;
+  font-size: 12.5px;
+  line-height: 1.45;
+  color: var(--ember-strong, #a8481a);
+}
+
+.nf-hint {
+  margin: 0;
+  font-size: 12.5px;
+  line-height: 1.45;
+  color: var(--gray);
+}
+
+/* ---------- a real switch, not a 0/1 slider ---------- */
+
+.sw {
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  min-height: 44px;
+  padding: 0;
+  background: none;
+  border: 0;
+  cursor: pointer;
+  font: 600 15px/1 'Poppins', sans-serif;
+  color: var(--ink);
+}
+
+.sw-track {
+  position: relative;
+  width: 52px;
+  height: 30px;
+  border-radius: var(--r-pill);
+  background: #c2cccd;
+  transition: background var(--dur-base) var(--ease);
+}
+
+.sw-thumb {
+  position: absolute;
+  top: 3px;
+  left: 3px;
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  background: #fff;
+  box-shadow: 0 1px 3px rgba(10, 54, 60, 0.3);
+  transition: transform var(--dur-base) var(--ease);
+}
+
+.sw[aria-checked='true'] .sw-track {
+  background: var(--green);
+}
+
+.sw[aria-checked='true'] .sw-thumb {
+  transform: translateX(22px);
+}
+
+.sw:focus-visible {
+  outline: 2px solid var(--teal);
+  outline-offset: 3px;
+  border-radius: var(--r-sm);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .nf-step,
+  .sw-track,
+  .sw-thumb,
+  .nf-input {
+    transition: none;
+  }
+}
+
+@media print {
+  .nf-step,
+  .nf-range {
+    display: none;
+  }
+
+  .nf-input {
+    border: 0;
+    padding-left: 0;
+    font-size: 15px;
+  }
+}

@@ -537,6 +537,7 @@
       import {
         scoreGauge, metricStrip, breakdownBar, goalProgress, stepper, lifePath, moneyShort, TONE,
       } from '../assets/widgets.js'
+      import { numberField, switchField, mountInputs } from '../assets/inputs.js'
 
       mountSheet({
         no: '02',
@@ -592,39 +593,41 @@
       const fmtAge = (v) => String(v)
 
       const FIELDS = {
-        age: { label: 'Your age today', min: 25, max: 70, step: 1, fmt: fmtAge },
-        current: { label: 'Invested outside super today', min: 0, max: 3000000, step: 25000, fmt: fmtMoney,
+        age: { label: 'Your age today', min: 25, max: 70, step: 1, fmt: fmtAge, kind: 'age' },
+        current: { label: 'Invested outside super today', min: 0, max: 3000000, step: 25000, fmt: fmtMoney, kind: 'money',
           hint: 'Shares, ETFs, managed funds, cash beyond your reserve. Not the family home, not super.' },
-        workOptionalAge: { label: 'Age work becomes optional', min: 40, max: 75, step: 1, fmt: fmtAge },
-        lifestyle: { label: 'Annual spending once you stop', min: 30000, max: 400000, step: 5000, fmt: fmtMoney,
+        workOptionalAge: { label: 'Age work becomes optional', min: 40, max: 75, step: 1, fmt: fmtAge, kind: 'age' },
+        lifestyle: { label: 'Annual spending once you stop', min: 30000, max: 400000, step: 5000, fmt: fmtMoney, kind: 'money',
           hint: "In today's dollars. What the year costs, not what you earn." },
-        monthly: { label: 'Invested each month, outside super', min: 0, max: 25000, step: 250, fmt: fmtMoney },
-        superBalance: { label: 'Your super balance today', min: 0, max: 3000000, step: 25000, fmt: fmtMoney },
-        superContrib: { label: 'Into super each year', min: 0, max: 100000, step: 1000, fmt: fmtMoney,
+        monthly: { label: 'Invested each month, outside super', min: 0, max: 25000, step: 250, fmt: fmtMoney, kind: 'money' },
+        superBalance: { label: 'Your super balance today', min: 0, max: 3000000, step: 25000, fmt: fmtMoney, kind: 'money' },
+        superContrib: { label: 'Into super each year', min: 0, max: 100000, step: 1000, fmt: fmtMoney, kind: 'money',
           hint: 'Employer contributions plus anything extra.' },
-        superAccessAge: { label: 'Age super becomes available', min: 55, max: 70, step: 1, fmt: fmtAge,
+        superAccessAge: { label: 'Age super becomes available', min: 55, max: 70, step: 1, fmt: fmtAge, kind: 'age',
           hint: 'Preservation age is 60 for everyone reaching it from 1 July 2024.' },
-        lifeExpectancy: { label: 'Model retirement until age', min: 75, max: 105, step: 1, fmt: fmtAge },
-        postIncome: { label: 'Annual spending after super unlocks', min: 30000, max: 400000, step: 5000, fmt: fmtMoney },
-        inflation: { label: 'Inflation', min: 0, max: 6, step: 0.25, fmt: fmtPct },
-        partTime: { label: 'Part-time income during the bridge', min: 0, max: 150000, step: 5000, fmt: fmtMoney },
-        partTimeUntil: { label: 'Part-time income stops at age', min: 40, max: 70, step: 1, fmt: fmtAge },
-        partnerAge: { label: "Partner's age", min: 25, max: 70, step: 1, fmt: fmtAge },
-        partnerBalance: { label: "Partner's super balance", min: 0, max: 3000000, step: 25000, fmt: fmtMoney },
-        partnerContrib: { label: "Into partner's super each year", min: 0, max: 100000, step: 1000, fmt: fmtMoney },
-        investReturn: { label: 'Expected return before you stop', min: 0, max: 12, step: 0.25, fmt: fmtPct },
-        superReturn: { label: 'Expected super return', min: 0, max: 12, step: 0.25, fmt: fmtPct },
-        postReturn: { label: 'Expected return after super unlocks', min: 0, max: 12, step: 0.25, fmt: fmtPct },
+        lifeExpectancy: { label: 'Model retirement until age', min: 75, max: 105, step: 1, fmt: fmtAge, kind: 'age' },
+        postIncome: { label: 'Annual spending after super unlocks', min: 30000, max: 400000, step: 5000, fmt: fmtMoney, kind: 'money' },
+        inflation: { label: 'Inflation', min: 0, max: 6, step: 0.25, fmt: fmtPct, kind: 'pct' },
+        partTime: { label: 'Part-time income during the bridge', min: 0, max: 150000, step: 5000, fmt: fmtMoney, kind: 'money' },
+        partTimeUntil: { label: 'Part-time income stops at age', min: 40, max: 70, step: 1, fmt: fmtAge, kind: 'age' },
+        partnerAge: { label: "Partner's age", min: 25, max: 70, step: 1, fmt: fmtAge, kind: 'age' },
+        partnerBalance: { label: "Partner's super balance", min: 0, max: 3000000, step: 25000, fmt: fmtMoney, kind: 'money' },
+        partnerContrib: { label: "Into partner's super each year", min: 0, max: 100000, step: 1000, fmt: fmtMoney, kind: 'money' },
+        investReturn: { label: 'Expected return before you stop', min: 0, max: 12, step: 0.25, fmt: fmtPct, kind: 'pct' },
+        superReturn: { label: 'Expected super return', min: 0, max: 12, step: 0.25, fmt: fmtPct, kind: 'pct' },
+        postReturn: { label: 'Expected return after super unlocks', min: 0, max: 12, step: 0.25, fmt: fmtPct, kind: 'pct' },
       }
 
+      // A number you can type, nudge or drag. The typed box wins; the slider is
+      // a coarse assist that steps aside when the figure outgrows its range.
       const dial = (k) => {
         const f = FIELDS[k]
-        return `<div class="dial">
-          <label for="i-${k}">${f.label}</label>
-          <span class="dial-read" data-read="${k}">${f.fmt(state[k])}</span>
-          ${f.hint ? `<span class="dial-hint">${f.hint}</span>` : ''}
-          <input type="range" id="i-${k}" data-field="${k}" min="${f.min}" max="${f.max}" step="${f.step}" value="${state[k]}" />
-        </div>`
+        return numberField({
+          key: k, label: f.label, value: state[k],
+          min: f.min, max: f.max, step: f.step,
+          kind: f.kind || 'money', hint: f.hint || '',
+          hardMax: f.hardMax,
+        })
       }
       const chips = (k, opts) => `<div class="chips">
         ${opts.map((o) => `<button type="button" class="chip" data-chip="${k}" data-v="${o}">${o}%</button>`).join('')}
@@ -654,28 +657,18 @@
           ask: 'How much can you invest each month, and at what return?',
           why: 'Use what actually left your account last year rather than what you intended. The return is an assumption, not a forecast — move it and watch everything move with it.',
           body: dial('monthly') +
-            `<div class="dial">
-               <label for="i-investReturn">${FIELDS.investReturn.label}</label>
-               <span class="dial-read" data-read="investReturn">${fmtPct(state.investReturn)}</span>
-               ${chips('investReturn', [4, 5, 6, 7])}
-               <input type="range" id="i-investReturn" data-field="investReturn" min="0" max="12" step="0.25" value="${state.investReturn}" />
-             </div>` },
+            `<div>${dial('investReturn')}${chips('investReturn', [4, 5, 6, 7])}</div>` },
         { eyebrow: 'Step 4 of 5 · Your super',
           ask: 'What is waiting for you at the other end?',
           why: 'Super plays no part in the bridge — it cannot. But it decides what happens the moment the bridge ends, and whether the plan holds for the decades after that.',
           body: `<div class="pair">${dial('superBalance')}${dial('superContrib')}</div>` +
-            `<div class="dial">
-               <label for="i-superReturn">${FIELDS.superReturn.label}</label>
-               <span class="dial-read" data-read="superReturn">${fmtPct(state.superReturn)}</span>
-               ${chips('superReturn', [4, 5, 6, 7])}
-               <input type="range" id="i-superReturn" data-field="superReturn" min="0" max="12" step="0.25" value="${state.superReturn}" />
-             </div>` +
+            `<div>${dial('superReturn')}${chips('superReturn', [4, 5, 6, 7])}</div>` +
             advanced(
-              `<div class="dial" style="grid-column:1/-1">
-                 <label for="i-partnerIncluded">Include a partner</label>
-                 <span class="dial-read" data-read="partnerIncluded">No</span>
-                 <input type="range" id="i-partnerIncluded" data-field="partnerIncluded" min="0" max="1" step="1" value="${state.partnerIncluded}" />
-               </div>` + dial('partnerAge') + dial('partnerBalance') + dial('partnerContrib')
+              `<div style="grid-column:1/-1">${switchField({
+                 key: 'partnerIncluded', value: state.partnerIncluded,
+                 label: 'Include a partner',
+                 hint: "Their super joins the pool once yours unlocks — it plays no part in the bridge.",
+               })}</div>` + dial('partnerAge') + dial('partnerBalance') + dial('partnerContrib')
             ) },
         { eyebrow: 'Step 5 of 5 · How long to model',
           ask: 'How long should the money need to last?',
@@ -728,11 +721,7 @@
 
       /* The adjust tray mirrors the headline fields. */
       const TRAY = ['age', 'workOptionalAge', 'lifestyle', 'current', 'monthly', 'investReturn', 'superBalance', 'superContrib']
-      el('tray').innerHTML = TRAY.map((k) => `
-        <div class="field">
-          <label for="t-${k}">${FIELDS[k].label} <span class="v" data-read="${k}">${FIELDS[k].fmt(state[k])}</span></label>
-          <input type="range" id="t-${k}" data-field="${k}" min="${FIELDS[k].min}" max="${FIELDS[k].max}" step="${FIELDS[k].step}" value="${state[k]}" />
-        </div>`).join('')
+      el('tray').innerHTML = TRAY.map((k) => dial(k)).join('')
 
       /* ---------- State plumbing ---------- */
       function toModel() {
@@ -749,28 +738,22 @@
         }
       }
 
+      // Declared before syncInputs can run, so a scenario click during boot
+      // cannot hit the temporal dead zone.
+      let inputs = null
+
       function syncInputs() {
-        document.querySelectorAll('[data-field]').forEach((i) => {
-          const k = i.dataset.field
-          i.value = state[k]
-          // Without this a slider announces its raw value — "25000", or "1" for
-          // the partner switch. Say to a screen reader what the page says.
-          i.setAttribute(
-            'aria-valuetext',
-            k === 'partnerIncluded' ? (state.partnerIncluded ? 'Yes' : 'No') : FIELDS[k].fmt(state[k])
-          )
-        })
-        document.querySelectorAll('[data-read]').forEach((r) => {
-          const k = r.dataset.read
-          r.textContent = k === 'partnerIncluded' ? (state.partnerIncluded ? 'Yes' : 'No') : FIELDS[k].fmt(state[k])
-        })
+        // The data-entry layer repaints the box, the slider and the switch.
+        if (inputs) inputs.sync()
         document.querySelectorAll('[data-chip]').forEach((c) =>
           c.setAttribute('aria-pressed', String(Number(c.dataset.v) === state[c.dataset.chip]))
         )
       }
 
       function setField(k, value) {
-        state[k] = Number(value)
+        const n = Number(value)
+        if (!Number.isFinite(n)) return          // never let NaN into the state
+        state[k] = n
         // Ages must stay in order, or the model is describing an impossible life.
         if (state.workOptionalAge < state.age) state.workOptionalAge = state.age
         if (state.superAccessAge < state.workOptionalAge) state.superAccessAge = state.workOptionalAge
@@ -782,9 +765,10 @@
         if (el('step-5').classList.contains('on')) render()
       }
 
-      document.addEventListener('input', (e) => {
-        const f = e.target.closest('[data-field]')
-        if (f) setField(f.dataset.field, f.value)
+      // The data-entry layer owns typing, stepping and dragging for every field.
+      inputs = mountInputs(document, {
+        get: (k) => state[k],
+        set: (k, v) => setField(k, v),
       })
       document.addEventListener('click', (e) => {
         const chip = e.target.closest('[data-chip]')

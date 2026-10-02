@@ -214,12 +214,12 @@
       /* All three answers select identically. Colour-coding them
          would make the sheet grade the reader mid-question, and this
          assessment explicitly has no good or bad answer. */
-      .opt[aria-pressed='true'] {
+      .opt[aria-checked='true'] {
         border-color: var(--teal);
         background: var(--bg2);
         color: var(--ink);
       }
-      .opt[aria-pressed='true'] .mark {
+      .opt[aria-checked='true'] .mark {
         border-color: var(--teal);
         background: var(--teal);
         box-shadow: 0 0 0 3px rgba(19, 95, 105, 0.15);
@@ -696,6 +696,7 @@
     <script type="module">
       import { mountSheet, wirePrint, store } from '../assets/sheet.js'
       import { scoreGauge, progressRows, breakdownBar, metricStrip, stepper, TONE } from '../assets/widgets.js'
+      import { numberField, mountInputs, mountRadioGroups } from '../assets/inputs.js'
 
       mountSheet({
         no: '01',
@@ -1137,16 +1138,7 @@
             </div>
           </div>
           <div class="horizon">
-            <div class="field">
-              <label for="age-now">Your age today</label>
-              <span class="age-val" id="age-now-val">45</span>
-              <input type="range" id="age-now" min="25" max="70" step="1" value="45" />
-            </div>
-            <div class="field">
-              <label for="age-target">Age you would like work to become optional</label>
-              <span class="age-val" id="age-target-val">58</span>
-              <input type="range" id="age-target" min="40" max="75" step="1" value="58" />
-            </div>
+<div id="age-fields" class="pair"></div>
           </div>
           <div class="card card-tint" style="margin-top: 26px">
             <p class="small" id="horizon-live" aria-live="polite"></p>
@@ -1175,8 +1167,8 @@
             const opts = q.opts
               .map(
                 ([label, v]) => `
-                  <button type="button" class="opt" aria-pressed="false"
-                          data-q="${p.id}:${qi}" data-v="${v}">
+                  <button type="button" class="opt" role="radio" aria-checked="false"
+                          tabindex="-1" data-q="${p.id}:${qi}" data-v="${v}">
                     <span class="mark" aria-hidden="true"></span>
                     <span>${label}</span>
                   </button>`
@@ -1188,7 +1180,7 @@
                   <span class="num">${String(n).padStart(2, '0')}</span>
                   <p>${q.q}</p>
                 </div>
-                <div class="opts" role="group" aria-label="Question ${n}">${opts}</div>
+                <div class="opts" role="radiogroup" aria-label="Question ${n}">${opts}</div>
               </div>`
           })
           .join('')
@@ -1260,8 +1252,12 @@
         if (opt) {
           const [pid, qi] = opt.dataset.q.split(':')
           state.answers[`${pid}:${qi}`] = Number(opt.dataset.v)
-          opt.parentElement.querySelectorAll('.opt').forEach((o) => o.setAttribute('aria-pressed', 'false'))
-          opt.setAttribute('aria-pressed', 'true')
+          opt.parentElement.querySelectorAll('.opt').forEach((o) => {
+            o.setAttribute('aria-checked', 'false')
+            o.tabIndex = -1
+          })
+          opt.setAttribute('aria-checked', 'true')
+          opt.tabIndex = 0
           save()
           refreshGate(pid)
           syncProgress()
@@ -1299,14 +1295,17 @@
 
       /* ===================== HORIZON ========================= */
 
-      const ageNow = el('age-now')
-      const ageTarget = el('age-target')
+      const AGE_FIELDS = [
+        { key: 'currentAge', label: 'Your age today', min: 25, max: 70, step: 1, kind: 'age' },
+        { key: 'targetAge', label: 'Age you would like work to become optional',
+          min: 40, max: 75, step: 1, kind: 'age' },
+      ]
+      el('age-fields').innerHTML = AGE_FIELDS
+        .map((f) => numberField({ ...f, value: state[f.key] })).join('')
+
+      let ageInputs = null
 
       function syncHorizon() {
-        state.currentAge = Number(ageNow.value)
-        state.targetAge = Number(ageTarget.value)
-        el('age-now-val').textContent = state.currentAge
-        el('age-target-val').textContent = state.targetAge
         const years = Math.max(state.targetAge - state.currentAge, 0)
         const gap = Math.max(60 - state.targetAge, 0)
         el('horizon-live').innerHTML =
@@ -1318,8 +1317,15 @@
                 : ' Your target sits at or after preservation age, so super can form part of the income from day one.')
         save()
       }
-      ageNow.addEventListener('input', syncHorizon)
-      ageTarget.addEventListener('input', syncHorizon)
+      mountRadioGroups(document)
+
+      ageInputs = mountInputs(el('age-fields'), {
+        get: (k) => state[k],
+        set: (k, v) => {
+          state[k] = Math.round(Number(v))
+          syncHorizon()
+        },
+      })
 
       function save() {
         saved.write({ answers: state.answers, currentAge: state.currentAge, targetAge: state.targetAge })
@@ -1332,11 +1338,14 @@
         Object.assign(state.answers, prev.answers)
         state.currentAge = prev.currentAge ?? state.currentAge
         state.targetAge = prev.targetAge ?? state.targetAge
-        ageNow.value = state.currentAge
-        ageTarget.value = state.targetAge
+        ageInputs?.sync()
         Object.entries(state.answers).forEach(([k, v]) => {
           const node = document.querySelector(`.opt[data-q="${k}"][data-v="${v}"]`)
-          if (node) node.setAttribute('aria-pressed', 'true')
+          if (node) {
+            node.setAttribute('aria-checked', 'true')
+            node.parentElement.querySelectorAll('.opt').forEach((o) => (o.tabIndex = -1))
+            node.tabIndex = 0
+          }
         })
       }
       syncHorizon()
